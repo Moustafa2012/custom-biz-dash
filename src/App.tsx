@@ -17,9 +17,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/sales" element={<ErpAppPage defaultPage="dashboard" />} />
-          <Route path="/finance" element={<ErpAppPage defaultPage="dashboard" />} />
-          <Route path="/inventory" element={<ErpAppPage defaultPage="dashboard" />} />
+          <Route path="/sales" element={<ErpAppPage appId="sales" defaultPage="dashboard" />} />
+          <Route path="/finance" element={<ErpAppPage appId="finance" defaultPage="dashboard" />} />
+          <Route path="/inventory" element={<ErpAppPage appId="inventory" defaultPage="dashboard" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
