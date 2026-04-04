@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sliders, ChevronRight, Check } from "lucide-react";
+import { Sliders, ChevronRight, Check, Type, Baseline, Box, CornerDownRight, Shuffle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   useAppConfig,
@@ -22,6 +22,7 @@ import {
   type FontScale,
 } from "./app-config";
 
+/* ─── Sub-panel for picking an option ─── */
 function OptionPicker<T extends string>({
   title, options, value, onChange, onBack,
 }: {
@@ -33,21 +34,21 @@ function OptionPicker<T extends string>({
 }) {
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border/40">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border/30">
         <button onClick={onBack} className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors">
           <ChevronRight className="h-4 w-4 rotate-180" />
         </button>
         <h2 className="text-sm font-semibold">{title}</h2>
       </div>
       <ScrollArea className="flex-1">
-        <div className="py-2">
+        <div className="p-2 space-y-0.5">
           {options.map((opt) => (
             <button
               key={String(opt.value)}
               onClick={() => { onChange(opt.value); onBack(); }}
               className={cn(
-                "flex items-center w-full px-5 py-3.5 gap-4 transition-colors hover:bg-muted/30 text-left",
-                value === opt.value && "bg-muted/20"
+                "flex items-center w-full px-3 py-3 gap-3 rounded-xl transition-colors text-left",
+                value === opt.value ? "bg-muted/40" : "hover:bg-muted/20"
               )}
             >
               <span className="flex-1 text-sm font-medium">{opt.label}</span>
@@ -60,6 +61,7 @@ function OptionPicker<T extends string>({
   );
 }
 
+/* ─── Sub-panel for picking a color ─── */
 function ColorPickerPanel({
   title, colors, value, onChange, onBack,
 }: {
@@ -71,21 +73,21 @@ function ColorPickerPanel({
 }) {
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border/40">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border/30">
         <button onClick={onBack} className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-muted/60 text-muted-foreground hover:text-foreground transition-colors">
           <ChevronRight className="h-4 w-4 rotate-180" />
         </button>
         <h2 className="text-sm font-semibold">{title}</h2>
       </div>
       <ScrollArea className="flex-1">
-        <div className="py-2">
+        <div className="p-2 space-y-0.5">
           {(Object.entries(colors) as [string, { hex: string; label: string }][]).map(([key, meta]) => (
             <button
               key={key}
               onClick={() => { onChange(key); onBack(); }}
               className={cn(
-                "flex items-center w-full px-5 py-3.5 gap-4 transition-colors hover:bg-muted/30",
-                value === key && "bg-muted/20"
+                "flex items-center w-full px-3 py-3 gap-3 rounded-xl transition-colors",
+                value === key ? "bg-muted/40" : "hover:bg-muted/20"
               )}
             >
               <span className="h-5 w-5 rounded-full shrink-0 ring-2 ring-offset-2 ring-offset-background" style={{ backgroundColor: meta.hex }} />
@@ -99,41 +101,29 @@ function ColorPickerPanel({
   );
 }
 
-function SettingRow({ label, sublabel, right, onClick }: {
-  label: string; sublabel?: string; right?: React.ReactNode; onClick?: () => void;
+/* ─── Individual setting card (shadcn/ui create style) ─── */
+function SettingCard({ label, value, right, onClick }: {
+  label: string;
+  value: string;
+  right?: React.ReactNode;
+  onClick?: () => void;
 }) {
   return (
     <button
       onClick={onClick}
       disabled={!onClick}
       className={cn(
-        "flex items-center w-full px-5 py-3.5 gap-3 transition-colors text-left",
-        onClick && "hover:bg-muted/30 active:bg-muted/50",
+        "flex items-center w-full rounded-xl border border-border/40 bg-card/50 px-4 py-3 text-left transition-all",
+        onClick && "hover:bg-muted/30 hover:border-border/60 active:scale-[0.98]",
         !onClick && "cursor-default"
       )}
     >
       <div className="flex-1 min-w-0">
-        <p className="text-[11px] leading-tight mb-0.5 text-muted-foreground/80">{label}</p>
-        {sublabel && <p className="text-sm font-semibold text-foreground truncate">{sublabel}</p>}
+        <p className="text-[11px] leading-tight text-muted-foreground/70 mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-foreground truncate">{value}</p>
       </div>
-      {right && <div className="shrink-0 flex items-center gap-1.5">{right}</div>}
+      {right && <div className="shrink-0 ml-3">{right}</div>}
     </button>
-  );
-}
-
-function SettingGroup({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mx-4 my-2 rounded-2xl border border-border/30 bg-card/60 overflow-hidden divide-y divide-border/20">
-      {children}
-    </div>
-  );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="px-5 pt-5 pb-1 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground/50">
-      {children}
-    </p>
   );
 }
 
@@ -148,25 +138,21 @@ export function LayoutSettingsSheet() {
     { value: "classic", label: "Classic" },
     { value: "minimal", label: "Minimal" },
   ];
-
   const baseColorOptions: { value: BaseColor; label: string }[] = [
     { value: "neutral", label: "Neutral" },
     { value: "stone", label: "Stone" },
     { value: "zinc", label: "Zinc" },
   ];
-
   const fontOptions: { value: FontFamily; label: string }[] = [
     { value: "geist", label: "Geist" },
     { value: "inter", label: "Inter" },
     { value: "sans", label: "Sans" },
   ];
-
   const iconLibraryOptions: { value: IconLibrary; label: string }[] = [
     { value: "hugeicons", label: "HugeIcons" },
     { value: "lucide", label: "Lucide" },
     { value: "heroicons", label: "HeroIcons" },
   ];
-
   const borderRadiusOptions: { value: BorderRadius; label: string }[] = [
     { value: "none", label: "None" },
     { value: "sm", label: "Small" },
@@ -174,25 +160,21 @@ export function LayoutSettingsSheet() {
     { value: "lg", label: "Large" },
     { value: "full", label: "Full" },
   ];
-
   const sidebarVariantOptions: { value: SidebarVariant; label: string }[] = [
     { value: "inset", label: "Inset" },
     { value: "sidebar", label: "Sidebar" },
     { value: "floating", label: "Floating" },
   ];
-
   const collapsibleOptions: { value: CollapsibleState; label: string }[] = [
     { value: "icon", label: "Icon" },
     { value: "offcanvas", label: "Off Canvas" },
     { value: "none", label: "None" },
   ];
-
   const densityOptions: { value: ContentDensity; label: string }[] = [
     { value: "compact", label: "Compact" },
     { value: "default", label: "Default" },
     { value: "relaxed", label: "Relaxed" },
   ];
-
   const fontScaleOptions: { value: FontScale; label: string }[] = [
     { value: "sm", label: "Small" },
     { value: "md", label: "Medium" },
@@ -200,44 +182,125 @@ export function LayoutSettingsSheet() {
   ];
 
   const colorDot = (hex: string) => (
-    <span className="h-5 w-5 rounded-full" style={{ backgroundColor: hex }} />
+    <span className="h-5 w-5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: hex }} />
+  );
+
+  const radiusIcon = (
+    <CornerDownRight className="h-4 w-4 text-muted-foreground" />
   );
 
   const renderMainPanel = () => (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border/30">
         <h2 className="text-sm font-bold tracking-tight">{cfg.t("القائمة", "Menu")}</h2>
+        <Sliders className="h-4 w-4 text-muted-foreground" />
       </div>
+
       <ScrollArea className="flex-1">
-        <SectionLabel>{cfg.t("المظهر", "Appearance")}</SectionLabel>
-        <SettingGroup>
-          <SettingRow label="Style" sublabel={cfg.stylePreset} onClick={() => setPanel("style")} />
-          <SettingRow label="Base Color" sublabel={cfg.baseColor} onClick={() => setPanel("baseColor")} />
-          <SettingRow label="Accent" sublabel={cfg.getColorLabel(cfg.accentColor)} right={colorDot(ACCENT_COLORS[cfg.accentColor].hex)} onClick={() => setPanel("accentColor")} />
-          <SettingRow label="Chart Color" sublabel={cfg.getColorLabel(cfg.chartColor)} right={colorDot(ACCENT_COLORS[cfg.chartColor].hex)} onClick={() => setPanel("chartColor")} />
-        </SettingGroup>
+        <div className="p-3 space-y-2">
+          {/* Appearance Cards */}
+          <SettingCard
+            label="Style"
+            value={cfg.stylePreset.charAt(0).toUpperCase() + cfg.stylePreset.slice(1)}
+            right={<div className="h-5 w-5 rounded-md border border-border/50 bg-background" />}
+            onClick={() => setPanel("style")}
+          />
+          <SettingCard
+            label="Base Color"
+            value={cfg.baseColor.charAt(0).toUpperCase() + cfg.baseColor.slice(1)}
+            right={<span className="h-5 w-5 rounded-full bg-muted-foreground/40" />}
+            onClick={() => setPanel("baseColor")}
+          />
+          <SettingCard
+            label="Theme"
+            value={cfg.getColorLabel(cfg.accentColor)}
+            right={colorDot(ACCENT_COLORS[cfg.accentColor].hex)}
+            onClick={() => setPanel("accentColor")}
+          />
+          <SettingCard
+            label="Chart Color"
+            value={cfg.getColorLabel(cfg.chartColor)}
+            right={colorDot(ACCENT_COLORS[cfg.chartColor].hex)}
+            onClick={() => setPanel("chartColor")}
+          />
 
-        <SectionLabel>{cfg.t("الطباعة", "Typography")}</SectionLabel>
-        <SettingGroup>
-          <SettingRow label="Heading" sublabel={cfg.headingFont} onClick={() => setPanel("headingFont")} />
-          <SettingRow label="Body" sublabel={cfg.bodyFont} onClick={() => setPanel("bodyFont")} />
-          <SettingRow label="Text Size" sublabel={{ sm: "Small", md: "Medium", lg: "Large" }[cfg.fontScale]} onClick={() => setPanel("fontScale")} />
-        </SettingGroup>
+          {/* Spacer */}
+          <div className="h-1" />
 
-        <SectionLabel>{cfg.t("الواجهة", "Interface")}</SectionLabel>
-        <SettingGroup>
-          <SettingRow label="Icon Library" sublabel={cfg.iconLibrary} onClick={() => setPanel("iconLibrary")} />
-          <SettingRow label="Radius" sublabel={cfg.borderRadius} onClick={() => setPanel("borderRadius")} />
-          <SettingRow label="Content Density" sublabel={cfg.contentDensity} onClick={() => setPanel("contentDensity")} />
-        </SettingGroup>
+          {/* Typography Cards */}
+          <SettingCard
+            label="Heading"
+            value={cfg.headingFont.charAt(0).toUpperCase() + cfg.headingFont.slice(1)}
+            right={<Type className="h-4 w-4 text-muted-foreground" />}
+            onClick={() => setPanel("headingFont")}
+          />
+          <SettingCard
+            label="Font"
+            value={cfg.bodyFont.charAt(0).toUpperCase() + cfg.bodyFont.slice(1)}
+            right={<Baseline className="h-4 w-4 text-muted-foreground" />}
+            onClick={() => setPanel("bodyFont")}
+          />
 
-        <SectionLabel>{cfg.t("التخطيط", "Layout")}</SectionLabel>
-        <SettingGroup>
-          <SettingRow label="Sidebar Style" sublabel={cfg.sidebarVariant} onClick={() => setPanel("sidebarVariant")} />
-          <SettingRow label="Collapsible" sublabel={cfg.collapsible} onClick={() => setPanel("collapsible")} />
-        </SettingGroup>
+          {/* Spacer */}
+          <div className="h-1" />
 
-        <div className="px-4 py-3 pb-6">
+          {/* Interface Cards */}
+          <SettingCard
+            label="Icon Library"
+            value={cfg.iconLibrary === "hugeicons" ? "HugeIcons" : cfg.iconLibrary === "lucide" ? "Lucide" : "HeroIcons"}
+            right={<Box className="h-4 w-4 text-muted-foreground" />}
+            onClick={() => setPanel("iconLibrary")}
+          />
+          <SettingCard
+            label="Radius"
+            value={cfg.borderRadius.charAt(0).toUpperCase() + cfg.borderRadius.slice(1)}
+            right={radiusIcon}
+            onClick={() => setPanel("borderRadius")}
+          />
+
+          {/* Spacer */}
+          <div className="h-1" />
+
+          {/* Layout Cards */}
+          <SettingCard
+            label="Sidebar Style"
+            value={cfg.sidebarVariant.charAt(0).toUpperCase() + cfg.sidebarVariant.slice(1)}
+            onClick={() => setPanel("sidebarVariant")}
+          />
+          <SettingCard
+            label="Collapsible"
+            value={cfg.collapsible === "offcanvas" ? "Off Canvas" : cfg.collapsible.charAt(0).toUpperCase() + cfg.collapsible.slice(1)}
+            onClick={() => setPanel("collapsible")}
+          />
+          <SettingCard
+            label="Content Density"
+            value={cfg.contentDensity.charAt(0).toUpperCase() + cfg.contentDensity.slice(1)}
+            onClick={() => setPanel("contentDensity")}
+          />
+          <SettingCard
+            label="Text Size"
+            value={{ sm: "Small", md: "Medium", lg: "Large" }[cfg.fontScale]}
+            onClick={() => setPanel("fontScale")}
+          />
+        </div>
+
+        {/* Bottom Actions */}
+        <div className="p-3 pt-1 space-y-2">
+          <button
+            onClick={() => {
+              const presets: StylePreset[] = ["luma", "classic", "minimal"];
+              const accents = Object.keys(ACCENT_COLORS) as (keyof typeof ACCENT_COLORS)[];
+              cfg.setStylePreset(presets[Math.floor(Math.random() * presets.length)]);
+              cfg.setAccentColor(accents[Math.floor(Math.random() * accents.length)]);
+              cfg.setChartColor(accents[Math.floor(Math.random() * accents.length)]);
+            }}
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-medium border border-border/40 hover:border-border/70 bg-card/50 hover:bg-muted/30 text-foreground transition-all active:scale-[0.98]"
+          >
+            <Shuffle className="h-3.5 w-3.5" />
+            {cfg.t("خلط عشوائي", "Shuffle")}
+          </button>
+
           <button
             onClick={() => {
               cfg.setStylePreset("luma"); cfg.setBaseColor("neutral"); cfg.setAccentColor("blue");
@@ -245,9 +308,9 @@ export function LayoutSettingsSheet() {
               cfg.setFontScale("md"); cfg.setIconLibrary("lucide"); cfg.setBorderRadius("default");
               cfg.setContentDensity("default"); cfg.setSidebarVariant("inset"); cfg.setCollapsible("icon");
             }}
-            className="w-full py-2.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground border border-border/40 hover:border-border/80 hover:bg-muted/30 transition-all"
+            className="w-full py-2.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground border border-border/40 hover:border-border/70 hover:bg-muted/30 transition-all active:scale-[0.98]"
           >
-            {cfg.t("إعادة تعيين إلى الافتراضيات", "Reset to defaults")}
+            {cfg.t("إعادة تعيين", "Reset to defaults")}
           </button>
         </div>
       </ScrollArea>
@@ -257,7 +320,7 @@ export function LayoutSettingsSheet() {
   const renderPanel = () => {
     if (panel === "style") return <OptionPicker title="Style" options={styleOptions} value={cfg.stylePreset} onChange={cfg.setStylePreset} onBack={() => setPanel(null)} />;
     if (panel === "baseColor") return <OptionPicker title="Base Color" options={baseColorOptions} value={cfg.baseColor} onChange={cfg.setBaseColor} onBack={() => setPanel(null)} />;
-    if (panel === "accentColor") return <ColorPickerPanel title="Accent Color" colors={ACCENT_COLORS} value={cfg.accentColor} onChange={cfg.setAccentColor} onBack={() => setPanel(null)} />;
+    if (panel === "accentColor") return <ColorPickerPanel title="Theme Color" colors={ACCENT_COLORS} value={cfg.accentColor} onChange={cfg.setAccentColor} onBack={() => setPanel(null)} />;
     if (panel === "chartColor") return <ColorPickerPanel title="Chart Color" colors={ACCENT_COLORS} value={cfg.chartColor} onChange={cfg.setChartColor} onBack={() => setPanel(null)} />;
     if (panel === "headingFont") return <OptionPicker title="Heading Font" options={fontOptions} value={cfg.headingFont} onChange={cfg.setHeadingFont} onBack={() => setPanel(null)} />;
     if (panel === "bodyFont") return <OptionPicker title="Body Font" options={fontOptions} value={cfg.bodyFont} onChange={cfg.setBodyFont} onBack={() => setPanel(null)} />;
@@ -277,7 +340,7 @@ export function LayoutSettingsSheet() {
           <Sliders className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col p-0 gap-0 w-72 border-l border-border/40 shadow-2xl bg-background/95 backdrop-blur" side="right">
+      <SheetContent className="flex flex-col p-0 gap-0 w-[280px] border-l border-border/30 shadow-2xl bg-background/98 backdrop-blur-xl" side="right">
         <div className="flex flex-col h-full overflow-hidden">
           {renderPanel()}
         </div>
