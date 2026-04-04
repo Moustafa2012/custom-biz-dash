@@ -1,0 +1,27 @@
+export type PageId =
+  | "dashboard"
+  | "profile"
+  | "settings"
+  // Sales pages
+  | "sales-orders"
+  | "sales-customers"
+  | "sales-quotations"
+  | "sales-invoices"
+  | "sales-returns"
+  | "sales-reports"
+  // Finance pages
+  | "finance-ledger"
+  | "finance-accounts"
+  | "finance-journal"
+  | "finance-payables"
+  | "finance-receivables"
+  | "finance-reports"
+  | "finance-budget"
+  // Inventory pages
+  | "inventory-items"
+  | "inventory-warehouses"
+  | "inventory-transfers"
+  | "inventory-adjustments"
+  | "inventory-bom"
+  | "inventory-production"
+  | "inventory-reports";
