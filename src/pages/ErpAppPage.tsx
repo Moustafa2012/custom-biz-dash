@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
-import AppShell from "@/components/erp/app-shell";
 import type { PageId } from "@/components/erp/types";
 import { AppConfigProvider, useAppConfig, erpApps, type ErpAppId } from "@/components/erp/app-config";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/erp/app-sidebar";
 import { AppHeader } from "@/components/erp/app-header";
 import { AppContent } from "@/components/erp/app-content";
+import { SettingsPage } from "@/components/erp/settings-page";
 
-function PageContent({ pageId }: { pageId: PageId }) {
+function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
+  if (pageId === "settings") {
+    return <SettingsPage appId={appId} />;
+  }
+
   const displayName = pageId === "dashboard"
     ? "Dashboard"
     : pageId.replace(/-/g, " ").replace(/^(sales|finance|inventory)\s/, "");
