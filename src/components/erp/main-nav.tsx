@@ -21,7 +21,8 @@ import {
   Home, ShoppingCart, Users, FileText, RotateCcw, BarChart3,
   BookOpen, Landmark, Receipt, CreditCard, Wallet, PiggyBank,
   Package, Warehouse, ArrowRightLeft, ClipboardList, Wrench, Factory,
-  Settings, ChevronRight,
+  Settings, ChevronRight, Bot, ShieldCheck, Bell, Radio, Zap, UsersRound, Activity,
+  Mail, FileTemplate, Send, ScrollText, MailCog,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PageId } from "./types";

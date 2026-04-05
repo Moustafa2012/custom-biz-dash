@@ -24,4 +24,18 @@ export type PageId =
   | "inventory-adjustments"
   | "inventory-bom"
   | "inventory-production"
-  | "inventory-reports";
+  | "inventory-reports"
+  // Telegram service pages
+  | "telegram-bots"
+  | "telegram-2fa"
+  | "telegram-notifications"
+  | "telegram-broadcasts"
+  | "telegram-automation"
+  | "telegram-users"
+  | "telegram-analytics"
+  // Email/SMTP service pages
+  | "smtp-overview"
+  | "smtp-templates"
+  | "smtp-send"
+  | "smtp-logs"
+  | "smtp-settings";
