@@ -45,30 +45,6 @@ interface NavGroup {
   items: NavItem[];
 }
 
-const telegramNav: NavGroup = {
-  label: "Telegram Services",
-  items: [
-    { title: "Bot Management", icon: Bot, pageId: "telegram-bots" },
-    { title: "2FA Authentication", icon: ShieldCheck, pageId: "telegram-2fa" },
-    { title: "Notifications", icon: Bell, pageId: "telegram-notifications" },
-    { title: "Broadcasts", icon: Radio, pageId: "telegram-broadcasts" },
-    { title: "Automation", icon: Zap, pageId: "telegram-automation" },
-    { title: "Users & CRM", icon: UsersRound, pageId: "telegram-users" },
-    { title: "Analytics", icon: Activity, pageId: "telegram-analytics" },
-  ],
-};
-
-const smtpNav: NavGroup = {
-  label: "Email / SMTP",
-  items: [
-    { title: "Overview", icon: Mail, pageId: "smtp-overview" },
-    { title: "Templates", icon: FileTemplate2, pageId: "smtp-templates" },
-    { title: "Send Email", icon: Send, pageId: "smtp-send" },
-    { title: "Logs", icon: ScrollText, pageId: "smtp-logs" },
-    { title: "SMTP Settings", icon: Settings2, pageId: "smtp-settings" },
-  ],
-};
-
 const salesNav: NavGroup[] = [
   {
     label: "Sales",
@@ -82,8 +58,6 @@ const salesNav: NavGroup[] = [
       { title: "Reports", icon: BarChart3, pageId: "sales-reports" },
     ],
   },
-  telegramNav,
-  smtpNav,
   {
     label: "System",
     items: [
@@ -106,8 +80,6 @@ const financeNav: NavGroup[] = [
       { title: "Reports", icon: BarChart3, pageId: "finance-reports" },
     ],
   },
-  telegramNav,
-  smtpNav,
   {
     label: "System",
     items: [
@@ -135,8 +107,6 @@ const inventoryNav: NavGroup[] = [
       { title: "Reports", icon: BarChart3, pageId: "inventory-reports" },
     ],
   },
-  telegramNav,
-  smtpNav,
   {
     label: "System",
     items: [
