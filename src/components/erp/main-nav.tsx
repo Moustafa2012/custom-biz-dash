@@ -22,7 +22,7 @@ import {
   BookOpen, Landmark, Receipt, CreditCard, Wallet, PiggyBank,
   Package, Warehouse, ArrowRightLeft, ClipboardList, Wrench, Factory,
   Settings, ChevronRight, Bot, ShieldCheck, Bell, Radio, Zap, UsersRound, Activity,
-  Mail, FileTemplate, Send, ScrollText, MailCog,
+  Mail, FileText as FileTemplate2, Send, ScrollText, Settings2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PageId } from "./types";
