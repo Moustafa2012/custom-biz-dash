@@ -33,18 +33,6 @@ const PAGE_LABELS: Record<PageId, string> = {
   "inventory-bom": "Bill of Materials",
   "inventory-production": "Production Orders",
   "inventory-reports": "Reports",
-  "telegram-bots": "Bot Management",
-  "telegram-2fa": "Two-Factor Auth",
-  "telegram-notifications": "Notifications",
-  "telegram-broadcasts": "Broadcasts",
-  "telegram-automation": "Automation",
-  "telegram-users": "Users & CRM",
-  "telegram-analytics": "Analytics",
-  "smtp-overview": "Email Overview",
-  "smtp-templates": "Email Templates",
-  "smtp-send": "Send Email",
-  "smtp-logs": "Email Logs",
-  "smtp-settings": "SMTP Settings",
 };
 
 interface AppHeaderProps {
