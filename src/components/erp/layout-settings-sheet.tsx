@@ -129,9 +129,31 @@ function SettingCard({ label, value, right, onClick }: {
 
 type ActivePanel = null | "style" | "baseColor" | "accentColor" | "chartColor" | "headingFont" | "bodyFont" | "iconLibrary" | "borderRadius" | "sidebarVariant" | "collapsible" | "contentDensity" | "fontScale";
 
+type SlideDirection = "forward" | "back";
+
 export function LayoutSettingsSheet() {
   const cfg = useAppConfig();
   const [panel, setPanel] = useState<ActivePanel>(null);
+  const [slideDir, setSlideDir] = useState<SlideDirection>("forward");
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const openPanel = (p: ActivePanel) => {
+    setSlideDir("forward");
+    setIsAnimating(true);
+    setPanel(p);
+  };
+
+  const goBack = () => {
+    setSlideDir("back");
+    setIsAnimating(true);
+    setPanel(null);
+  };
+
+  const slideClass = isAnimating
+    ? slideDir === "forward"
+      ? "animate-slide-in-forward"
+      : "animate-slide-in-back"
+    : "";
 
   const styleOptions: { value: StylePreset; label: string }[] = [
     { value: "luma", label: "Luma" },
@@ -204,25 +226,25 @@ export function LayoutSettingsSheet() {
             label="Style"
             value={cfg.stylePreset.charAt(0).toUpperCase() + cfg.stylePreset.slice(1)}
             right={<div className="h-5 w-5 rounded-md border border-border/50 bg-background" />}
-            onClick={() => setPanel("style")}
+            onClick={() => openPanel("style")}
           />
           <SettingCard
             label="Base Color"
             value={cfg.baseColor.charAt(0).toUpperCase() + cfg.baseColor.slice(1)}
             right={<span className="h-5 w-5 rounded-full bg-muted-foreground/40" />}
-            onClick={() => setPanel("baseColor")}
+            onClick={() => openPanel("baseColor")}
           />
           <SettingCard
             label="Theme"
             value={cfg.getColorLabel(cfg.accentColor)}
             right={colorDot(ACCENT_COLORS[cfg.accentColor].hex)}
-            onClick={() => setPanel("accentColor")}
+            onClick={() => openPanel("accentColor")}
           />
           <SettingCard
             label="Chart Color"
             value={cfg.getColorLabel(cfg.chartColor)}
             right={colorDot(ACCENT_COLORS[cfg.chartColor].hex)}
-            onClick={() => setPanel("chartColor")}
+            onClick={() => openPanel("chartColor")}
           />
 
           {/* Spacer */}
@@ -233,13 +255,13 @@ export function LayoutSettingsSheet() {
             label="Heading"
             value={cfg.headingFont.charAt(0).toUpperCase() + cfg.headingFont.slice(1)}
             right={<Type className="h-4 w-4 text-muted-foreground" />}
-            onClick={() => setPanel("headingFont")}
+            onClick={() => openPanel("headingFont")}
           />
           <SettingCard
             label="Font"
             value={cfg.bodyFont.charAt(0).toUpperCase() + cfg.bodyFont.slice(1)}
             right={<Baseline className="h-4 w-4 text-muted-foreground" />}
-            onClick={() => setPanel("bodyFont")}
+            onClick={() => openPanel("bodyFont")}
           />
 
           {/* Spacer */}
@@ -250,13 +272,13 @@ export function LayoutSettingsSheet() {
             label="Icon Library"
             value={cfg.iconLibrary === "hugeicons" ? "HugeIcons" : cfg.iconLibrary === "lucide" ? "Lucide" : "HeroIcons"}
             right={<Box className="h-4 w-4 text-muted-foreground" />}
-            onClick={() => setPanel("iconLibrary")}
+            onClick={() => openPanel("iconLibrary")}
           />
           <SettingCard
             label="Radius"
             value={cfg.borderRadius.charAt(0).toUpperCase() + cfg.borderRadius.slice(1)}
             right={radiusIcon}
-            onClick={() => setPanel("borderRadius")}
+            onClick={() => openPanel("borderRadius")}
           />
 
           {/* Spacer */}
@@ -266,22 +288,22 @@ export function LayoutSettingsSheet() {
           <SettingCard
             label="Sidebar Style"
             value={cfg.sidebarVariant.charAt(0).toUpperCase() + cfg.sidebarVariant.slice(1)}
-            onClick={() => setPanel("sidebarVariant")}
+            onClick={() => openPanel("sidebarVariant")}
           />
           <SettingCard
             label="Collapsible"
             value={cfg.collapsible === "offcanvas" ? "Off Canvas" : cfg.collapsible.charAt(0).toUpperCase() + cfg.collapsible.slice(1)}
-            onClick={() => setPanel("collapsible")}
+            onClick={() => openPanel("collapsible")}
           />
           <SettingCard
             label="Content Density"
             value={cfg.contentDensity.charAt(0).toUpperCase() + cfg.contentDensity.slice(1)}
-            onClick={() => setPanel("contentDensity")}
+            onClick={() => openPanel("contentDensity")}
           />
           <SettingCard
             label="Text Size"
             value={{ sm: "Small", md: "Medium", lg: "Large" }[cfg.fontScale]}
-            onClick={() => setPanel("fontScale")}
+            onClick={() => openPanel("fontScale")}
           />
         </div>
 
