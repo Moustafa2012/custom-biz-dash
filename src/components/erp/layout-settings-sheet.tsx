@@ -1,5 +1,5 @@
-import { useState } from "react";
-import {
+import { useState, useRef, useEffect } from "react";
+import { flushSync } from "react-dom";
   Sheet,
   SheetContent,
   SheetTrigger,
