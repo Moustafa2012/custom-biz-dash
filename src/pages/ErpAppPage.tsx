@@ -43,7 +43,7 @@ function InnerErpApp({ appId, defaultPage }: { appId: ErpAppId; defaultPage: Pag
       <SidebarInset className="flex flex-col min-h-screen">
         <AppHeader currentPage={currentPage} />
         <AppContent>
-          <PageContent pageId={currentPage} />
+          <PageContent pageId={currentPage} appId={appId} />
         </AppContent>
       </SidebarInset>
     </>
