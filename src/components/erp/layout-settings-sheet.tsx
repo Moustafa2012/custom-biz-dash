@@ -340,30 +340,33 @@ export function LayoutSettingsSheet() {
   );
 
   const renderPanel = () => {
-    if (panel === "style") return <OptionPicker title="Style" options={styleOptions} value={cfg.stylePreset} onChange={cfg.setStylePreset} onBack={() => setPanel(null)} />;
-    if (panel === "baseColor") return <OptionPicker title="Base Color" options={baseColorOptions} value={cfg.baseColor} onChange={cfg.setBaseColor} onBack={() => setPanel(null)} />;
-    if (panel === "accentColor") return <ColorPickerPanel title="Theme Color" colors={ACCENT_COLORS} value={cfg.accentColor} onChange={cfg.setAccentColor} onBack={() => setPanel(null)} />;
-    if (panel === "chartColor") return <ColorPickerPanel title="Chart Color" colors={ACCENT_COLORS} value={cfg.chartColor} onChange={cfg.setChartColor} onBack={() => setPanel(null)} />;
-    if (panel === "headingFont") return <OptionPicker title="Heading Font" options={fontOptions} value={cfg.headingFont} onChange={cfg.setHeadingFont} onBack={() => setPanel(null)} />;
-    if (panel === "bodyFont") return <OptionPicker title="Body Font" options={fontOptions} value={cfg.bodyFont} onChange={cfg.setBodyFont} onBack={() => setPanel(null)} />;
-    if (panel === "fontScale") return <OptionPicker title="Text Size" options={fontScaleOptions} value={cfg.fontScale} onChange={cfg.setFontScale} onBack={() => setPanel(null)} />;
-    if (panel === "iconLibrary") return <OptionPicker title="Icon Library" options={iconLibraryOptions} value={cfg.iconLibrary} onChange={cfg.setIconLibrary} onBack={() => setPanel(null)} />;
-    if (panel === "borderRadius") return <OptionPicker title="Border Radius" options={borderRadiusOptions} value={cfg.borderRadius} onChange={cfg.setBorderRadius} onBack={() => setPanel(null)} />;
-    if (panel === "sidebarVariant") return <OptionPicker title="Sidebar Style" options={sidebarVariantOptions} value={cfg.sidebarVariant} onChange={cfg.setSidebarVariant} onBack={() => setPanel(null)} />;
-    if (panel === "collapsible") return <OptionPicker title="Collapsible" options={collapsibleOptions} value={cfg.collapsible} onChange={cfg.setCollapsible} onBack={() => setPanel(null)} />;
-    if (panel === "contentDensity") return <OptionPicker title="Content Density" options={densityOptions} value={cfg.contentDensity} onChange={cfg.setContentDensity} onBack={() => setPanel(null)} />;
+    if (panel === "style") return <OptionPicker title="Style" options={styleOptions} value={cfg.stylePreset} onChange={cfg.setStylePreset} onBack={goBack} />;
+    if (panel === "baseColor") return <OptionPicker title="Base Color" options={baseColorOptions} value={cfg.baseColor} onChange={cfg.setBaseColor} onBack={goBack} />;
+    if (panel === "accentColor") return <ColorPickerPanel title="Theme Color" colors={ACCENT_COLORS} value={cfg.accentColor} onChange={cfg.setAccentColor} onBack={goBack} />;
+    if (panel === "chartColor") return <ColorPickerPanel title="Chart Color" colors={ACCENT_COLORS} value={cfg.chartColor} onChange={cfg.setChartColor} onBack={goBack} />;
+    if (panel === "headingFont") return <OptionPicker title="Heading Font" options={fontOptions} value={cfg.headingFont} onChange={cfg.setHeadingFont} onBack={goBack} />;
+    if (panel === "bodyFont") return <OptionPicker title="Body Font" options={fontOptions} value={cfg.bodyFont} onChange={cfg.setBodyFont} onBack={goBack} />;
+    if (panel === "fontScale") return <OptionPicker title="Text Size" options={fontScaleOptions} value={cfg.fontScale} onChange={cfg.setFontScale} onBack={goBack} />;
+    if (panel === "iconLibrary") return <OptionPicker title="Icon Library" options={iconLibraryOptions} value={cfg.iconLibrary} onChange={cfg.setIconLibrary} onBack={goBack} />;
+    if (panel === "borderRadius") return <OptionPicker title="Border Radius" options={borderRadiusOptions} value={cfg.borderRadius} onChange={cfg.setBorderRadius} onBack={goBack} />;
+    if (panel === "sidebarVariant") return <OptionPicker title="Sidebar Style" options={sidebarVariantOptions} value={cfg.sidebarVariant} onChange={cfg.setSidebarVariant} onBack={goBack} />;
+    if (panel === "collapsible") return <OptionPicker title="Collapsible" options={collapsibleOptions} value={cfg.collapsible} onChange={cfg.setCollapsible} onBack={goBack} />;
+    if (panel === "contentDensity") return <OptionPicker title="Content Density" options={densityOptions} value={cfg.contentDensity} onChange={cfg.setContentDensity} onBack={goBack} />;
     return renderMainPanel();
   };
 
   return (
-    <Sheet onOpenChange={(open) => { if (!open) setPanel(null); }}>
+    <Sheet onOpenChange={(open) => { if (!open) { setPanel(null); setIsAnimating(false); } }}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60" aria-label="Customize layout">
           <Sliders className="h-4 w-4" />
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col p-0 gap-0 w-[280px] border-l border-border/30 shadow-2xl bg-background/98 backdrop-blur-xl" side="right">
-        <div className="flex flex-col h-full overflow-hidden">
+        <div
+          className={cn("flex flex-col h-full overflow-hidden", slideClass)}
+          onAnimationEnd={() => setIsAnimating(false)}
+        >
           {renderPanel()}
         </div>
       </SheetContent>
