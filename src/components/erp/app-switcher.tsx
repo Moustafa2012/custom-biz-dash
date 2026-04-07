@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronsUpDown, Search, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 export function AppSwitcher() {
   const { currentApp, setCurrentApp, getAppName, t } = useAppConfig();
+  const navigate = useNavigate();
   const { state } = useSidebar();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -31,6 +33,7 @@ export function AppSwitcher() {
     setCurrentApp(app);
     setOpen(false);
     setQuery("");
+    navigate(`/${app.id}`);
   };
 
   return (
