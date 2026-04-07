@@ -33,6 +33,7 @@ export function AppSwitcher() {
     setCurrentApp(app);
     setOpen(false);
     setQuery("");
+    navigate(`/${app.id}`);
   };
 
   return (
