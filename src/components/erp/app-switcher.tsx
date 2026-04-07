@@ -17,6 +17,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 
 export function AppSwitcher() {
   const { currentApp, setCurrentApp, getAppName, t } = useAppConfig();
+  const navigate = useNavigate();
   const { state } = useSidebar();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
