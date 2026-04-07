@@ -6,10 +6,29 @@ import { AppSidebar } from "@/components/erp/app-sidebar";
 import { AppHeader } from "@/components/erp/app-header";
 import { AppContent } from "@/components/erp/app-content";
 import { SettingsPage } from "@/components/erp/settings-page";
+import {
+  InventoryDashboard, InventoryItems, InventoryWarehouses,
+  InventoryTransfers, InventoryAdjustments, InventoryBOM,
+  InventoryProduction, InventoryReports,
+} from "@/components/erp/inventory";
 
 function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
   if (pageId === "settings") {
     return <SettingsPage appId={appId} />;
+  }
+
+  // Inventory & Mfg pages
+  if (appId === "inventory") {
+    switch (pageId) {
+      case "dashboard": return <InventoryDashboard />;
+      case "inventory-items": return <InventoryItems />;
+      case "inventory-warehouses": return <InventoryWarehouses />;
+      case "inventory-transfers": return <InventoryTransfers />;
+      case "inventory-adjustments": return <InventoryAdjustments />;
+      case "inventory-bom": return <InventoryBOM />;
+      case "inventory-production": return <InventoryProduction />;
+      case "inventory-reports": return <InventoryReports />;
+    }
   }
 
   const displayName = pageId === "dashboard"
