@@ -2,6 +2,7 @@ export type PageId =
   | "dashboard"
   | "profile"
   | "settings"
+  | "users"
   // Sales pages
   | "sales-orders"
   | "sales-customers"

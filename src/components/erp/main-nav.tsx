@@ -61,6 +61,7 @@ const salesNav: NavGroup[] = [
   {
     label: "System",
     items: [
+      { title: "Users", icon: Users, pageId: "users" },
       { title: "Settings", icon: Settings, pageId: "settings" },
     ],
   },
@@ -83,6 +84,7 @@ const financeNav: NavGroup[] = [
   {
     label: "System",
     items: [
+      { title: "Users", icon: Users, pageId: "users" },
       { title: "Settings", icon: Settings, pageId: "settings" },
     ],
   },
@@ -110,6 +112,7 @@ const inventoryNav: NavGroup[] = [
   {
     label: "System",
     items: [
+      { title: "Users", icon: Users, pageId: "users" },
       { title: "Settings", icon: Settings, pageId: "settings" },
     ],
   },

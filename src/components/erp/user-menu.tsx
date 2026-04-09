@@ -1,18 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuGroup,
-  DropdownMenuShortcut,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenuGroup, DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
-import {
-  MoreHorizontal, LogOut, Settings, User, CreditCard, Moon,
-} from "lucide-react";
+import { MoreHorizontal, LogOut, Settings, User, CreditCard, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppConfig } from "./app-config";
+import { useAuthStore } from "@/stores/auth-store";
 import type { PageId } from "./types";
 
 interface UserMenuProps {
@@ -21,6 +16,14 @@ interface UserMenuProps {
 
 export function UserMenu({ onNavigate }: UserMenuProps) {
   const { toggleTheme, resolvedTheme, t } = useAppConfig();
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const logout = useAuthStore((s) => s.logout);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <DropdownMenu>
@@ -39,8 +42,8 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
 
       <DropdownMenuContent align="end" side="top" className="w-60 rounded-2xl shadow-2xl p-1.5 border border-border/50" sideOffset={6}>
         <DropdownMenuLabel className="px-2.5 py-2">
-          <p className="text-sm font-semibold">{t("مستخدم", "User")}</p>
-          <p className="text-[11px] text-muted-foreground font-normal">user@example.com</p>
+          <p className="text-sm font-semibold">{currentUser?.name || t("مستخدم", "User")}</p>
+          <p className="text-[11px] text-muted-foreground font-normal">{currentUser?.email || "user@example.com"}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -64,7 +67,7 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
           <span className="text-sm">{t("التبديل إلى", "Switch to")} {resolvedTheme === "dark" ? t("فاتح", "light") : t("داكن", "dark")}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="rounded-xl gap-2.5 px-2.5 py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
+        <DropdownMenuItem onClick={handleLogout} className="rounded-xl gap-2.5 px-2.5 py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
           <LogOut className="h-4 w-4" />
           <span className="text-sm">{t("تسجيل الخروج", "Log out")}</span>
         </DropdownMenuItem>
