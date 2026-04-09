@@ -8,32 +8,35 @@ import { LanguageSwitcher } from "./language-switcher";
 import { ThemeToggle } from "./theme-toggle";
 import { LayoutSettingsSheet } from "./layout-settings-sheet";
 import type { PageId } from "./types";
+import { useAppConfig } from "./app-config";
 
-const PAGE_LABELS: Record<PageId, string> = {
-  dashboard: "Dashboard",
-  profile: "Profile",
-  settings: "Settings",
-  users: "Users",
-  "sales-orders": "Orders",
-  "sales-customers": "Customers",
-  "sales-quotations": "Quotations",
-  "sales-invoices": "Invoices",
-  "sales-returns": "Returns",
-  "sales-reports": "Reports",
-  "finance-ledger": "General Ledger",
-  "finance-accounts": "Chart of Accounts",
-  "finance-journal": "Journal Entries",
-  "finance-payables": "Accounts Payable",
-  "finance-receivables": "Accounts Receivable",
-  "finance-reports": "Reports",
-  "finance-budget": "Budget",
-  "inventory-items": "Items",
-  "inventory-warehouses": "Warehouses",
-  "inventory-transfers": "Transfers",
-  "inventory-adjustments": "Adjustments",
-  "inventory-bom": "Bill of Materials",
-  "inventory-production": "Production Orders",
-  "inventory-reports": "Reports",
+type PageLabels = Record<PageId, { en: string; ar: string }>;
+
+const PAGE_LABELS: PageLabels = {
+  dashboard: { en: "Dashboard", ar: "لوحة المعلومات" },
+  profile: { en: "Profile", ar: "الملف الشخصي" },
+  settings: { en: "Settings", ar: "الإعدادات" },
+  users: { en: "Users", ar: "المستخدمون" },
+  "sales-orders": { en: "Orders", ar: "الطلبات" },
+  "sales-customers": { en: "Customers", ar: "العملاء" },
+  "sales-quotations": { en: "Quotations", ar: "عروض الأسعار" },
+  "sales-invoices": { en: "Invoices", ar: "الفواتير" },
+  "sales-returns": { en: "Returns", ar: "المرتجعات" },
+  "sales-reports": { en: "Reports", ar: "التقارير" },
+  "finance-ledger": { en: "General Ledger", ar: "دفتر الأستاذ العام" },
+  "finance-accounts": { en: "Chart of Accounts", ar: "دليل الحسابات" },
+  "finance-journal": { en: "Journal Entries", ar: "القيود اليومية" },
+  "finance-payables": { en: "Accounts Payable", ar: "الذمم الدائنة" },
+  "finance-receivables": { en: "Accounts Receivable", ar: "الذمم المدينة" },
+  "finance-reports": { en: "Reports", ar: "التقارير" },
+  "finance-budget": { en: "Budget", ar: "الميزانية" },
+  "inventory-items": { en: "Items", ar: "الأصناف" },
+  "inventory-warehouses": { en: "Warehouses", ar: "المستودعات" },
+  "inventory-transfers": { en: "Transfers", ar: "التحويلات" },
+  "inventory-adjustments": { en: "Adjustments", ar: "التسويات" },
+  "inventory-bom": { en: "Bill of Materials", ar: "قائمة المواد" },
+  "inventory-production": { en: "Production Orders", ar: "أوامر الإنتاج" },
+  "inventory-reports": { en: "Reports", ar: "التقارير" },
 };
 
 interface AppHeaderProps {
@@ -41,6 +44,10 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ currentPage = "dashboard" }: AppHeaderProps) {
+  const { language } = useAppConfig();
+  const label = PAGE_LABELS[currentPage];
+  const pageTitle = label ? (language === "ar" ? label.ar : label.en) : currentPage;
+
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 rounded-lg border-b border-border/40 bg-background/95 backdrop-blur-md px-3 top-0 z-40">
       <SidebarTrigger className="-ml-0.5 h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-lg transition-colors" />
@@ -54,7 +61,7 @@ export function AppHeader({ currentPage = "dashboard" }: AppHeaderProps) {
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden sm:block text-muted-foreground/30" />
           <BreadcrumbItem>
-            <BreadcrumbPage className="text-xs font-semibold">{PAGE_LABELS[currentPage]}</BreadcrumbPage>
+            <BreadcrumbPage className="text-xs font-semibold">{pageTitle}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

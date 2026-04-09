@@ -28,12 +28,14 @@ import type { PageId } from "./types";
 import { useAppConfig, type ErpAppId } from "./app-config";
 
 interface NavSubItem {
-  title: string;
+  titleEn: string;
+  titleAr: string;
   pageId?: PageId;
 }
 
 interface NavItem {
-  title: string;
+  titleEn: string;
+  titleAr: string;
   icon: React.ElementType;
   pageId?: PageId;
   badge?: string | number;
@@ -41,79 +43,80 @@ interface NavItem {
 }
 
 interface NavGroup {
-  label: string;
+  labelEn: string;
+  labelAr: string;
   items: NavItem[];
 }
 
 const salesNav: NavGroup[] = [
   {
-    label: "Sales",
+    labelEn: "Sales", labelAr: "المبيعات",
     items: [
-      { title: "Dashboard", icon: Home, pageId: "dashboard" },
-      { title: "Orders", icon: ShoppingCart, pageId: "sales-orders" },
-      { title: "Customers", icon: Users, pageId: "sales-customers" },
-      { title: "Quotations", icon: FileText, pageId: "sales-quotations" },
-      { title: "Invoices", icon: Receipt, pageId: "sales-invoices" },
-      { title: "Returns", icon: RotateCcw, pageId: "sales-returns" },
-      { title: "Reports", icon: BarChart3, pageId: "sales-reports" },
+      { titleEn: "Dashboard", titleAr: "لوحة المعلومات", icon: Home, pageId: "dashboard" },
+      { titleEn: "Orders", titleAr: "الطلبات", icon: ShoppingCart, pageId: "sales-orders" },
+      { titleEn: "Customers", titleAr: "العملاء", icon: Users, pageId: "sales-customers" },
+      { titleEn: "Quotations", titleAr: "عروض الأسعار", icon: FileText, pageId: "sales-quotations" },
+      { titleEn: "Invoices", titleAr: "الفواتير", icon: Receipt, pageId: "sales-invoices" },
+      { titleEn: "Returns", titleAr: "المرتجعات", icon: RotateCcw, pageId: "sales-returns" },
+      { titleEn: "Reports", titleAr: "التقارير", icon: BarChart3, pageId: "sales-reports" },
     ],
   },
   {
-    label: "System",
+    labelEn: "System", labelAr: "النظام",
     items: [
-      { title: "Users", icon: Users, pageId: "users" },
-      { title: "Settings", icon: Settings, pageId: "settings" },
+      { titleEn: "Users", titleAr: "المستخدمون", icon: Users, pageId: "users" },
+      { titleEn: "Settings", titleAr: "الإعدادات", icon: Settings, pageId: "settings" },
     ],
   },
 ];
 
 const financeNav: NavGroup[] = [
   {
-    label: "Finance",
+    labelEn: "Finance", labelAr: "المالية",
     items: [
-      { title: "Dashboard", icon: Home, pageId: "dashboard" },
-      { title: "General Ledger", icon: BookOpen, pageId: "finance-ledger" },
-      { title: "Chart of Accounts", icon: Landmark, pageId: "finance-accounts" },
-      { title: "Journal Entries", icon: Receipt, pageId: "finance-journal" },
-      { title: "Accounts Payable", icon: CreditCard, pageId: "finance-payables" },
-      { title: "Accounts Receivable", icon: Wallet, pageId: "finance-receivables" },
-      { title: "Budget", icon: PiggyBank, pageId: "finance-budget" },
-      { title: "Reports", icon: BarChart3, pageId: "finance-reports" },
+      { titleEn: "Dashboard", titleAr: "لوحة المعلومات", icon: Home, pageId: "dashboard" },
+      { titleEn: "General Ledger", titleAr: "دفتر الأستاذ العام", icon: BookOpen, pageId: "finance-ledger" },
+      { titleEn: "Chart of Accounts", titleAr: "دليل الحسابات", icon: Landmark, pageId: "finance-accounts" },
+      { titleEn: "Journal Entries", titleAr: "القيود اليومية", icon: Receipt, pageId: "finance-journal" },
+      { titleEn: "Accounts Payable", titleAr: "الذمم الدائنة", icon: CreditCard, pageId: "finance-payables" },
+      { titleEn: "Accounts Receivable", titleAr: "الذمم المدينة", icon: Wallet, pageId: "finance-receivables" },
+      { titleEn: "Budget", titleAr: "الميزانية", icon: PiggyBank, pageId: "finance-budget" },
+      { titleEn: "Reports", titleAr: "التقارير", icon: BarChart3, pageId: "finance-reports" },
     ],
   },
   {
-    label: "System",
+    labelEn: "System", labelAr: "النظام",
     items: [
-      { title: "Users", icon: Users, pageId: "users" },
-      { title: "Settings", icon: Settings, pageId: "settings" },
+      { titleEn: "Users", titleAr: "المستخدمون", icon: Users, pageId: "users" },
+      { titleEn: "Settings", titleAr: "الإعدادات", icon: Settings, pageId: "settings" },
     ],
   },
 ];
 
 const inventoryNav: NavGroup[] = [
   {
-    label: "Inventory",
+    labelEn: "Inventory", labelAr: "المخزون",
     items: [
-      { title: "Dashboard", icon: Home, pageId: "dashboard" },
-      { title: "Items", icon: Package, pageId: "inventory-items" },
-      { title: "Warehouses", icon: Warehouse, pageId: "inventory-warehouses" },
-      { title: "Transfers", icon: ArrowRightLeft, pageId: "inventory-transfers" },
-      { title: "Adjustments", icon: ClipboardList, pageId: "inventory-adjustments" },
+      { titleEn: "Dashboard", titleAr: "لوحة المعلومات", icon: Home, pageId: "dashboard" },
+      { titleEn: "Items", titleAr: "الأصناف", icon: Package, pageId: "inventory-items" },
+      { titleEn: "Warehouses", titleAr: "المستودعات", icon: Warehouse, pageId: "inventory-warehouses" },
+      { titleEn: "Transfers", titleAr: "التحويلات", icon: ArrowRightLeft, pageId: "inventory-transfers" },
+      { titleEn: "Adjustments", titleAr: "التسويات", icon: ClipboardList, pageId: "inventory-adjustments" },
     ],
   },
   {
-    label: "Manufacturing",
+    labelEn: "Manufacturing", labelAr: "التصنيع",
     items: [
-      { title: "Bill of Materials", icon: Wrench, pageId: "inventory-bom" },
-      { title: "Production Orders", icon: Factory, pageId: "inventory-production" },
-      { title: "Reports", icon: BarChart3, pageId: "inventory-reports" },
+      { titleEn: "Bill of Materials", titleAr: "قائمة المواد", icon: Wrench, pageId: "inventory-bom" },
+      { titleEn: "Production Orders", titleAr: "أوامر الإنتاج", icon: Factory, pageId: "inventory-production" },
+      { titleEn: "Reports", titleAr: "التقارير", icon: BarChart3, pageId: "inventory-reports" },
     ],
   },
   {
-    label: "System",
+    labelEn: "System", labelAr: "النظام",
     items: [
-      { title: "Users", icon: Users, pageId: "users" },
-      { title: "Settings", icon: Settings, pageId: "settings" },
+      { titleEn: "Users", titleAr: "المستخدمون", icon: Users, pageId: "users" },
+      { titleEn: "Settings", titleAr: "الإعدادات", icon: Settings, pageId: "settings" },
     ],
   },
 ];
@@ -126,9 +129,12 @@ const NAV_MAP: Record<ErpAppId, NavGroup[]> = {
 
 function NavItemRow({ item, currentPage, onNavigate }: { item: NavItem; currentPage?: PageId; onNavigate?: (page: PageId) => void }) {
   const { state } = useSidebar();
+  const { language } = useAppConfig();
   const collapsed = state === "collapsed";
   const isActive = item.pageId !== undefined && item.pageId === currentPage;
   const [open, setOpen] = useState(isActive && !!item.children);
+
+  const title = language === "ar" ? item.titleAr : item.titleEn;
 
   const handleClick = () => {
     if (item.pageId && onNavigate) onNavigate(item.pageId);
@@ -140,23 +146,23 @@ function NavItemRow({ item, currentPage, onNavigate }: { item: NavItem; currentP
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             <SidebarMenuButton
-              tooltip={item.title}
+              tooltip={title}
               isActive={isActive}
               onClick={handleClick}
               className={cn("group/btn transition-all duration-150", isActive && "font-medium")}
             >
               <item.icon className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover/btn:text-foreground")} />
-              <span>{item.title}</span>
+              <span>{title}</span>
               <ChevronRight className={cn("ml-auto h-3.5 w-3.5 text-muted-foreground/50 transition-transform duration-200", open && "rotate-90")} />
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
             <SidebarMenuSub>
               {item.children.map((sub) => (
-                <SidebarMenuSubItem key={sub.title}>
+                <SidebarMenuSubItem key={sub.titleEn}>
                   <SidebarMenuSubButton asChild>
                     <button onClick={() => sub.pageId && onNavigate?.(sub.pageId)} className="flex items-center w-full">
-                      <span>{sub.title}</span>
+                      <span>{language === "ar" ? sub.titleAr : sub.titleEn}</span>
                     </button>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
@@ -171,13 +177,13 @@ function NavItemRow({ item, currentPage, onNavigate }: { item: NavItem; currentP
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
-        tooltip={item.title}
+        tooltip={title}
         isActive={isActive}
         onClick={handleClick}
         className={cn("group/btn transition-all duration-150 cursor-pointer", isActive && "font-medium")}
       >
         <item.icon className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover/btn:text-foreground")} />
-        <span>{item.title}</span>
+        <span>{title}</span>
       </SidebarMenuButton>
       {item.badge !== undefined && !collapsed && (
         <SidebarMenuBadge>
@@ -196,20 +202,20 @@ interface MainNavProps {
 }
 
 export function MainNav({ currentPage, onNavigate }: MainNavProps) {
-  const { currentApp } = useAppConfig();
+  const { currentApp, language } = useAppConfig();
   const navGroups = NAV_MAP[currentApp.id] || salesNav;
 
   return (
     <>
       {navGroups.map((group) => (
-        <SidebarGroup key={group.label} className="px-2 py-1">
+        <SidebarGroup key={group.labelEn} className="px-2 py-1">
           <SidebarGroupLabel className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground/50 px-2 mb-1">
-            {group.label}
+            {language === "ar" ? group.labelAr : group.labelEn}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {group.items.map((item) => (
-                <NavItemRow key={item.title} item={item} currentPage={currentPage} onNavigate={onNavigate} />
+                <NavItemRow key={item.titleEn} item={item} currentPage={currentPage} onNavigate={onNavigate} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

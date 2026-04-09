@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserMenu } from "./user-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/components/ui/sidebar";
 import type { PageId } from "./types";
@@ -37,12 +38,38 @@ export function UserNav({ status = "online", onNavigate }: UserNavProps) {
     }
   };
 
+  if (isCollapsed) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className="flex items-center justify-center w-full py-2 cursor-pointer"
+            onClick={() => onNavigate?.("profile")}
+          >
+            <div className="relative">
+              <Avatar className="h-8 w-8 ring-2 ring-background shadow-sm">
+                <AvatarImage src={currentUser?.avatar} alt={displayName} />
+                <AvatarFallback className="text-xs font-semibold bg-primary/20 text-primary">{initials}</AvatarFallback>
+              </Avatar>
+              <span
+                className={cn("absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-background", STATUS_COLORS[status])}
+              />
+            </div>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="flex flex-col">
+          <span className="font-semibold">{displayName}</span>
+          <span className="text-xs text-muted-foreground">{getStatusText()}</span>
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
     <div
       className={cn(
         "flex items-center gap-3 px-2 py-2.5 w-full",
         "rounded-xl transition-colors duration-150 hover:bg-muted/40 group cursor-pointer",
-        isCollapsed && "justify-center px-1 py-2"
       )}
       onClick={() => onNavigate?.("profile")}
     >
@@ -55,19 +82,15 @@ export function UserNav({ status = "online", onNavigate }: UserNavProps) {
           className={cn("absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-background", STATUS_COLORS[status])}
         />
       </div>
-      {!isCollapsed && (
-        <>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate leading-tight">{displayName}</p>
-            <p className="text-[10px] text-muted-foreground truncate leading-tight capitalize">
-              ● {getStatusText()}
-            </p>
-          </div>
-          <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150" onClick={(e) => e.stopPropagation()}>
-            <UserMenu onNavigate={onNavigate} />
-          </div>
-        </>
-      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold truncate leading-tight">{displayName}</p>
+        <p className="text-[10px] text-muted-foreground truncate leading-tight capitalize">
+          ● {getStatusText()}
+        </p>
+      </div>
+      <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150" onClick={(e) => e.stopPropagation()}>
+        <UserMenu onNavigate={onNavigate} />
+      </div>
     </div>
   );
 }

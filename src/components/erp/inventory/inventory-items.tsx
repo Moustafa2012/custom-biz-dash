@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppConfig } from "../app-config";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,16 +19,29 @@ const ITEMS_DATA = [
   { id: "ITM-008", name: { en: "Bearing 6205-2RS", ar: "محمل 6205-2RS" }, sku: "BR-6205", category: { en: "Components", ar: "مكونات" }, qty: 340, unit: { en: "PCS", ar: "قطعة" }, cost: 7.50, status: "in_stock" },
 ];
 
+// Stable English keys for category filter – language-independent
+const CATEGORY_KEYS = ["Raw Materials", "Components", "Finished Goods", "Consumables"] as const;
+type CategoryKey = typeof CATEGORY_KEYS[number];
+
+const CATEGORY_LABELS: Record<CategoryKey, { ar: string }> = {
+  "Raw Materials": { ar: "مواد خام" },
+  "Components": { ar: "مكونات" },
+  "Finished Goods": { ar: "منتجات نهائية" },
+  "Consumables": { ar: "مستهلكات" },
+};
+
 export function InventoryItems() {
   const { t, language } = useAppConfig();
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  // Filter key is always the English category name – stable across language switches
+  const [categoryFilter, setCategoryFilter] = useState<"all" | CategoryKey>("all");
 
   const filtered = ITEMS_DATA.filter((item) => {
     const name = language === "ar" ? item.name.ar : item.name.en;
-    const matchSearch = name.toLowerCase().includes(search.toLowerCase()) || item.sku.toLowerCase().includes(search.toLowerCase());
-    const cat = language === "ar" ? item.category.ar : item.category.en;
-    const matchCat = categoryFilter === "all" || cat === categoryFilter;
+    const matchSearch =
+      name.toLowerCase().includes(search.toLowerCase()) ||
+      item.sku.toLowerCase().includes(search.toLowerCase());
+    const matchCat = categoryFilter === "all" || item.category.en === categoryFilter;
     return matchSearch && matchCat;
   });
 
@@ -41,10 +54,6 @@ export function InventoryItems() {
     const s = map[status] || { label: status, variant: "outline" as const };
     return <Badge variant={s.variant} className="text-[10px]">{s.label}</Badge>;
   };
-
-  const categories = language === "ar"
-    ? ["مواد خام", "مكونات", "منتجات نهائية", "مستهلكات"]
-    : ["Raw Materials", "Components", "Finished Goods", "Consumables"];
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -77,15 +86,17 @@ export function InventoryItems() {
                 className="ps-9 h-9"
               />
             </div>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as "all" | CategoryKey)}>
               <SelectTrigger className="w-[180px] h-9">
                 <Filter className="h-3.5 w-3.5 me-2 text-muted-foreground" />
                 <SelectValue placeholder={t("التصنيف", "Category")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("الكل", "All")}</SelectItem>
-                {categories.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                {CATEGORY_KEYS.map((key) => (
+                  <SelectItem key={key} value={key}>
+                    {language === "ar" ? CATEGORY_LABELS[key].ar : key}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -97,31 +108,43 @@ export function InventoryItems() {
               <TableRow>
                 <TableHead>{t("الرمز", "SKU")}</TableHead>
                 <TableHead>{t("الاسم", "Name")}</TableHead>
-                <TableHead>{t("التصنيف", "Category")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("التصنيف", "Category")}</TableHead>
                 <TableHead className="text-end">{t("الكمية", "Qty")}</TableHead>
-                <TableHead>{t("الوحدة", "Unit")}</TableHead>
-                <TableHead className="text-end">{t("التكلفة", "Cost")}</TableHead>
+                <TableHead className="hidden sm:table-cell">{t("الوحدة", "Unit")}</TableHead>
+                <TableHead className="text-end hidden lg:table-cell">{t("التكلفة", "Cost")}</TableHead>
                 <TableHead>{t("الحالة", "Status")}</TableHead>
                 <TableHead className="w-10"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-mono text-xs">{item.sku}</TableCell>
-                  <TableCell className="font-medium">{language === "ar" ? item.name.ar : item.name.en}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">{language === "ar" ? item.category.ar : item.category.en}</TableCell>
-                  <TableCell className="text-end font-semibold">{item.qty.toLocaleString()}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">{language === "ar" ? item.unit.ar : item.unit.en}</TableCell>
-                  <TableCell className="text-end">${item.cost.toFixed(2)}</TableCell>
-                  <TableCell>{statusBadge(item.status)}</TableCell>
-                  <TableCell>
-                    <Button variant="ghost" size="icon" className="h-7 w-7">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+              {filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                    {t("لا توجد نتائج", "No items found")}
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                filtered.map((item) => (
+                  <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
+                    <TableCell className="font-mono text-xs">{item.sku}</TableCell>
+                    <TableCell className="font-medium">{language === "ar" ? item.name.ar : item.name.en}</TableCell>
+                    <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
+                      {language === "ar" ? item.category.ar : item.category.en}
+                    </TableCell>
+                    <TableCell className="text-end font-semibold">{item.qty.toLocaleString()}</TableCell>
+                    <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                      {language === "ar" ? item.unit.ar : item.unit.en}
+                    </TableCell>
+                    <TableCell className="text-end hidden lg:table-cell">${item.cost.toFixed(2)}</TableCell>
+                    <TableCell>{statusBadge(item.status)}</TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>

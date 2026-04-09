@@ -33,11 +33,11 @@ export const erpApps: ErpApp[] = [
 
 export const ACCENT_COLORS: Record<AccentColor, { css: string; label: string; arLabel: string; hex: string }> = {
   violet: { css: "262 83% 58%", label: "Violet", arLabel: "بنفسجي", hex: "#7c3aed" },
-  blue:   { css: "217 91% 60%", label: "Blue", arLabel: "أزرق",   hex: "#3b82f6" },
-  emerald:{ css: "160 84% 39%", label: "Emerald", arLabel: "زمرد", hex: "#10b981" },
-  rose:   { css: "350 89% 60%", label: "Rose", arLabel: "وردي",   hex: "#f43f5e" },
+  blue:   { css: "217 91% 60%", label: "Blue",   arLabel: "أزرق",   hex: "#3b82f6" },
+  emerald:{ css: "160 84% 39%", label: "Emerald", arLabel: "زمرد",   hex: "#10b981" },
+  rose:   { css: "350 89% 60%", label: "Rose",   arLabel: "وردي",   hex: "#f43f5e" },
   amber:  { css: "38 92% 50%",  label: "Amber",  arLabel: "عنبري",  hex: "#f59e0b" },
-  cyan:   { css: "192 91% 36%", label: "Cyan", arLabel: "سماوي",   hex: "#0891b2" },
+  cyan:   { css: "192 91% 36%", label: "Cyan",   arLabel: "سماوي",  hex: "#0891b2" },
 };
 
 export const CHART_COLORS = ACCENT_COLORS;
@@ -80,6 +80,7 @@ interface AppConfig {
   setBorderRadius: (v: BorderRadius) => void;
   t: (arabic: string, english: string) => string;
   getAppName: (appId: string) => string;
+  getAppDescription: (appId: string) => string;
   getColorLabel: (colorKey: string) => string;
 }
 
@@ -122,6 +123,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
 
   const persist = <T,>(key: string, val: T) => localStorage.setItem(key, JSON.stringify(val));
 
+  // System theme listener
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e: MediaQueryListEvent) => setSystemTheme(e.matches ? "dark" : "light");
@@ -129,10 +131,35 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  // Apply dark/light theme class
   useEffect(() => {
     document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
   }, [resolvedTheme]);
 
+  // Apply accent color CSS variable
+  useEffect(() => {
+    const root = document.documentElement;
+    const color = ACCENT_COLORS[accentColor];
+    root.style.setProperty("--primary", color.css);
+    root.style.setProperty("--ring", color.css);
+    root.style.setProperty("--sidebar-primary", color.css);
+    root.style.setProperty("--sidebar-ring", color.css);
+  }, [accentColor]);
+
+  // Apply font scale CSS variable
+  useEffect(() => {
+    const root = document.documentElement;
+    const scaleMap: Record<FontScale, string> = {
+      sm: "0.875",
+      md: "1",
+      lg: "1.0625",
+    };
+    root.style.setProperty("--font-scale", scaleMap[fontScale]);
+    // Apply to root font size for relative scaling
+    root.style.fontSize = fontScale === "sm" ? "14px" : fontScale === "lg" ? "16.5px" : "15px";
+  }, [fontScale]);
+
+  // Apply other style tokens
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--style-preset", stylePreset);
@@ -180,6 +207,16 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     return n ? (language === "ar" ? n.ar : n.en) : appId;
   };
 
+  const getAppDescription = (appId: string) => {
+    const descs: Record<string, { ar: string; en: string }> = {
+      sales: { ar: "الطلبات وإدارة العملاء", en: "Orders & CRM" },
+      finance: { ar: "المحاسبة والتقارير", en: "Accounting & Reports" },
+      inventory: { ar: "المخزون والإنتاج", en: "Stock & Production" },
+    };
+    const d = descs[appId];
+    return d ? (language === "ar" ? d.ar : d.en) : "";
+  };
+
   const getColorLabel = (colorKey: string) => {
     const color = ACCENT_COLORS[colorKey as AccentColor];
     return color ? (language === "ar" ? color.arLabel : color.label) : colorKey;
@@ -194,7 +231,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
         setSidebarVariant, setCollapsible, setCurrentApp, setLanguage, setTheme, toggleTheme,
         setAccentColor, setFontScale, setContentDensity, setSidebarOpen,
         setStylePreset, setBaseColor, setChartColor, setHeadingFont, setBodyFont,
-        setIconLibrary, setBorderRadius, t, getAppName, getColorLabel,
+        setIconLibrary, setBorderRadius, t, getAppName, getAppDescription, getColorLabel,
       }}>
         {children}
       </AppConfigContext.Provider>

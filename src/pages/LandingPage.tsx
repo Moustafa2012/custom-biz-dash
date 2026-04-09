@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ShoppingCart, Landmark, Package, ArrowRight, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/auth-store";
 
 const apps = [
   {
@@ -35,6 +36,17 @@ const apps = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const setIntendedRoute = useAuthStore((s) => s.setIntendedRoute);
+
+  const handleAppClick = (route: string) => {
+    if (isAuthenticated) {
+      navigate(route);
+    } else {
+      setIntendedRoute(route);
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -46,6 +58,17 @@ export default function LandingPage() {
               <Layers className="h-5 w-5 text-primary-foreground" />
             </div>
             <span className="text-lg font-heading font-bold tracking-tight text-foreground">ERP Suite</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {isAuthenticated ? (
+              <Button size="sm" onClick={() => navigate("/sales")}>
+                Open App <ArrowRight className="h-3.5 w-3.5 ml-1" />
+              </Button>
+            ) : (
+              <Button size="sm" variant="outline" onClick={() => navigate("/login")}>
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -67,7 +90,7 @@ export default function LandingPage() {
           {apps.map((app, i) => (
             <button
               key={app.id}
-              onClick={() => navigate(app.route)}
+              onClick={() => handleAppClick(app.route)}
               className={cn(
                 "group relative flex flex-col items-start p-6 rounded-2xl border border-border/50",
                 "bg-card hover:bg-card/80 transition-all duration-300",
@@ -82,7 +105,7 @@ export default function LandingPage() {
               <h2 className="text-lg font-heading font-semibold text-foreground mb-2">{app.title}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed flex-1">{app.description}</p>
               <div className="flex items-center gap-1.5 mt-4 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                Open <ArrowRight className="h-4 w-4" />
+                {isAuthenticated ? "Open" : "Get Started"} <ArrowRight className="h-4 w-4" />
               </div>
             </button>
           ))}

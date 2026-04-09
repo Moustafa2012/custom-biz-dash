@@ -110,6 +110,8 @@ interface AuthState {
   users: User[];
   isAuthenticated: boolean;
   twoFactorState: TwoFactorState | null;
+  // Track intended destination for post-login redirect
+  intendedRoute: string | null;
 
   login: (email: string, password: string) => { success: boolean; requires2FA?: boolean; error?: string };
   verify2FA: (code: string) => boolean;
@@ -117,6 +119,7 @@ interface AuthState {
   updateProfile: (data: Partial<User>) => void;
   can: (permission: string) => boolean;
   hasRole: (role: Role) => boolean;
+  setIntendedRoute: (route: string | null) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -126,6 +129,9 @@ export const useAuthStore = create<AuthState>()(
       users: DEMO_USERS,
       isAuthenticated: false,
       twoFactorState: null,
+      intendedRoute: null,
+
+      setIntendedRoute: (route) => set({ intendedRoute: route }),
 
       login: (email, password) => {
         const user = get().users.find((u) => u.email === email && u.password === password);
@@ -146,7 +152,12 @@ export const useAuthStore = create<AuthState>()(
         const updated = get().users.map((u) =>
           u.id === user.id ? { ...u, lastLogin: new Date().toISOString().slice(0, 10) } : u
         );
-        set({ currentUser: { ...user, lastLogin: new Date().toISOString().slice(0, 10) }, isAuthenticated: true, users: updated, twoFactorState: null });
+        set({
+          currentUser: { ...user, lastLogin: new Date().toISOString().slice(0, 10) },
+          isAuthenticated: true,
+          users: updated,
+          twoFactorState: null,
+        });
         return { success: true };
       },
 
@@ -163,12 +174,17 @@ export const useAuthStore = create<AuthState>()(
         const updated = get().users.map((u) =>
           u.id === user.id ? { ...u, lastLogin: new Date().toISOString().slice(0, 10) } : u
         );
-        set({ currentUser: { ...user, lastLogin: new Date().toISOString().slice(0, 10) }, isAuthenticated: true, users: updated, twoFactorState: null });
+        set({
+          currentUser: { ...user, lastLogin: new Date().toISOString().slice(0, 10) },
+          isAuthenticated: true,
+          users: updated,
+          twoFactorState: null,
+        });
         return true;
       },
 
       logout: () => {
-        set({ currentUser: null, isAuthenticated: false, twoFactorState: null });
+        set({ currentUser: null, isAuthenticated: false, twoFactorState: null, intendedRoute: null });
       },
 
       updateProfile: (data) => {

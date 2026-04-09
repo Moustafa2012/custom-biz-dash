@@ -16,18 +16,19 @@ import { useAppConfig, erpApps, type ErpApp } from "./app-config";
 import { useSidebar } from "@/components/ui/sidebar";
 
 export function AppSwitcher() {
-  const { currentApp, setCurrentApp, getAppName, t } = useAppConfig();
+  const { currentApp, setCurrentApp, getAppName, getAppDescription, t } = useAppConfig();
   const navigate = useNavigate();
   const { state } = useSidebar();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const isCollapsed = state === "collapsed";
 
-  const filtered = erpApps.filter(
-    (a) =>
-      a.name.toLowerCase().includes(query.toLowerCase()) ||
-      a.description?.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = erpApps.filter((a) => {
+    const name = getAppName(a.id).toLowerCase();
+    const desc = getAppDescription(a.id).toLowerCase();
+    const q = query.toLowerCase();
+    return name.includes(q) || desc.includes(q);
+  });
 
   const handleSelect = (app: ErpApp) => {
     setCurrentApp(app);
@@ -53,11 +54,9 @@ export function AppSwitcher() {
             <>
               <div className="flex flex-col items-start min-w-0 flex-1">
                 <span className="text-sm font-semibold truncate leading-tight">{getAppName(currentApp.id)}</span>
-                {currentApp.description && (
-                  <span className="text-[10px] text-muted-foreground truncate leading-tight">
-                    {currentApp.description}
-                  </span>
-                )}
+                <span className="text-[10px] text-muted-foreground truncate leading-tight">
+                  {getAppDescription(currentApp.id)}
+                </span>
               </div>
               <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60 transition-transform duration-200 group-data-[state=open]:rotate-180" />
             </>
@@ -108,15 +107,14 @@ export function AppSwitcher() {
                     color: "white",
                     fontWeight: "bold",
                     fontSize: "18px",
+                    flexShrink: 0,
                   }}
                 >
                   {app.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate leading-tight">{getAppName(app.id)}</p>
-                  {app.description && (
-                    <p className="text-[10px] text-muted-foreground truncate leading-tight">{app.description}</p>
-                  )}
+                  <p className="text-[10px] text-muted-foreground truncate leading-tight">{getAppDescription(app.id)}</p>
                 </div>
                 {currentApp.id === app.id && (
                   <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
