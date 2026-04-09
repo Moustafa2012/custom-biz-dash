@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useSidebar } from "@/components/ui/sidebar";
 import type { PageId } from "./types";
 import { useAppConfig } from "./app-config";
+import { useAuthStore } from "@/stores/auth-store";
 
 const STATUS_COLORS = {
   online: "bg-emerald-500",
@@ -21,6 +22,10 @@ export function UserNav({ status = "online", onNavigate }: UserNavProps) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const { t } = useAppConfig();
+  const currentUser = useAuthStore((s) => s.currentUser);
+
+  const displayName = currentUser?.name || t("مستخدم", "User");
+  const initials = currentUser?.name?.split(" ").map(n => n[0]).join("") || "U";
 
   const getStatusText = () => {
     switch (status) {
@@ -43,8 +48,8 @@ export function UserNav({ status = "online", onNavigate }: UserNavProps) {
     >
       <div className="relative shrink-0">
         <Avatar className="h-8 w-8 ring-2 ring-background shadow-sm">
-          <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-          <AvatarFallback className="text-xs font-semibold bg-primary/20 text-primary">U</AvatarFallback>
+          <AvatarImage src={currentUser?.avatar} alt={displayName} />
+          <AvatarFallback className="text-xs font-semibold bg-primary/20 text-primary">{initials}</AvatarFallback>
         </Avatar>
         <span
           className={cn("absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-background", STATUS_COLORS[status])}
@@ -53,7 +58,7 @@ export function UserNav({ status = "online", onNavigate }: UserNavProps) {
       {!isCollapsed && (
         <>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate leading-tight">{t("مستخدم", "User")}</p>
+            <p className="text-sm font-semibold truncate leading-tight">{displayName}</p>
             <p className="text-[10px] text-muted-foreground truncate leading-tight capitalize">
               ● {getStatusText()}
             </p>
