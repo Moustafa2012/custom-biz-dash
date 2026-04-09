@@ -13,6 +13,7 @@ const PAGE_LABELS: Record<PageId, string> = {
   dashboard: "Dashboard",
   profile: "Profile",
   settings: "Settings",
+  users: "Users",
   "sales-orders": "Orders",
   "sales-customers": "Customers",
   "sales-quotations": "Quotations",
