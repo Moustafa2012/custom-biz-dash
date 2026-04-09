@@ -6,6 +6,8 @@ import { AppSidebar } from "@/components/erp/app-sidebar";
 import { AppHeader } from "@/components/erp/app-header";
 import { AppContent } from "@/components/erp/app-content";
 import { SettingsPage } from "@/components/erp/settings-page";
+import { ProfilePage } from "@/components/erp/profile-page";
+import { UsersPage } from "@/components/erp/users-page";
 import {
   InventoryDashboard, InventoryItems, InventoryWarehouses,
   InventoryTransfers, InventoryAdjustments, InventoryBOM,
@@ -13,11 +15,10 @@ import {
 } from "@/components/erp/inventory";
 
 function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
-  if (pageId === "settings") {
-    return <SettingsPage appId={appId} />;
-  }
+  if (pageId === "settings") return <SettingsPage appId={appId} />;
+  if (pageId === "profile") return <ProfilePage />;
+  if (pageId === "users") return <UsersPage />;
 
-  // Inventory & Mfg pages
   if (appId === "inventory") {
     switch (pageId) {
       case "dashboard": return <InventoryDashboard />;
@@ -38,9 +39,7 @@ function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
   return (
     <div className="flex flex-1 items-center justify-center min-h-[400px]">
       <div className="text-center">
-        <h2 className="text-2xl font-heading font-bold text-foreground mb-2 capitalize">
-          {displayName}
-        </h2>
+        <h2 className="text-2xl font-heading font-bold text-foreground mb-2 capitalize">{displayName}</h2>
         <p className="text-sm text-muted-foreground">This page is ready for implementation.</p>
       </div>
     </div>
