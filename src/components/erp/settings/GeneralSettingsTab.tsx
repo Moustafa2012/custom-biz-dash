@@ -14,22 +14,22 @@ export function GeneralSettingsTab({ appId }: GeneralSettingsTabProps) {
 
   const appSpecificFields: Record<ErpAppId, { label: string; placeholder: string; icon: React.ElementType }[]> = {
     sales: [
-      { label: t("Default Currency", "Default Currency"), placeholder: "USD", icon: Globe },
-      { label: t("Invoice Prefix", "Invoice Prefix"), placeholder: "INV-", icon: FileText },
-      { label: t("Payment Terms", "Payment Terms"), placeholder: "Net 30", icon: Settings },
-      { label: t("Tax ID", "Tax ID"), placeholder: "Enter tax ID", icon: Lock },
+      { label: t("العملة الافتراضية", "Default Currency"), placeholder: "USD", icon: Globe },
+      { label: t("بادئة الفاتورة", "Invoice Prefix"), placeholder: "INV-", icon: FileText },
+      { label: t("شروط الدفع", "Payment Terms"), placeholder: "Net 30", icon: Settings },
+      { label: t("الرقم الضريبي", "Tax ID"), placeholder: t("أدخل الرقم الضريبي", "Enter tax ID"), icon: Lock },
     ],
     finance: [
-      { label: t("Fiscal Year Start", "Fiscal Year Start"), placeholder: "January", icon: Globe },
-      { label: t("Base Currency", "Base Currency"), placeholder: "USD", icon: Settings },
-      { label: t("Numbering System", "Numbering System"), placeholder: "Auto", icon: FileText },
-      { label: t("Lock Period", "Lock Period"), placeholder: "Monthly", icon: Lock },
+      { label: t("بداية السنة المالية", "Fiscal Year Start"), placeholder: t("يناير", "January"), icon: Globe },
+      { label: t("العملة الأساسية", "Base Currency"), placeholder: "USD", icon: Settings },
+      { label: t("نظام الترقيم", "Numbering System"), placeholder: t("تلقائي", "Auto"), icon: FileText },
+      { label: t("فترة القفل", "Lock Period"), placeholder: t("شهري", "Monthly"), icon: Lock },
     ],
     inventory: [
-      { label: t("Default Unit", "Default Unit"), placeholder: "PCS", icon: Settings },
-      { label: t("Valuation Method", "Valuation Method"), placeholder: "FIFO", icon: Globe },
-      { label: t("Reorder Threshold", "Reorder Threshold"), placeholder: "10", icon: FileText },
-      { label: t("Batch Tracking", "Batch Tracking"), placeholder: "Enabled", icon: Lock },
+      { label: t("الوحدة الافتراضية", "Default Unit"), placeholder: t("قطعة", "PCS"), icon: Settings },
+      { label: t("طريقة التقييم", "Valuation Method"), placeholder: "FIFO", icon: Globe },
+      { label: t("حد إعادة الطلب", "Reorder Threshold"), placeholder: "10", icon: FileText },
+      { label: t("تتبع الدُفعات", "Batch Tracking"), placeholder: t("مفعّل", "Enabled"), icon: Lock },
     ],
   };
 
@@ -39,9 +39,9 @@ export function GeneralSettingsTab({ appId }: GeneralSettingsTabProps) {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <User className="h-4 w-4 text-muted-foreground" />
-            {t("General", "General")}
+            {t("عام", "General")}
           </CardTitle>
-          <CardDescription>{t("Configure basic module settings", "Configure basic module settings")}</CardDescription>
+          <CardDescription>{t("تكوين إعدادات الوحدة الأساسية", "Configure basic module settings")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {appSpecificFields[appId].map((field) => (
@@ -60,21 +60,21 @@ export function GeneralSettingsTab({ appId }: GeneralSettingsTabProps) {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <Lock className="h-4 w-4 text-muted-foreground" />
-            {t("Security", "Security")}
+            {t("الأمان", "Security")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">{t("Two-Factor Auth", "Two-Factor Auth")}</p>
-              <p className="text-xs text-muted-foreground">{t("Enable 2FA verification", "Enable 2FA verification")}</p>
+              <p className="text-sm font-medium">{t("المصادقة الثنائية", "Two-Factor Auth")}</p>
+              <p className="text-xs text-muted-foreground">{t("تفعيل التحقق بخطوتين", "Enable 2FA verification")}</p>
             </div>
             <Switch />
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">{t("Audit Log", "Audit Log")}</p>
-              <p className="text-xs text-muted-foreground">{t("Track all changes", "Track all changes")}</p>
+              <p className="text-sm font-medium">{t("سجل التدقيق", "Audit Log")}</p>
+              <p className="text-xs text-muted-foreground">{t("تتبع جميع التغييرات", "Track all changes")}</p>
             </div>
             <Switch defaultChecked />
           </div>
@@ -82,7 +82,7 @@ export function GeneralSettingsTab({ appId }: GeneralSettingsTabProps) {
       </Card>
 
       <div className="flex justify-end">
-        <Button>{t("Save Changes", "Save Changes")}</Button>
+        <Button>{t("حفظ التغييرات", "Save Changes")}</Button>
       </div>
     </div>
   );

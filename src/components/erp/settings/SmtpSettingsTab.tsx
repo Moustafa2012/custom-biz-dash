@@ -3,10 +3,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Server, Mail, Send, FileText, ScrollText, ChevronRight } from "lucide-react";
+import { Server, Mail, Send, FileText, ScrollText, ChevronRight, ChevronLeft } from "lucide-react";
 
 export function SmtpSettingsTab() {
-  const { t } = useAppConfig();
+  const { t, language } = useAppConfig();
+
+  const ArrowIcon = language === "ar" ? ChevronLeft : ChevronRight;
+
+  const templateNames = [
+    { ar: "بريد الترحيب", en: "Welcome Email" },
+    { ar: "الفاتورة", en: "Invoice" },
+    { ar: "إعادة تعيين كلمة المرور", en: "Password Reset" },
+    { ar: "الإشعار", en: "Notification" },
+  ];
 
   return (
     <div className="space-y-4">
@@ -14,36 +23,36 @@ export function SmtpSettingsTab() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <Server className="h-4 w-4 text-muted-foreground" />
-            {t("SMTP Server", "SMTP Server")}
+            {t("خادم SMTP", "SMTP Server")}
           </CardTitle>
-          <CardDescription className="text-xs">{t("Configure outgoing mail server", "Configure outgoing mail server")}</CardDescription>
+          <CardDescription className="text-xs">{t("تكوين خادم البريد الصادر", "Configure outgoing mail server")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-1.5">
-            <label className="text-sm font-medium">{t("Host", "Host")}</label>
+            <label className="text-sm font-medium">{t("المضيف", "Host")}</label>
             <Input placeholder="smtp.example.com" className="h-9" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-1.5">
-              <label className="text-sm font-medium">{t("Port", "Port")}</label>
+              <label className="text-sm font-medium">{t("المنفذ", "Port")}</label>
               <Input placeholder="587" className="h-9" />
             </div>
             <div className="grid gap-1.5">
-              <label className="text-sm font-medium">{t("Encryption", "Encryption")}</label>
+              <label className="text-sm font-medium">{t("التشفير", "Encryption")}</label>
               <Input placeholder="TLS" className="h-9" />
             </div>
           </div>
           <div className="grid gap-1.5">
-            <label className="text-sm font-medium">{t("Username", "Username")}</label>
+            <label className="text-sm font-medium">{t("اسم المستخدم", "Username")}</label>
             <Input placeholder="user@example.com" className="h-9" />
           </div>
           <div className="grid gap-1.5">
-            <label className="text-sm font-medium">{t("Password", "Password")}</label>
+            <label className="text-sm font-medium">{t("كلمة المرور", "Password")}</label>
             <Input placeholder="..." type="password" className="h-9" />
           </div>
           <Button variant="outline" size="sm" className="gap-2">
             <Send className="h-3.5 w-3.5" />
-            {t("Test Connection", "Test Connection")}
+            {t("اختبار الاتصال", "Test Connection")}
           </Button>
         </CardContent>
       </Card>
@@ -52,20 +61,20 @@ export function SmtpSettingsTab() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <Mail className="h-4 w-4 text-muted-foreground" />
-            {t("Sender Identity", "Sender Identity")}
+            {t("هوية المرسل", "Sender Identity")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-1.5">
-            <label className="text-sm font-medium">{t("From Name", "From Name")}</label>
-            <Input placeholder="My Company" className="h-9" />
+            <label className="text-sm font-medium">{t("اسم المرسل", "From Name")}</label>
+            <Input placeholder={t("شركتي", "My Company")} className="h-9" />
           </div>
           <div className="grid gap-1.5">
-            <label className="text-sm font-medium">{t("From Email", "From Email")}</label>
+            <label className="text-sm font-medium">{t("بريد المرسل", "From Email")}</label>
             <Input placeholder="noreply@example.com" className="h-9" />
           </div>
           <div className="grid gap-1.5">
-            <label className="text-sm font-medium">{t("Reply-To", "Reply-To")}</label>
+            <label className="text-sm font-medium">{t("الرد على", "Reply-To")}</label>
             <Input placeholder="support@example.com" className="h-9" />
           </div>
         </CardContent>
@@ -75,15 +84,15 @@ export function SmtpSettingsTab() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <FileText className="h-4 w-4 text-muted-foreground" />
-            {t("Templates", "Templates")}
+            {t("القوالب", "Templates")}
           </CardTitle>
-          <CardDescription className="text-xs">{t("Manage email templates", "Manage email templates")}</CardDescription>
+          <CardDescription className="text-xs">{t("إدارة قوالب البريد الإلكتروني", "Manage email templates")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {["Welcome Email", "Invoice", "Password Reset", "Notification"].map((template) => (
-            <div key={template} className="flex items-center justify-between rounded-lg border border-border/40 px-3 py-2.5">
-              <span className="text-sm font-medium">{template}</span>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          {templateNames.map((tmpl) => (
+            <div key={tmpl.en} className="flex items-center justify-between rounded-lg border border-border/40 px-3 py-2.5">
+              <span className="text-sm font-medium">{t(tmpl.ar, tmpl.en)}</span>
+              <ArrowIcon className="h-4 w-4 text-muted-foreground" />
             </div>
           ))}
         </CardContent>
@@ -93,14 +102,14 @@ export function SmtpSettingsTab() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <ScrollText className="h-4 w-4 text-muted-foreground" />
-            {t("Logs", "Logs")}
+            {t("السجلات", "Logs")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">{t("Enable Logging", "Enable Logging")}</p>
-              <p className="text-xs text-muted-foreground">{t("Log all sent emails", "Log all sent emails")}</p>
+              <p className="text-sm font-medium">{t("تفعيل التسجيل", "Enable Logging")}</p>
+              <p className="text-xs text-muted-foreground">{t("تسجيل جميع الرسائل المرسلة", "Log all sent emails")}</p>
             </div>
             <Switch defaultChecked />
           </div>
@@ -108,7 +117,7 @@ export function SmtpSettingsTab() {
       </Card>
 
       <div className="flex justify-end">
-        <Button>{t("Save SMTP Settings", "Save SMTP Settings")}</Button>
+        <Button>{t("حفظ إعدادات SMTP", "Save SMTP Settings")}</Button>
       </div>
     </div>
   );

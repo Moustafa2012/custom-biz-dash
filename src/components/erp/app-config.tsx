@@ -104,12 +104,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
   const [sidebarVariant, setSidebarVariantState] = useState<SidebarVariant>(() => loadPref("sidebarVariant", "inset"));
   const [collapsible, setCollapsibleState] = useState<CollapsibleState>(() => loadPref("collapsible", "icon"));
   const [currentApp, setCurrentAppState] = useState<ErpApp>(erpApps[0]);
-  const [language, setLanguageState] = useState<"en" | "ar">(() => {
-    const loadedLang = loadPref("language", "en");
-    console.log('Language initialized from localStorage:', loadedLang);
-    console.log('Language initialized from localStorage - debugging:', loadedLang);
-    return loadedLang;
-  });
+  const [language, setLanguageState] = useState<"en" | "ar">(() => loadPref("language", "en"));
   const [theme, setThemeState] = useState<"light" | "dark" | "system">(() => loadPref("theme", "system"));
   const [accentColor, setAccentColorState] = useState<AccentColor>(() => loadPref("accentColor", "blue"));
   const [fontScale, setFontScaleState] = useState<FontScale>(() => loadPref("fontScale", "md"));
@@ -127,16 +122,9 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
   const resolvedTheme: "light" | "dark" = theme === "system" ? systemTheme : theme;
 
   const persist = <T,>(key: string, val: T) => {
-    console.log('persist called - key:', key, 'value:', val);
-    try {
-      localStorage.setItem(key, JSON.stringify(val));
-      console.log('persist successful - key:', key, 'stored value:', localStorage.getItem(key));
-    } catch (e) {
-      console.error('persist failed - key:', key, 'error:', e);
-    }
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
   };
 
-  // System theme listener
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e: MediaQueryListEvent) => setSystemTheme(e.matches ? "dark" : "light");
@@ -144,12 +132,10 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // Apply dark/light theme class
   useEffect(() => {
     document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
   }, [resolvedTheme]);
 
-  // Apply accent color CSS variable
   useEffect(() => {
     const root = document.documentElement;
     const color = ACCENT_COLORS[accentColor];
@@ -159,20 +145,13 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     root.style.setProperty("--sidebar-ring", color.css);
   }, [accentColor]);
 
-  // Apply font scale CSS variable
   useEffect(() => {
     const root = document.documentElement;
-    const scaleMap: Record<FontScale, string> = {
-      sm: "0.875",
-      md: "1",
-      lg: "1.0625",
-    };
+    const scaleMap: Record<FontScale, string> = { sm: "0.875", md: "1", lg: "1.0625" };
     root.style.setProperty("--font-scale", scaleMap[fontScale]);
-    // Apply to root font size for relative scaling
     root.style.fontSize = fontScale === "sm" ? "14px" : fontScale === "lg" ? "16.5px" : "15px";
   }, [fontScale]);
 
-  // Apply other style tokens
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--style-preset", stylePreset);
@@ -190,14 +169,16 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
     );
   }, [stylePreset, baseColor, chartColor, headingFont, bodyFont, iconLibrary, borderRadius]);
 
+  // Apply document direction for RTL/LTR
+  useEffect(() => {
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = language;
+  }, [language]);
+
   const setSidebarVariant = (v: SidebarVariant) => { setSidebarVariantState(v); persist("sidebarVariant", v); };
   const setCollapsible = (c: CollapsibleState) => { setCollapsibleState(c); persist("collapsible", c); };
   const setCurrentApp = (app: ErpApp) => setCurrentAppState(app);
-  const setLanguage = (lang: "en" | "ar") => { 
-    console.log('setLanguage called - setting to:', lang, 'current language:', language);
-    setLanguageState(lang); 
-    persist("language", lang); 
-  };
+  const setLanguage = (lang: "en" | "ar") => { setLanguageState(lang); persist("language", lang); };
   const setTheme = (t: "light" | "dark" | "system") => { setThemeState(t); persist("theme", t); };
   const toggleTheme = () => setTheme(resolvedTheme === "light" ? "dark" : "light");
   const setAccentColor = (color: AccentColor) => { setAccentColorState(color); persist("accentColor", color); };
@@ -211,10 +192,7 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
   const setBodyFont = (v: FontFamily) => { setBodyFontState(v); persist("bodyFont", v); };
   const setIconLibrary = (v: IconLibrary) => { setIconLibraryState(v); persist("iconLibrary", v); };
   const setBorderRadius = (v: BorderRadius) => { setBorderRadiusState(v); persist("borderRadius", v); };
-  const t = (arabic: string, english: string) => {
-    console.log('t() called - language:', language, 'arabic:', arabic, 'english:', english, 'result:', language === "ar" ? arabic : english);
-    return language === "ar" ? arabic : english;
-  };
+  const t = (arabic: string, english: string) => language === "ar" ? arabic : english;
 
   const getAppName = (appId: string) => {
     const names: Record<string, { ar: string; en: string }> = {

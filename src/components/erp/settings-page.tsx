@@ -9,12 +9,6 @@ import { SmtpSettingsTab } from "./settings/SmtpSettingsTab";
 
 type SettingsTab = "general" | "telegram" | "smtp";
 
-const APP_SETTINGS_LABELS: Record<ErpAppId, { title: string; description: string }> = {
-  sales: { title: "Sales Settings", description: "Configure your sales module preferences, integrations, and services." },
-  finance: { title: "Finance Settings", description: "Configure your finance module preferences, integrations, and services." },
-  inventory: { title: "Inventory & Mfg Settings", description: "Configure your inventory & manufacturing preferences, integrations, and services." },
-};
-
 interface SettingsPageProps {
   appId: ErpAppId;
 }
@@ -23,19 +17,29 @@ export function SettingsPage({ appId }: SettingsPageProps) {
   const { t } = useAppConfig();
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
 
-  const meta = APP_SETTINGS_LABELS[appId];
+  const appTitles: Record<ErpAppId, { ar: string; en: string }> = {
+    sales: { ar: "إعدادات المبيعات", en: "Sales Settings" },
+    finance: { ar: "إعدادات المالية", en: "Finance Settings" },
+    inventory: { ar: "إعدادات المخزون والتصنيع", en: "Inventory & Mfg Settings" },
+  };
+
+  const appDescs: Record<ErpAppId, { ar: string; en: string }> = {
+    sales: { ar: "تكوين تفضيلات وحدة المبيعات والتكاملات والخدمات.", en: "Configure your sales module preferences, integrations, and services." },
+    finance: { ar: "تكوين تفضيلات وحدة المالية والتكاملات والخدمات.", en: "Configure your finance module preferences, integrations, and services." },
+    inventory: { ar: "تكوين تفضيلات المخزون والتصنيع والتكاملات والخدمات.", en: "Configure your inventory & manufacturing preferences, integrations, and services." },
+  };
 
   const tabs: { id: SettingsTab; label: string; icon: React.ElementType }[] = [
-    { id: "general", label: t("General", "General"), icon: Settings },
-    { id: "telegram", label: t("Telegram", "Telegram"), icon: Bot },
-    { id: "smtp", label: t("Email / SMTP", "Email / SMTP"), icon: Mail },
+    { id: "general", label: t("عام", "General"), icon: Settings },
+    { id: "telegram", label: t("تيليجرام", "Telegram"), icon: Bot },
+    { id: "smtp", label: t("البريد / SMTP", "Email / SMTP"), icon: Mail },
   ];
 
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
       <div>
-        <h2 className="text-2xl font-heading font-bold text-foreground">{meta.title}</h2>
-        <p className="text-sm text-muted-foreground mt-1">{meta.description}</p>
+        <h2 className="text-2xl font-heading font-bold text-foreground">{t(appTitles[appId].ar, appTitles[appId].en)}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t(appDescs[appId].ar, appDescs[appId].en)}</p>
       </div>
 
       <div className="flex gap-1 p-1 rounded-xl bg-muted/50 w-fit">

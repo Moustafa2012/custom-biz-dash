@@ -6,7 +6,6 @@ import { useSidebar } from "@/components/ui/sidebar";
 import type { PageId } from "./types";
 import { useAppConfig } from "./app-config";
 import { useAuthStore } from "@/stores/auth-store";
-import * as React from "react";
 
 const STATUS_COLORS = {
   online: "bg-emerald-500",
@@ -21,26 +20,9 @@ interface UserNavProps {
 }
 
 export function UserNav({ status = "online", onNavigate }: UserNavProps) {
-  // Try to use sidebar context, but don't throw error if not available
-  let isCollapsed = false;
-  try {
-    const { state } = useSidebar();
-    isCollapsed = state === "collapsed";
-  } catch (error) {
-    // Not in a SidebarProvider context, use default values
-    isCollapsed = false;
-  }
-  
-  // Try to use app config context, but don't throw error if not available
-  let t: (ar: string, en: string) => string;
-  try {
-    const config = useAppConfig();
-    t = config.t;
-  } catch (error) {
-    // Not in an AppConfigProvider context, use default translation function
-    t = (ar: string, en: string) => en; // Default to English
-  }
-  
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+  const { t } = useAppConfig();
   const currentUser = useAuthStore((s) => s.currentUser);
 
   const displayName = currentUser?.name || t("مستخدم", "User");
