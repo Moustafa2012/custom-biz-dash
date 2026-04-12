@@ -15,22 +15,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ onNavigate }: UserMenuProps) {
-  // Try to use app config context, but don't throw error if not available
-  let toggleTheme: () => void;
-  let resolvedTheme: string;
-  let t: (ar: string, en: string) => string;
-  try {
-    const config = useAppConfig();
-    toggleTheme = config.toggleTheme;
-    resolvedTheme = config.resolvedTheme;
-    t = config.t;
-  } catch (error) {
-    // Not in an AppConfigProvider context, use default values
-    toggleTheme = () => {}; // No-op function
-    resolvedTheme = "light";
-    t = (ar: string, en: string) => en; // Default to English
-  }
-  
+  const { toggleTheme, resolvedTheme, t } = useAppConfig();
   const currentUser = useAuthStore((s) => s.currentUser);
   const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
