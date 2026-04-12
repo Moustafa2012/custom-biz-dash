@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useAuthStore } from "@/stores/auth-store";
 import { useAppConfig } from "./app-config";
 import { ROLE_LABELS } from "@/types/auth";
-import type { User } from "@/types/auth";
+import type { User, Role } from "@/types/auth";
+
+type SafeUser = Omit<User, 'password' | 'twoFactorSecret' | 'backupCodes'>;
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
