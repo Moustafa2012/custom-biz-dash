@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth-store";
+import { useAppConfig } from "@/components/erp/app-config";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,8 +14,8 @@ export function ProtectedRoute({ children, requiredPermission }: ProtectedRouteP
   const can = useAuthStore((s) => s.can);
   const setIntendedRoute = useAuthStore((s) => s.setIntendedRoute);
   const location = useLocation();
+  const { t } = useAppConfig();
 
-  // Save the intended route before redirecting to login
   useEffect(() => {
     if (!isAuthenticated && !twoFactorState?.isRequired) {
       setIntendedRoute(location.pathname);
@@ -37,8 +38,8 @@ export function ProtectedRoute({ children, requiredPermission }: ProtectedRouteP
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-heading font-bold text-destructive">Access Denied</h2>
-          <p className="text-sm text-muted-foreground">You don't have permission to view this page.</p>
+          <h2 className="text-2xl font-heading font-bold text-destructive">{t("تم رفض الوصول", "Access Denied")}</h2>
+          <p className="text-sm text-muted-foreground">{t("ليس لديك صلاحية لعرض هذه الصفحة.", "You don't have permission to view this page.")}</p>
         </div>
       </div>
     );

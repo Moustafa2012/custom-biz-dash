@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { PageId } from "@/components/erp/types";
-import { AppConfigProvider, useAppConfig, erpApps, type ErpAppId } from "@/components/erp/app-config";
+import { useAppConfig, erpApps, type ErpAppId } from "@/components/erp/app-config";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/erp/app-sidebar";
 import { AppHeader } from "@/components/erp/app-header";
@@ -51,35 +51,7 @@ function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
     }
   }
 
-  // Dashboard and unimplemented pages
   return <PlaceholderPage pageId={pageId} />;
-}
-
-function InnerErpApp({ appId, defaultPage }: { appId: ErpAppId; defaultPage: PageId }) {
-  const { setCurrentApp } = useAppConfig();
-  const [currentPage, setCurrentPage] = useState<PageId>(defaultPage);
-
-  useEffect(() => {
-    const app = erpApps.find(a => a.id === appId);
-    if (app) setCurrentApp(app);
-  }, [appId, setCurrentApp]);
-
-  // Reset to defaultPage when app changes (e.g. switching from finance to sales)
-  useEffect(() => {
-    setCurrentPage(defaultPage);
-  }, [appId, defaultPage]);
-
-  return (
-    <>
-      <AppSidebar currentPage={currentPage} onNavigate={setCurrentPage} />
-      <SidebarInset className="flex flex-col min-h-screen">
-        <AppHeader currentPage={currentPage} />
-        <AppContent>
-          <PageContent pageId={currentPage} appId={appId} />
-        </AppContent>
-      </SidebarInset>
-    </>
-  );
 }
 
 interface ErpAppPageProps {
@@ -88,11 +60,27 @@ interface ErpAppPageProps {
 }
 
 export default function ErpAppPage({ appId, defaultPage }: ErpAppPageProps) {
+  const { setCurrentApp } = useAppConfig();
+  const [currentPage, setCurrentPage] = useState<PageId>(defaultPage);
+
+  useEffect(() => {
+    const app = erpApps.find(a => a.id === appId);
+    if (app) setCurrentApp(app);
+  }, [appId, setCurrentApp]);
+
+  useEffect(() => {
+    setCurrentPage(defaultPage);
+  }, [appId, defaultPage]);
+
   return (
-    <AppConfigProvider>
-      <SidebarProvider>
-        <InnerErpApp appId={appId} defaultPage={defaultPage} />
-      </SidebarProvider>
-    </AppConfigProvider>
+    <SidebarProvider>
+      <AppSidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+      <SidebarInset className="flex flex-col min-h-screen">
+        <AppHeader currentPage={currentPage} />
+        <AppContent>
+          <PageContent pageId={currentPage} appId={appId} />
+        </AppContent>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

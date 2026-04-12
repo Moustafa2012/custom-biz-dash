@@ -10,44 +10,44 @@ export function TelegramSettingsTab() {
 
   const sections = [
     {
-      icon: Bot, title: t("Bot Management", "Bot Management"),
-      description: t("Configure and manage Telegram bots", "Configure and manage Telegram bots"),
+      icon: Bot, title: t("إدارة البوت", "Bot Management"),
+      description: t("تكوين وإدارة بوتات تيليجرام", "Configure and manage Telegram bots"),
       fields: [
-        { label: t("Bot Token", "Bot Token"), placeholder: "123456:ABC-DEF...", type: "password" },
-        { label: t("Bot Username", "Bot Username"), placeholder: "@your_bot" },
+        { label: t("رمز البوت", "Bot Token"), placeholder: "123456:ABC-DEF...", type: "password" },
+        { label: t("اسم مستخدم البوت", "Bot Username"), placeholder: "@your_bot" },
       ],
     },
     {
-      icon: ShieldCheck, title: t("Two-Factor Authentication", "Two-Factor Authentication"),
-      description: t("Set up 2FA via Telegram", "Set up 2FA via Telegram"),
+      icon: ShieldCheck, title: t("المصادقة الثنائية", "Two-Factor Authentication"),
+      description: t("إعداد المصادقة الثنائية عبر تيليجرام", "Set up 2FA via Telegram"),
       toggles: [
-        { label: t("Enable 2FA via Telegram", "Enable 2FA via Telegram"), description: t("Send verification codes via Telegram", "Send verification codes via Telegram"), defaultChecked: false },
-        { label: t("Backup Codes", "Backup Codes"), description: t("Generate backup codes", "Generate backup codes"), defaultChecked: true },
+        { label: t("تفعيل المصادقة الثنائية عبر تيليجرام", "Enable 2FA via Telegram"), description: t("إرسال رموز التحقق عبر تيليجرام", "Send verification codes via Telegram"), defaultChecked: false },
+        { label: t("رموز الاسترداد", "Backup Codes"), description: t("إنشاء رموز استرداد احتياطية", "Generate backup codes"), defaultChecked: true },
       ],
     },
     {
-      icon: Bell, title: t("Notifications", "Notifications"),
-      description: t("Configure Telegram notifications", "Configure Telegram notifications"),
+      icon: Bell, title: t("الإشعارات", "Notifications"),
+      description: t("تكوين إشعارات تيليجرام", "Configure Telegram notifications"),
       toggles: [
-        { label: t("Order Notifications", "Order Notifications"), description: t("Notify on new orders", "Notify on new orders"), defaultChecked: true },
-        { label: t("System Alerts", "System Alerts"), description: t("Error and maintenance alerts", "Error and maintenance alerts"), defaultChecked: true },
-        { label: t("Daily Reports", "Daily Reports"), description: t("Automated daily summary", "Automated daily summary"), defaultChecked: false },
+        { label: t("إشعارات الطلبات", "Order Notifications"), description: t("إشعار عند وجود طلبات جديدة", "Notify on new orders"), defaultChecked: true },
+        { label: t("تنبيهات النظام", "System Alerts"), description: t("تنبيهات الأخطاء والصيانة", "Error and maintenance alerts"), defaultChecked: true },
+        { label: t("التقارير اليومية", "Daily Reports"), description: t("ملخص يومي تلقائي", "Automated daily summary"), defaultChecked: false },
       ],
     },
     {
-      icon: Radio, title: t("Broadcasts", "Broadcasts"),
-      description: t("Bulk message settings", "Bulk message settings"),
+      icon: Radio, title: t("البث الجماعي", "Broadcasts"),
+      description: t("إعدادات الرسائل الجماعية", "Bulk message settings"),
       fields: [
-        { label: t("Rate Limit", "Rate Limit"), placeholder: "30 msg/sec" },
-        { label: t("Default Template", "Default Template"), placeholder: "Select template..." },
+        { label: t("حد المعدّل", "Rate Limit"), placeholder: t("30 رسالة/ثانية", "30 msg/sec") },
+        { label: t("القالب الافتراضي", "Default Template"), placeholder: t("اختر قالب...", "Select template...") },
       ],
     },
     {
-      icon: Zap, title: t("Automation", "Automation"),
-      description: t("Auto-response rules", "Auto-response rules"),
+      icon: Zap, title: t("الأتمتة", "Automation"),
+      description: t("قواعد الرد التلقائي", "Auto-response rules"),
       toggles: [
-        { label: t("Auto Replies", "Auto Replies"), description: t("Instant message responses", "Instant message responses"), defaultChecked: true },
-        { label: t("Custom Commands", "Custom Commands"), description: t("Enable custom bot commands", "Enable custom bot commands"), defaultChecked: false },
+        { label: t("الردود التلقائية", "Auto Replies"), description: t("ردود فورية على الرسائل", "Instant message responses"), defaultChecked: true },
+        { label: t("الأوامر المخصصة", "Custom Commands"), description: t("تفعيل أوامر البوت المخصصة", "Enable custom bot commands"), defaultChecked: false },
       ],
     },
   ];
@@ -83,7 +83,7 @@ export function TelegramSettingsTab() {
         </Card>
       ))}
       <div className="flex justify-end">
-        <Button>{t("Save Telegram Settings", "Save Telegram Settings")}</Button>
+        <Button>{t("حفظ إعدادات تيليجرام", "Save Telegram Settings")}</Button>
       </div>
     </div>
   );
