@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Language State</title>
+</head>
+<body>
+    <h1>Language State Test</h1>
+    <p>Check localStorage for language value:</p>
+    <pre id="localStorage"></pre>
+    <script>
+        const lang = localStorage.getItem('language');
+        document.getElementById('localStorage').textContent = JSON.stringify(lang, null, 2);
+        console.log('Language from localStorage:', lang);
+    </script>
+</body>
+</html>

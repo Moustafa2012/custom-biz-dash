@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 155 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 155 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 30% 10%;
+
+    --primary: 158 64% 28%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 155 30% 95%;
+    --secondary-foreground: 155 30% 15%;
+
+    --muted: 155 20% 96%;
+    --muted-foreground: 155 10% 45%;
+
+    --accent: 158 40% 92%;
+    --accent-foreground: 158 64% 22%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 155 20% 90%;
+    --input: 155 20% 88%;
+    --ring: 158 64% 28%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 155 20% 97%;
+    --sidebar-foreground: 155 30% 15%;
+    --sidebar-primary: 158 64% 28%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 155 30% 94%;
+    --sidebar-accent-foreground: 155 30% 15%;
+    --sidebar-border: 155 20% 90%;
+    --sidebar-ring: 158 64% 28%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(162 60% 8%) 0%, hsl(158 50% 15%) 50%, hsl(162 60% 8%) 100%);
+    --section-alt: 158 30% 97%;
+    --glow-color: 158 70% 42%;
+  }
+
+  .dark {
+    --background: 162 60% 5%;
+    --foreground: 155 15% 92%;
+
+    --card: 162 45% 9%;
+    --card-foreground: 155 15% 92%;
+
+    --popover: 162 45% 9%;
+    --popover-foreground: 155 15% 92%;
+
+    --primary: 158 70% 42%;
+    --primary-foreground: 162 80% 4%;
+
+    --secondary: 162 35% 14%;
+    --secondary-foreground: 155 15% 90%;
+
+    --muted: 162 30% 14%;
+    --muted-foreground: 155 15% 55%;
+
+    --accent: 162 35% 16%;
+    --accent-foreground: 158 70% 50%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 162 30% 16%;
+    --input: 162 30% 18%;
+    --ring: 158 70% 42%;
+
+    --sidebar-background: 162 50% 7%;
+    --sidebar-foreground: 155 15% 90%;
+    --sidebar-primary: 158 70% 42%;
+    --sidebar-primary-foreground: 162 80% 4%;
+    --sidebar-accent: 162 35% 14%;
+    --sidebar-accent-foreground: 155 15% 90%;
+    --sidebar-border: 162 30% 16%;
+    --sidebar-ring: 158 70% 42%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(162 60% 3%) 0%, hsl(158 50% 10%) 50%, hsl(162 60% 3%) 100%);
+    --section-alt: 162 45% 7%;
+    --glow-color: 158 70% 35%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  .erp-gradient-sales {
+    background: linear-gradient(135deg, hsl(var(--erp-sales)), hsl(160 84% 30%));
+  }
+  .erp-gradient-finance {
+    background: linear-gradient(135deg, hsl(var(--erp-finance)), hsl(262 83% 45%));
+  }
+  .erp-gradient-inventory {
+    background: linear-gradient(135deg, hsl(var(--erp-inventory)), hsl(25 92% 45%));
+  }
+}
+
+@keyframes slide-in-forward {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-back {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-forward {
+  animation: slide-in-forward 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-in-back {
+  animation: slide-in-back 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
