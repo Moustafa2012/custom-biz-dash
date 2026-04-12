@@ -23,7 +23,7 @@ export function UsersPage() {
   const { t, language } = useAppConfig();
   const users = useAuthStore((s) => s.users);
   const [search, setSearch] = useState("");
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<SafeUser | null>(null);
 
   const filtered = users.filter(
     (u) =>
