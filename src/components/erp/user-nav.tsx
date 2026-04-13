@@ -20,7 +20,7 @@ interface UserNavProps {
 }
 
 export function UserNav({ status = "online", onNavigate }: UserNavProps) {
-  const { state } = useSidebar();
+  const { state } = useSidebarSafe();
   const isCollapsed = state === "collapsed";
   const { t } = useAppConfig();
   const currentUser = useAuthStore((s) => s.currentUser);
