@@ -40,6 +40,11 @@ function useSidebar() {
   return context;
 }
 
+function useSidebarSafe() {
+  const context = React.useContext(SidebarContext);
+  return context ?? { state: "expanded" as const, open: true, setOpen: () => {}, openMobile: false, setOpenMobile: () => {}, isMobile: false, toggleSidebar: () => {} };
+}
+
 const SidebarProvider = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
