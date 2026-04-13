@@ -15,7 +15,7 @@ export function ProductBenefitsTab({ benefits, benefitsAr }: ProductBenefitsTabP
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
         <TrendingUp className="h-5 w-5 text-primary" />
-        <h3 className="font-semibold">{t("Benefits", "Benefits")}</h3>
+        <h3 className="font-semibold">{t("الفوائد", "Benefits")}</h3>
       </div>
       <ul className="space-y-3">
         {benefits.map((benefit, index) => (
