@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserMenu } from "./user-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/components/ui/sidebar";
+import { useSidebarSafe } from "@/components/ui/sidebar";
 import type { PageId } from "./types";
 import { useAppConfig } from "./app-config";
 import { useAuthStore } from "@/stores/auth-store";
@@ -20,7 +20,7 @@ interface UserNavProps {
 }
 
 export function UserNav({ status = "online", onNavigate }: UserNavProps) {
-  const { state } = useSidebar();
+  const { state } = useSidebarSafe();
   const isCollapsed = state === "collapsed";
   const { t } = useAppConfig();
   const currentUser = useAuthStore((s) => s.currentUser);
