@@ -2,10 +2,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserMenu } from "./user-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/components/ui/sidebar";
 import type { PageId } from "./types";
 import { useAppConfig } from "./app-config";
 import { useAuthStore } from "@/stores/auth-store";
+
+// Safe hook that works outside SidebarProvider
+function useSidebarSafe() {
+  try {
+    const { useSidebar } = require("@/components/ui/sidebar");
+    return useSidebar();
+  } catch {
+    return { state: "expanded" as const };
+  }
+}
 
 const STATUS_COLORS = {
   online: "bg-emerald-500",
