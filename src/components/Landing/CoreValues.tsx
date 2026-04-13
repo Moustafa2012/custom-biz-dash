@@ -9,44 +9,44 @@ export default function CoreValues() {
   const values = [
     {
       icon: Award,
-      title: t("Excellence in Quality", "التميز في الجودة"),
+      title: t("التميز في الجودة", "Excellence in Quality"),
       description: t(
-        "We set new standards in agricultural trade with an unwavering commitment to quality and innovation.",
-        "نضع معايير جديدة في التجارة الزراعية مع التزام لا يتزعزع بالجودة والابتكار."
+        "نضع معايير جديدة في التجارة الزراعية مع التزام لا يتزعزع بالجودة والابتكار.",
+        "We set new standards in agricultural trade with an unwavering commitment to quality and innovation."
       ),
       points: [
-        t("ISO 9001:2015 Certified", "شهادة ISO 9001:2015"),
-        t("Premium Product Selection", "اختيار منتجات متميزة"),
-        t("Quality Control at Every Step", "مراقبة الجودة في كل خطوة"),
-        t("Exceeding Global Standards", "تجاوز المعايير العالمية"),
+        t("شهادة ISO 9001:2015", "ISO 9001:2015 Certified"),
+        t("اختيار منتجات متميزة", "Premium Product Selection"),
+        t("مراقبة الجودة في كل خطوة", "Quality Control at Every Step"),
+        t("تجاوز المعايير العالمية", "Exceeding Global Standards"),
       ],
     },
     {
       icon: Heart,
-      title: t("Customer Care", "العناية بالعملاء"),
+      title: t("العناية بالعملاء", "Customer Care"),
       description: t(
-        "We build lasting relationships through exceptional service and a personal touch to every customer's needs.",
-        "نبني علاقات دائمة من خلال خدمة استثنائية ولمسة شخصية لكل عميل."
+        "نبني علاقات دائمة من خلال خدمة استثنائية ولمسة شخصية لكل عميل.",
+        "We build lasting relationships through exceptional service and a personal touch to every customer's needs."
       ),
       points: [
-        t("24/7 Customer Support", "دعم العملاء على مدار الساعة"),
-        t("Customized Solutions", "حلول مخصصة"),
-        t("Expert Consultation", "استشارات متخصصة"),
-        t("Your Success is Our Priority", "نجاحك هو أولويتنا"),
+        t("دعم العملاء على مدار الساعة", "24/7 Customer Support"),
+        t("حلول مخصصة", "Customized Solutions"),
+        t("استشارات متخصصة", "Expert Consultation"),
+        t("نجاحك هو أولويتنا", "Your Success is Our Priority"),
       ],
     },
     {
       icon: Truck,
-      title: t("Reliable Delivery", "توصيل موثوق"),
+      title: t("توصيل موثوق", "Reliable Delivery"),
       description: t(
-        "A seamless global distribution network ensures your products arrive efficiently and on time.",
-        "شبكة توزيع عالمية سلسة تضمن وصول منتجاتك بكفاءة وفي الوقت المحدد."
+        "شبكة توزيع عالمية سلسة تضمن وصول منتجاتك بكفاءة وفي الوقت المحدد.",
+        "A seamless global distribution network ensures your products arrive efficiently and on time."
       ),
       points: [
-        t("Global Shipping Network", "شبكة شحن عالمية"),
-        t("Live Shipment Tracking", "تتبع الشحنات مباشرة"),
-        t("Express Delivery Options", "خيارات توصيل سريعة"),
-        t("On Time, Every Time", "في الوقت المحدد دائماً"),
+        t("شبكة شحن عالمية", "Global Shipping Network"),
+        t("تتبع الشحنات مباشرة", "Live Shipment Tracking"),
+        t("خيارات توصيل سريعة", "Express Delivery Options"),
+        t("في الوقت المحدد دائماً", "On Time, Every Time"),
       ],
     },
   ];
@@ -57,10 +57,10 @@ export default function CoreValues() {
       <div className="container">
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground heading-reveal">
-            <span className="line-draw">{t("Our Core Values", "قيمنا الأساسية")}</span>
+            <span className="line-draw">{t("قيمنا الأساسية", "Our Core Values")}</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto body-reveal">
-            {t("These principles guide everything we do", "هذه المبادئ توجه كل ما نقوم به")}
+            {t("هذه المبادئ توجه كل ما نقوم به", "These principles guide everything we do")}
           </p>
         </div>
 

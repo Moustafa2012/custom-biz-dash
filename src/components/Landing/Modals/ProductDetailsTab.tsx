@@ -37,7 +37,7 @@ export function ProductDetailsTab({
         <div className="flex items-start gap-3">
           <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
           <div>
-            <h3 className="font-medium">{t("Origin", "Origin")}</h3>
+            <h3 className="font-medium">{t("المنشأ", "Origin")}</h3>
             <p className="text-muted-foreground">
               {language === 'ar' ? originAr : origin}
             </p>
@@ -49,7 +49,7 @@ export function ProductDetailsTab({
         <div className="flex items-start gap-3">
           <Award className="h-5 w-5 text-muted-foreground mt-0.5" />
           <div>
-            <h3 className="font-medium">{t("Certifications", "Certifications")}</h3>
+            <h3 className="font-medium">{t("الشهادات", "Certifications")}</h3>
             <div className="flex flex-wrap gap-2 mt-2">
               {certifications.map((cert, index) => (
                 <span
@@ -67,7 +67,7 @@ export function ProductDetailsTab({
       <div className="flex items-start gap-3">
         <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
         <div>
-          <h3 className="font-medium">{t("Shelf Life", "Shelf Life")}</h3>
+          <h3 className="font-medium">{t("مدة الصلاحية", "Shelf Life")}</h3>
           <p className="text-muted-foreground">
             {language === 'ar' ? shelfLife.duration_ar : shelfLife.duration}
           </p>
@@ -81,10 +81,10 @@ export function ProductDetailsTab({
         <div className="flex items-start gap-3">
           <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
           <div>
-            <h3 className="font-medium">{t("Storage", "Storage")}</h3>
+            <h3 className="font-medium">{t("التخزين", "Storage")}</h3>
             <div className="text-sm text-muted-foreground space-y-1">
-              <p><span className="font-medium">{t("Temperature", "Temperature")}:</span> {storage.temperature}</p>
-              <p><span className="font-medium">{t("Humidity", "Humidity")}:</span> {language === 'ar' ? storage.humidity_ar : storage.humidity}</p>
+              <p><span className="font-medium">{t("درجة الحرارة", "Temperature")}:</span> {storage.temperature}</p>
+              <p><span className="font-medium">{t("الرطوبة", "Humidity")}:</span> {language === 'ar' ? storage.humidity_ar : storage.humidity}</p>
               <p>{language === 'ar' ? storage.instructions_ar : storage.instructions}</p>
             </div>
           </div>

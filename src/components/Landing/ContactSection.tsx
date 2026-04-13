@@ -16,48 +16,48 @@ export default function ContactSection() {
       <div className="container">
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground heading-reveal">
-            <span className="line-draw">{t("Get In Touch", "تواصل معنا")}</span>
+            <span className="line-draw">{t("تواصل معنا", "Get In Touch")}</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto body-reveal">
-            {t("Have questions or need assistance? We're just a message away", "هل لديك أسئلة أو تحتاج مساعدة؟ نحن على بُعد رسالة منك")}
+            {t("هل لديك أسئلة أو تحتاج مساعدة؟ نحن على بُعد رسالة منك", "Have questions or need assistance? We're just a message away")}
           </p>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-8">
           <Card className="lg:col-span-3 bg-card border-border/50">
             <CardContent className="p-8">
-              <h3 className="text-xl font-bold mb-6 text-foreground">{t("Send Us a Message", "أرسل لنا رسالة")}</h3>
+              <h3 className="text-xl font-bold mb-6 text-foreground">{t("أرسل لنا رسالة", "Send Us a Message")}</h3>
               <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">{t("Full Name", "الاسم الكامل")}</label>
-                    <Input placeholder={t("Your full name", "اسمك الكامل")} />
+                    <label className="text-sm font-medium text-foreground mb-2 block">{t("الاسم الكامل", "Full Name")}</label>
+                    <Input placeholder={t("اسمك الكامل", "Your full name")} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">{t("Email", "البريد الإلكتروني")}</label>
+                    <label className="text-sm font-medium text-foreground mb-2 block">{t("البريد الإلكتروني", "Email")}</label>
                     <Input type="email" placeholder="your.email@example.com" dir="ltr" />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">{t("Subject", "الموضوع")}</label>
+                  <label className="text-sm font-medium text-foreground mb-2 block">{t("الموضوع", "Subject")}</label>
                   <Select>
                     <SelectTrigger>
-                      <SelectValue placeholder={t("Select subject", "اختر الموضوع")} />
+                      <SelectValue placeholder={t("اختر الموضوع", "Select subject")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="general">{t("General Inquiry", "استفسار عام")}</SelectItem>
-                      <SelectItem value="products">{t("Products Inquiry", "استفسار عن المنتجات")}</SelectItem>
-                      <SelectItem value="orders">{t("Orders Inquiry", "استفسار عن الطلبات")}</SelectItem>
-                      <SelectItem value="complaints">{t("Complaints", "شكاوى")}</SelectItem>
+                      <SelectItem value="general">{t("استفسار عام", "General Inquiry")}</SelectItem>
+                      <SelectItem value="products">{t("استفسار عن المنتجات", "Products Inquiry")}</SelectItem>
+                      <SelectItem value="orders">{t("استفسار عن الطلبات", "Orders Inquiry")}</SelectItem>
+                      <SelectItem value="complaints">{t("شكاوى", "Complaints")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">{t("Your Message", "رسالتك")}</label>
-                  <Textarea placeholder={t("How can we help you?", "كيف يمكننا مساعدتك؟")} rows={4} />
+                  <label className="text-sm font-medium text-foreground mb-2 block">{t("رسالتك", "Your Message")}</label>
+                  <Textarea placeholder={t("كيف يمكننا مساعدتك؟", "How can we help you?")} rows={4} />
                 </div>
                 <Button type="submit" size="lg" className="w-full sm:w-auto px-10">
-                  {t("Send Message", "إرسال الرسالة")}
+                  {t("إرسال الرسالة", "Send Message")}
                 </Button>
               </form>
             </CardContent>
@@ -70,11 +70,11 @@ export default function ContactSection() {
                   <Phone className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-foreground mb-1">{t("Phone Numbers", "أرقام الهاتف")}</h4>
+                  <h4 className="font-bold text-foreground mb-1">{t("أرقام الهاتف", "Phone Numbers")}</h4>
                   <p className="text-sm text-muted-foreground" dir="ltr">+966-55-016-8553</p>
                   <a href="https://wa.me/966550168553" className="text-sm text-primary hover:underline flex items-center gap-1 mt-1">
                     <MessageCircle className="h-3.5 w-3.5" />
-                    {t("Contact via WhatsApp", "تواصل عبر واتساب")}
+                    {t("تواصل عبر واتساب", "Contact via WhatsApp")}
                   </a>
                 </div>
               </CardContent>
@@ -86,7 +86,7 @@ export default function ContactSection() {
                   <Mail className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-foreground mb-1">{t("Email", "البريد الإلكتروني")}</h4>
+                  <h4 className="font-bold text-foreground mb-1">{t("البريد الإلكتروني", "Email")}</h4>
                   <p className="text-sm text-muted-foreground" dir="ltr">support@thourayaalbilad.com</p>
                   <p className="text-sm text-muted-foreground" dir="ltr">sales@thourayaalbilad.com</p>
                 </div>
@@ -99,10 +99,10 @@ export default function ContactSection() {
                   <Clock className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-foreground mb-1">{t("Working Hours", "ساعات العمل")}</h4>
-                  <p className="text-sm text-muted-foreground">{t("Sunday - Thursday: 9:00 AM - 5:00 PM", "الأحد - الخميس: 9:00 ص - 5:00 م")}</p>
-                  <p className="text-sm text-muted-foreground">{t("Friday: Closed", "الجمعة: مغلق")}</p>
-                  <p className="text-sm text-muted-foreground">{t("Saturday: 10:00 AM - 3:00 PM", "السبت: 10:00 ص - 3:00 م")}</p>
+                  <h4 className="font-bold text-foreground mb-1">{t("ساعات العمل", "Working Hours")}</h4>
+                  <p className="text-sm text-muted-foreground">{t("الأحد - الخميس: 9:00 ص - 5:00 م", "Sunday - Thursday: 9:00 AM - 5:00 PM")}</p>
+                  <p className="text-sm text-muted-foreground">{t("الجمعة: مغلق", "Friday: Closed")}</p>
+                  <p className="text-sm text-muted-foreground">{t("السبت: 10:00 ص - 3:00 م", "Saturday: 10:00 AM - 3:00 PM")}</p>
                 </div>
               </CardContent>
             </Card>
@@ -113,18 +113,18 @@ export default function ContactSection() {
                   <MapPin className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-foreground mb-1">{t("Our Branches", "فروعنا")}</h4>
-                  <p className="text-sm text-muted-foreground font-semibold">{t("Main Branch - Jeddah", "الفرع الرئيسي - جدة")}</p>
-                  <p className="text-sm text-muted-foreground mb-1">{t("King Faisal Road, Petromin District, Jeddah", "طريق الملك فيصل، حي البترومين، جدة")}</p>
+                  <h4 className="font-bold text-foreground mb-1">{t("فروعنا", "Our Branches")}</h4>
+                  <p className="text-sm text-muted-foreground font-semibold">{t("الفرع الرئيسي - جدة", "Main Branch - Jeddah")}</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t("طريق الملك فيصل، حي البترومين، جدة", "King Faisal Road, Petromin District, Jeddah")}</p>
                   <a href="https://www.google.com/maps?ll=21.435245,39.191568&z=15&t=m&hl=ar&gl=SA&mapclient=embed&cid=3828446472197086210" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1 mb-3">
                     <MapPin className="h-3.5 w-3.5" />
-                    {t("View on Map", "عرض على الخريطة")}
+                    {t("عرض على الخريطة", "View on Map")}
                   </a>
-                  <p className="text-sm text-muted-foreground font-semibold">{t("Second Branch - Riyadh", "الفرع الثاني - الرياض")}</p>
-                  <p className="text-sm text-muted-foreground mb-1">{t("Riyadh", "الرياض")}</p>
+                  <p className="text-sm text-muted-foreground font-semibold">{t("الفرع الثاني - الرياض", "Second Branch - Riyadh")}</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t("الرياض", "Riyadh")}</p>
                   <a href="https://www.google.com/maps?ll=24.556047,46.751451&z=19&t=m&hl=en&gl=SA&mapclient=embed&q=24%C2%B033%2721.7%22N+46%C2%B045%2705.7%22E+24.556028,+46.751583@24.5560278,46.7515833" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
                     <MapPin className="h-3.5 w-3.5" />
-                    {t("View on Map", "عرض على الخريطة")}
+                    {t("عرض على الخريطة", "View on Map")}
                   </a>
                 </div>
               </CardContent>

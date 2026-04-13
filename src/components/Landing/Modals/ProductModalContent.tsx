@@ -51,7 +51,7 @@ interface Product {
 interface ProductModalContentProps {
   product: Product;
   language: string;
-  t: (en: string, ar: string) => string;
+  t: (ar: string, en: string) => string;
 }
 
 export function ProductModalContent({ product, language, t }: ProductModalContentProps) {
@@ -83,11 +83,11 @@ export function ProductModalContent({ product, language, t }: ProductModalConten
             <div className="grid grid-cols-2 gap-3 mt-4">
               <div className="bg-muted rounded-lg p-3 text-center">
                 <div className="h-5 w-5 text-green-600 mx-auto mb-1" />
-                <p className="text-xs text-muted-foreground">{t("100% Natural", "100% Natural")}</p>
+                <p className="text-xs text-muted-foreground">{t("100% طبيعي", "100% Natural")}</p>
               </div>
               <div className="bg-muted rounded-lg p-3 text-center">
                 <div className="h-5 w-5 text-primary mx-auto mb-1" />
-                <p className="text-xs text-muted-foreground">{t("Quality Guarantee", "Quality Guarantee")}</p>
+                <p className="text-xs text-muted-foreground">{t("ضمان الجودة", "Quality Guarantee")}</p>
               </div>
             </div>
           </div>
@@ -103,7 +103,7 @@ export function ProductModalContent({ product, language, t }: ProductModalConten
                 <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-950/20 px-3 py-1.5 rounded-full">
                   <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                   <span className="font-bold text-foreground">{product.rating}</span>
-                  <span className="text-sm text-muted-foreground">({t("847 Reviews", "847 Reviews")})</span>
+                  <span className="text-sm text-muted-foreground">({t("847 تقييم", "847 Reviews")})</span>
                 </div>
                 <Badge variant="outline" className="border-primary text-primary">
                   <Package className="h-3 w-3" />
@@ -127,7 +127,7 @@ export function ProductModalContent({ product, language, t }: ProductModalConten
           </div>
 
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">{t("Description", "Description")}</h2>
+            <h2 className="text-lg font-semibold mb-2">{t("الوصف", "Description")}</h2>
             <p className="text-muted-foreground">
               {language === 'ar' ? product.desc_ar : product.desc}
             </p>
@@ -135,9 +135,9 @@ export function ProductModalContent({ product, language, t }: ProductModalConten
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="details">{t("Details", "Details")}</TabsTrigger>
-              <TabsTrigger value="benefits">{t("Benefits", "Benefits")}</TabsTrigger>
-              <TabsTrigger value="usage">{t("Usage", "Usage")}</TabsTrigger>
+              <TabsTrigger value="details">{t("التفاصيل", "Details")}</TabsTrigger>
+              <TabsTrigger value="benefits">{t("الفوائد", "Benefits")}</TabsTrigger>
+              <TabsTrigger value="usage">{t("الاستخدام", "Usage")}</TabsTrigger>
             </TabsList>
             <TabsContent value="details" className="mt-6">
               <ProductDetailsTab

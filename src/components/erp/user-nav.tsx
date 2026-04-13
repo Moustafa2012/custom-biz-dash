@@ -6,6 +6,9 @@ import { useSidebarSafe } from "@/components/ui/sidebar";
 import type { PageId } from "./types";
 import { useAppConfig } from "./app-config";
 import { useAuthStore } from "@/stores/auth-store";
+import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const STATUS_COLORS = {
   online: "bg-emerald-500",
@@ -24,6 +27,23 @@ export function UserNav({ status = "online", onNavigate }: UserNavProps) {
   const isCollapsed = state === "collapsed";
   const { t } = useAppConfig();
   const currentUser = useAuthStore((s) => s.currentUser);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const navigate = useNavigate();
+
+  // If not authenticated, show login button
+  if (!isAuthenticated) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        className="gap-2"
+        onClick={() => navigate("/login")}
+      >
+        <LogIn className="h-4 w-4" />
+        {t("تسجيل الدخول", "Login")}
+      </Button>
+    );
+  }
 
   const displayName = currentUser?.name || t("مستخدم", "User");
   const initials = currentUser?.name?.split(" ").map(n => n[0]).join("") || "U";
