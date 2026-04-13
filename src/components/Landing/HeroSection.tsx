@@ -13,9 +13,9 @@ export default function HeroSection() {
   const direction = language === "ar" ? "rtl" : "ltr";
 
   const stats = [
-    { icon: Award, value: "+15", label: t("Years of Experience", "عاماً من الخبرة") },
-    { icon: Package, value: "+5000", label: t("Diverse Products", "منتج متنوع") },
-    { icon: Users, value: "+2500", label: t("Satisfied Clients", "عميل راضٍ") },
+    { icon: Award, value: "+15", label: t("عاماً من الخبرة", "Years of Experience") },
+    { icon: Package, value: "+5000", label: t("منتج متنوع", "Diverse Products") },
+    { icon: Users, value: "+2500", label: t("عميل راضٍ", "Satisfied Clients") },
   ];
 
   useEffect(() => {
@@ -44,33 +44,33 @@ export default function HeroSection() {
           <div className={`transform transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             <Badge variant="secondary" className="mb-6 text-sm md:text-base px-4 py-2 gap-2 hover:scale-105 transition-transform duration-300 shadow-lg">
               <Handshake className="h-4 w-4" />
-              {t("Your Trusted Partner in Global Agricultural Trade", "شريكك الموثوق في تجارة المواد الغذائية")}
+              {t("شريكك الموثوق في تجارة المواد الغذائية", "Your Trusted Partner in Global Agricultural Trade")}
             </Badge>
           </div>
 
           <h1 className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-6 text-foreground transform transition-all duration-700 delay-100 break-words ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
-            {t("Thouraya Albilad", "ثريا البلاد")}{" "}
+            {t("ثريا البلاد", "Thouraya Albilad")}{" "}
             <span className="text-gradient inline-block hover:scale-105 transition-transform duration-300">
-              {t("Trading", "للتجارة")}
+              {t("للتجارة", "Trading")}
             </span>
           </h1>
 
           <p className={`text-lg md:text-xl lg:text-2xl text-muted-foreground mb-10 leading-relaxed max-w-xl transform transition-all duration-700 delay-200 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             {t(
-              "Innovative solutions tailored to your unique needs. We combine expertise with cutting-edge technology to deliver exceptional results.",
-              "حلول مبتكرة مصممة خصيصاً لتلبية احتياجاتك. نجمع بين الخبرة والتكنولوجيا المتقدمة لتقديم نتائج استثنائية."
+              "حلول مبتكرة مصممة خصيصاً لتلبية احتياجاتك. نجمع بين الخبرة والتكنولوجيا المتقدمة لتقديم نتائج استثنائية.",
+              "Innovative solutions tailored to your unique needs. We combine expertise with cutting-edge technology to deliver exceptional results."
             )}
           </p>
 
           <div className={`flex flex-col sm:flex-row gap-4 mb-16 transform transition-all duration-700 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             <Button size="lg" className="text-base px-8 group shadow-lg hover:shadow-xl transition-all duration-300" asChild>
               <a href="#products" className="flex items-center gap-2">
-                {t("Browse Products", "تصفح المنتجات")}
+                {t("تصفح المنتجات", "Browse Products")}
                 <ArrowIcon className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
               </a>
             </Button>
             <Button size="lg" variant="outline" className="text-base px-8 backdrop-blur-sm bg-background/50 hover:bg-background/80 border-2 shadow-lg hover:shadow-xl transition-all duration-300" asChild>
-              <a href="#contact">{t("Contact Us", "تواصل معنا")}</a>
+              <a href="#contact">{t("تواصل معنا", "Contact Us")}</a>
             </Button>
           </div>
 
