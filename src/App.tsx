@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,13 +8,12 @@ import { AppConfigProvider } from "@/components/erp/app-config";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useAuthStore } from "@/stores/auth-store";
 import { useEffect } from "react";
+import { queryClient } from "@/lib/api/queryClient";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import TwoFactorPage from "./pages/TwoFactorPage";
 import ErpAppPage from "./pages/ErpAppPage";
 import NotFound from "./pages/NotFound.tsx";
-
-const queryClient = new QueryClient();
 
 const App = () => {
   return (
@@ -28,12 +27,10 @@ const App = () => {
 
 const AuthInitializer = () => {
   const initializeAuth = useAuthStore((s) => s.initializeAuth);
-
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
-
-  return null; // This component doesn't render anything
+  return null;
 };
 
 const AppContent = () => {
@@ -48,30 +45,49 @@ const AppContent = () => {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/2fa" element={<TwoFactorPage />} />
-            <Route 
-              path="/sales" 
+
+            {/* Module routes — each guarded by its `<module>.view` permission. */}
+            <Route
+              path="/sales"
               element={
                 <ProtectedRoute requiredPermission="sales.view">
                   <ErpAppPage appId="sales" defaultPage="dashboard" />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/finance" 
+            <Route
+              path="/finance"
               element={
                 <ProtectedRoute requiredPermission="finance.view">
                   <ErpAppPage appId="finance" defaultPage="dashboard" />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/inventory" 
+            <Route
+              path="/inventory"
               element={
                 <ProtectedRoute requiredPermission="inventory.view">
                   <ErpAppPage appId="inventory" defaultPage="dashboard" />
                 </ProtectedRoute>
-              } 
+              }
             />
+            <Route
+              path="/banking"
+              element={
+                <ProtectedRoute requiredPermission="banking.view">
+                  <ErpAppPage appId="banking" defaultPage="dashboard" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/warehouse"
+              element={
+                <ProtectedRoute requiredPermission="warehouse.view">
+                  <ErpAppPage appId="warehouse" defaultPage="dashboard" />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

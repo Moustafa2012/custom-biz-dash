@@ -4,7 +4,7 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
   DropdownMenuGroup, DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, LogOut, Settings, User, CreditCard, Moon, LayoutDashboard, ShoppingCart, Landmark, Warehouse } from "lucide-react";
+import { MoreHorizontal, LogOut, Settings, User, CreditCard, Moon, ShoppingCart, Landmark, Warehouse, Package, Banknote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppConfig } from "./app-config";
 import { useAuthStore } from "@/stores/auth-store";
@@ -30,9 +30,11 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
   };
 
   const appLinks = [
-    { id: "sales", label: t("المبيعات", "Sales"), icon: ShoppingCart, permission: "sales.view", path: "/sales" },
-    { id: "finance", label: t("المالية", "Finance"), icon: Landmark, permission: "finance.view", path: "/finance" },
-    { id: "inventory", label: t("المخزون والتصنيع", "Inventory & Mfg"), icon: Warehouse, permission: "inventory.view", path: "/inventory" },
+    { id: "sales",     label: t("المبيعات", "Sales"),                icon: ShoppingCart, permission: "sales.view",     path: "/sales" },
+    { id: "finance",   label: t("المالية", "Finance"),                icon: Landmark,     permission: "finance.view",   path: "/finance" },
+    { id: "inventory", label: t("المخزون والتصنيع", "Inventory & Mfg"), icon: Package,      permission: "inventory.view", path: "/inventory" },
+    { id: "banking",   label: t("الأعمال البنكية", "Banking"),         icon: Banknote,     permission: "banking.view",   path: "/banking" },
+    { id: "warehouse", label: t("المستودع", "Warehouse"),              icon: Warehouse,    permission: "warehouse.view", path: "/warehouse" },
   ];
 
   const accessibleApps = appLinks.filter(app => can(app.permission));

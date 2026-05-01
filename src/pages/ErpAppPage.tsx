@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import type { PageId } from "@/components/erp/types";
 import { useAppConfig, erpApps, type ErpAppId } from "@/components/erp/app-config";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -13,11 +13,24 @@ import {
   InventoryTransfers, InventoryAdjustments, InventoryBOM,
   InventoryProduction, InventoryReports,
 } from "@/components/erp/inventory";
-import { Construction } from "lucide-react";
+import { Construction, Loader2 } from "lucide-react";
+
+// Lazy-load Banking & Warehouse feature modules per ERP.md §2.3 (code-splitting).
+const BankingDashboard    = lazy(() => import("@/features/banking/pages/BankingDashboard"));
+const BankingAccounts     = lazy(() => import("@/features/banking/pages/BankingAccounts"));
+const BankingTransactions = lazy(() => import("@/features/banking/pages/BankingTransactions"));
+const BankingTransfers    = lazy(() => import("@/features/banking/pages/BankingTransfers"));
+const BankingReports      = lazy(() => import("@/features/banking/pages/BankingReports"));
+
+const WarehouseDashboard  = lazy(() => import("@/features/warehouse/pages/WarehouseDashboard"));
+const WarehouseInventory  = lazy(() => import("@/features/warehouse/pages/WarehouseInventory"));
+const WarehouseLocations  = lazy(() => import("@/features/warehouse/pages/WarehouseLocations"));
+const WarehouseMovements  = lazy(() => import("@/features/warehouse/pages/WarehouseMovements"));
+const WarehouseReports    = lazy(() => import("@/features/warehouse/pages/WarehouseReports"));
 
 function PlaceholderPage({ pageId }: { pageId: PageId }) {
   const { t } = useAppConfig();
-  const displayName = pageId.replace(/-/g, " ").replace(/^(sales|finance|inventory)\s/, "");
+  const displayName = pageId.replace(/-/g, " ").replace(/^(sales|finance|inventory|banking|warehouse)\s/, "");
   return (
     <div className="flex flex-1 items-center justify-center min-h-[400px]">
       <div className="text-center space-y-3">
@@ -29,6 +42,14 @@ function PlaceholderPage({ pageId }: { pageId: PageId }) {
           {t("هذه الصفحة جاهزة للتطوير.", "This page is ready for implementation.")}
         </p>
       </div>
+    </div>
+  );
+}
+
+function RouteFallback() {
+  return (
+    <div className="flex flex-1 items-center justify-center min-h-[400px]">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
     </div>
   );
 }
@@ -48,6 +69,26 @@ function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
       case "inventory-bom": return <InventoryBOM />;
       case "inventory-production": return <InventoryProduction />;
       case "inventory-reports": return <InventoryReports />;
+    }
+  }
+
+  if (appId === "banking") {
+    switch (pageId) {
+      case "dashboard":            return <BankingDashboard />;
+      case "banking-accounts":     return <BankingAccounts />;
+      case "banking-transactions": return <BankingTransactions />;
+      case "banking-transfers":    return <BankingTransfers />;
+      case "banking-reports":      return <BankingReports />;
+    }
+  }
+
+  if (appId === "warehouse") {
+    switch (pageId) {
+      case "dashboard":            return <WarehouseDashboard />;
+      case "warehouse-inventory":  return <WarehouseInventory />;
+      case "warehouse-locations":  return <WarehouseLocations />;
+      case "warehouse-movements":  return <WarehouseMovements />;
+      case "warehouse-reports":    return <WarehouseReports />;
     }
   }
 
@@ -78,7 +119,9 @@ export default function ErpAppPage({ appId, defaultPage }: ErpAppPageProps) {
       <SidebarInset className="flex flex-col min-h-screen">
         <AppHeader currentPage={currentPage} />
         <AppContent>
-          <PageContent pageId={currentPage} appId={appId} />
+          <Suspense fallback={<RouteFallback />}>
+            <PageContent pageId={currentPage} appId={appId} />
+          </Suspense>
         </AppContent>
       </SidebarInset>
     </SidebarProvider>
