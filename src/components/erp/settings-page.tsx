@@ -21,12 +21,16 @@ export function SettingsPage({ appId }: SettingsPageProps) {
     sales: { ar: "إعدادات المبيعات", en: "Sales Settings" },
     finance: { ar: "إعدادات المالية", en: "Finance Settings" },
     inventory: { ar: "إعدادات المخزون والتصنيع", en: "Inventory & Mfg Settings" },
+    banking: { ar: "إعدادات الأعمال البنكية", en: "Banking Settings" },
+    warehouse: { ar: "إعدادات المستودع", en: "Warehouse Settings" },
   };
 
   const appDescs: Record<ErpAppId, { ar: string; en: string }> = {
     sales: { ar: "تكوين تفضيلات وحدة المبيعات والتكاملات والخدمات.", en: "Configure your sales module preferences, integrations, and services." },
     finance: { ar: "تكوين تفضيلات وحدة المالية والتكاملات والخدمات.", en: "Configure your finance module preferences, integrations, and services." },
     inventory: { ar: "تكوين تفضيلات المخزون والتصنيع والتكاملات والخدمات.", en: "Configure your inventory & manufacturing preferences, integrations, and services." },
+    banking: { ar: "تكوين الحسابات والتحويلات والتكاملات.", en: "Configure accounts, transfers, and integrations." },
+    warehouse: { ar: "تكوين المواقع وحركات المخزون والتكاملات.", en: "Configure locations, stock movements, and integrations." },
   };
 
   const tabs: { id: SettingsTab; label: string; icon: React.ElementType }[] = [
