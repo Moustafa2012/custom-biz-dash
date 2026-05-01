@@ -15,7 +15,7 @@ export type CollapsibleState = "icon" | "offcanvas" | "none";
 export type ContentDensity = "compact" | "default" | "relaxed";
 export type FontScale = "sm" | "md" | "lg";
 
-export type ErpAppId = "sales" | "finance" | "inventory";
+export type ErpAppId = "sales" | "finance" | "inventory" | "banking" | "warehouse";
 
 export interface ErpApp {
   id: ErpAppId;
@@ -29,6 +29,8 @@ export const erpApps: ErpApp[] = [
   { id: "sales", name: "Sales", icon: "S", color: "#10b981", description: "Orders & CRM" },
   { id: "finance", name: "Finance", icon: "F", color: "#7c3aed", description: "Accounting & Reports" },
   { id: "inventory", name: "Inventory & Mfg", icon: "I", color: "#f59e0b", description: "Stock & Production" },
+  { id: "banking", name: "Banking", icon: "B", color: "#0ea5e9", description: "Accounts & Transfers" },
+  { id: "warehouse", name: "Warehouse", icon: "W", color: "#dc2626", description: "Locations & Movements" },
 ];
 
 export const ACCENT_COLORS: Record<AccentColor, { css: string; label: string; arLabel: string; hex: string }> = {
@@ -199,6 +201,8 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       sales: { ar: "المبيعات", en: "Sales" },
       finance: { ar: "المالية", en: "Finance" },
       inventory: { ar: "المخزون والتصنيع", en: "Inventory & Mfg" },
+      banking: { ar: "الأعمال البنكية", en: "Banking" },
+      warehouse: { ar: "المستودع", en: "Warehouse" },
     };
     const n = names[appId];
     return n ? (language === "ar" ? n.ar : n.en) : appId;
@@ -209,6 +213,8 @@ export function AppConfigProvider({ children }: { children: ReactNode }) {
       sales: { ar: "الطلبات وإدارة العملاء", en: "Orders & CRM" },
       finance: { ar: "المحاسبة والتقارير", en: "Accounting & Reports" },
       inventory: { ar: "المخزون والإنتاج", en: "Stock & Production" },
+      banking: { ar: "الحسابات والتحويلات", en: "Accounts & Transfers" },
+      warehouse: { ar: "المواقع والحركات", en: "Locations & Movements" },
     };
     const d = descs[appId];
     return d ? (language === "ar" ? d.ar : d.en) : "";

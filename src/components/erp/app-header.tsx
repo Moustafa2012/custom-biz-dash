@@ -37,6 +37,14 @@ const PAGE_LABELS: PageLabels = {
   "inventory-bom": { en: "Bill of Materials", ar: "قائمة المواد" },
   "inventory-production": { en: "Production Orders", ar: "أوامر الإنتاج" },
   "inventory-reports": { en: "Reports", ar: "التقارير" },
+  "banking-accounts": { en: "Accounts", ar: "الحسابات" },
+  "banking-transactions": { en: "Transactions", ar: "المعاملات" },
+  "banking-transfers": { en: "Transfers", ar: "التحويلات" },
+  "banking-reports": { en: "Reports", ar: "التقارير" },
+  "warehouse-inventory": { en: "Inventory", ar: "المخزون" },
+  "warehouse-locations": { en: "Locations", ar: "المواقع" },
+  "warehouse-movements": { en: "Movements", ar: "الحركات" },
+  "warehouse-reports": { en: "Reports", ar: "التقارير" },
 };
 
 interface AppHeaderProps {

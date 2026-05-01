@@ -31,6 +31,18 @@ export function GeneralSettingsTab({ appId }: GeneralSettingsTabProps) {
       { label: t("حد إعادة الطلب", "Reorder Threshold"), placeholder: "10", icon: FileText },
       { label: t("تتبع الدُفعات", "Batch Tracking"), placeholder: t("مفعّل", "Enabled"), icon: Lock },
     ],
+    banking: [
+      { label: t("العملة الأساسية", "Base Currency"), placeholder: "USD", icon: Globe },
+      { label: t("بادئة المعاملة", "Transaction Prefix"), placeholder: "TX-", icon: FileText },
+      { label: t("حد التحويل اليومي", "Daily Transfer Limit"), placeholder: "100000", icon: Settings },
+      { label: t("اسم البنك الافتراضي", "Default Bank Name"), placeholder: t("أدخل اسم البنك", "Enter bank name"), icon: Lock },
+    ],
+    warehouse: [
+      { label: t("المستودع الافتراضي", "Default Warehouse"), placeholder: t("الرئيسي", "Main"), icon: Settings },
+      { label: t("نظام ترميز المواقع", "Location Coding"), placeholder: "A-01-01", icon: Globe },
+      { label: t("الوحدة الافتراضية", "Default Unit"), placeholder: t("قطعة", "PCS"), icon: FileText },
+      { label: t("حد التنبيه للمخزون", "Stock Alert Threshold"), placeholder: "5", icon: Lock },
+    ],
   };
 
   return (

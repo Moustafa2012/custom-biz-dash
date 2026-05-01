@@ -25,4 +25,14 @@ export type PageId =
   | "inventory-adjustments"
   | "inventory-bom"
   | "inventory-production"
-  | "inventory-reports";
+  | "inventory-reports"
+  // Banking pages
+  | "banking-accounts"
+  | "banking-transactions"
+  | "banking-transfers"
+  | "banking-reports"
+  // Warehouse pages
+  | "warehouse-inventory"
+  | "warehouse-locations"
+  | "warehouse-movements"
+  | "warehouse-reports";

@@ -21,7 +21,11 @@ import {
 
 export function UsersPage() {
   const { t, language } = useAppConfig();
-  const users = useAuthStore((s) => s.users);
+  // Users list is not part of the auth store yet. Backend listing
+  // (`GET /api/users`) will be wired in a later phase. For now, surface the
+  // current user only so the page renders without crashing.
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const users: SafeUser[] = currentUser ? [currentUser as SafeUser] : [];
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<SafeUser | null>(null);
 
