@@ -15,9 +15,9 @@ import { ThemeToggle } from "@/components/erp/theme-toggle";
 export default function TwoFactorPage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [useBackup, setUseBackup] = useState(false);
   const verify2FA = useAuthStore((s) => s.verify2FA);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const twoFactorState = useAuthStore((s) => s.twoFactorState);
   const logout = useAuthStore((s) => s.logout);
   const intendedRoute = useAuthStore((s) => s.intendedRoute);
@@ -36,14 +36,12 @@ export default function TwoFactorPage() {
 
   const BackIcon = language === "ar" ? ArrowRight : ArrowLeft;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
-    setTimeout(() => {
-      const success = verify2FA(code.trim());
-      setLoading(false);
+    try {
+      const success = await verify2FA(code.trim());
 
       if (success) {
         const dest = intendedRoute || "/sales";
@@ -56,7 +54,9 @@ export default function TwoFactorPage() {
         );
         setCode("");
       }
-    }, 500);
+    } catch (error) {
+      setError(t("حدث خطأ ما. يرجى المحاولة مرة أخرى.", "Something went wrong. Please try again."));
+    }
   };
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,8 +150,8 @@ export default function TwoFactorPage() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading || !isComplete}>
-                {loading ? t("جارٍ التحقق…", "Verifying…") : t("تحقق وسجّل الدخول", "Verify & Sign In")}
+              <Button type="submit" className="w-full" disabled={isLoading || !isComplete}>
+                {isLoading ? t("جارٍ التحقق…", "Verifying…") : t("تحقق وسجّل الدخول", "Verify & Sign In")}
               </Button>
 
               <div className="flex items-center justify-between text-xs pt-1">

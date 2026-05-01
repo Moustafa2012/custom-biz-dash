@@ -10,6 +10,7 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children, requiredPermission }: ProtectedRouteProps) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const twoFactorState = useAuthStore((s) => s.twoFactorState);
   const can = useAuthStore((s) => s.can);
   const setIntendedRoute = useAuthStore((s) => s.setIntendedRoute);
@@ -21,6 +22,15 @@ export function ProtectedRoute({ children, requiredPermission }: ProtectedRouteP
       setIntendedRoute(location.pathname);
     }
   }, [isAuthenticated, twoFactorState, location.pathname, setIntendedRoute]);
+
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex flex-1 items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     if (twoFactorState?.isRequired) {

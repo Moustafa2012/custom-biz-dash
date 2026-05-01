@@ -16,8 +16,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const login = useAuthStore((s) => s.login);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const intendedRoute = useAuthStore((s) => s.intendedRoute);
   const setIntendedRoute = useAuthStore((s) => s.setIntendedRoute);
@@ -33,14 +33,12 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, intendedRoute, navigate, setIntendedRoute]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
-    setTimeout(() => {
-      const result = login(email, password);
-      setLoading(false);
+    try {
+      const result = await login(email, password);
 
       if (!result.success) {
         if (result.error === "invalid_credentials") setError(t("البريد الإلكتروني أو كلمة المرور غير صحيحة.", "Invalid email or password."));
@@ -49,6 +47,8 @@ export default function LoginPage() {
         else if (result.error?.startsWith("account_locked_")) {
           const minutes = result.error.split("_")[2];
           setError(t(`محاولات كثيرة. الحساب مقفل لمدة ${minutes} دقائق.`, `Too many failed attempts. Account locked for ${minutes} minutes.`));
+        } else if (result.error) {
+          setError(result.error);
         }
         return;
       }
@@ -60,7 +60,9 @@ export default function LoginPage() {
         setIntendedRoute(null);
         navigate(dest, { replace: true });
       }
-    }, 600);
+    } catch (error) {
+      setError(t("حدث خطأ ما. يرجى المحاولة مرة أخرى.", "Something went wrong. Please try again."));
+    }
   };
 
   const fillDemo = (demoEmail: string, demoPassword: string) => {
@@ -146,8 +148,8 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading || !email || !password}>
-                {loading ? t("جارٍ تسجيل الدخول…", "Signing in…") : t("تسجيل الدخول", "Sign In")}
+              <Button type="submit" className="w-full" disabled={isLoading || !email || !password}>
+                {isLoading ? t("جارٍ تسجيل الدخول…", "Signing in…") : t("تسجيل الدخول", "Sign In")}
               </Button>
             </form>
           </CardContent>

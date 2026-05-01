@@ -1,28 +1,12 @@
+import { UserDto } from '@shared/validation';
+
 export type Role = "super_admin" | "admin" | "accountant" | "salesman" | "store_keeper";
 
 export type TwoFactorMethod = "otp" | "email" | "app";
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
+export interface User extends Omit<UserDto, 'role' | 'twoFactorMethod'> {
   role: Role;
-  avatar: string;
-  phone: string;
-  country: string;
-  city: string;
-  address: string;
-  dateOfBirth: string;
-  gender?: "male" | "female";
-  isActive: boolean;
-  createdAt: string;
-  lastLogin?: string;
-  twoFactorEnabled: boolean;
   twoFactorMethod?: TwoFactorMethod;
-  twoFactorSecret?: string;
-  backupCodes?: string[];
-  permissions: string[];
 }
 
 export interface TwoFactorState {

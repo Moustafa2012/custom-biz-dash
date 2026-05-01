@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppConfigProvider } from "@/components/erp/app-config";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useAuthStore } from "@/stores/auth-store";
+import { useEffect } from "react";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import TwoFactorPage from "./pages/TwoFactorPage";
@@ -24,6 +26,16 @@ const App = () => {
   );
 };
 
+const AuthInitializer = () => {
+  const initializeAuth = useAuthStore((s) => s.initializeAuth);
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
+  return null; // This component doesn't render anything
+};
+
 const AppContent = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,6 +43,7 @@ const AppContent = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <AuthInitializer />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
