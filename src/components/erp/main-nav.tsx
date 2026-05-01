@@ -21,6 +21,7 @@ import {
   Home, ShoppingCart, Users, FileText, RotateCcw, BarChart3,
   BookOpen, Landmark, Receipt, CreditCard, Wallet, PiggyBank,
   Package, Warehouse, ArrowRightLeft, ClipboardList, Wrench, Factory,
+  MapPin,
   Settings, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -121,10 +122,52 @@ const inventoryNav: NavGroup[] = [
   },
 ];
 
+const bankingNav: NavGroup[] = [
+  {
+    labelEn: "Banking", labelAr: "الأعمال البنكية",
+    items: [
+      { titleEn: "Dashboard", titleAr: "لوحة المعلومات", icon: Home, pageId: "dashboard" },
+      { titleEn: "Accounts", titleAr: "الحسابات", icon: CreditCard, pageId: "banking-accounts" },
+      { titleEn: "Transactions", titleAr: "المعاملات", icon: Receipt, pageId: "banking-transactions" },
+      { titleEn: "Transfers", titleAr: "التحويلات", icon: ArrowRightLeft, pageId: "banking-transfers" },
+      { titleEn: "Reports", titleAr: "التقارير", icon: BarChart3, pageId: "banking-reports" },
+    ],
+  },
+  {
+    labelEn: "System", labelAr: "النظام",
+    items: [
+      { titleEn: "Users", titleAr: "المستخدمون", icon: Users, pageId: "users" },
+      { titleEn: "Settings", titleAr: "الإعدادات", icon: Settings, pageId: "settings" },
+    ],
+  },
+];
+
+const warehouseNav: NavGroup[] = [
+  {
+    labelEn: "Warehouse", labelAr: "المستودع",
+    items: [
+      { titleEn: "Dashboard", titleAr: "لوحة المعلومات", icon: Home, pageId: "dashboard" },
+      { titleEn: "Inventory", titleAr: "المخزون", icon: Package, pageId: "warehouse-inventory" },
+      { titleEn: "Locations", titleAr: "المواقع", icon: MapPin, pageId: "warehouse-locations" },
+      { titleEn: "Movements", titleAr: "الحركات", icon: ArrowRightLeft, pageId: "warehouse-movements" },
+      { titleEn: "Reports", titleAr: "التقارير", icon: BarChart3, pageId: "warehouse-reports" },
+    ],
+  },
+  {
+    labelEn: "System", labelAr: "النظام",
+    items: [
+      { titleEn: "Users", titleAr: "المستخدمون", icon: Users, pageId: "users" },
+      { titleEn: "Settings", titleAr: "الإعدادات", icon: Settings, pageId: "settings" },
+    ],
+  },
+];
+
 const NAV_MAP: Record<ErpAppId, NavGroup[]> = {
   sales: salesNav,
   finance: financeNav,
   inventory: inventoryNav,
+  banking: bankingNav,
+  warehouse: warehouseNav,
 };
 
 function NavItemRow({ item, currentPage, onNavigate }: { item: NavItem; currentPage?: PageId; onNavigate?: (page: PageId) => void }) {
