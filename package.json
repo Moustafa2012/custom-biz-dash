@@ -8,6 +8,7 @@
     "dev:frontend": "vite",
     "dev:backend": "cd server && npm run dev",
     "build": "npm run build:frontend && npm run build:backend",
+    "build:dev": "vite build --mode development",
     "build:frontend": "vite build",
     "build:backend": "cd server && npm run build",
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
