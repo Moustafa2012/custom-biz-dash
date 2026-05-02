@@ -1,20 +1,50 @@
-// Banking domain types (frontend-only stubs).
-// Backend wiring deferred — see ERP.md §4 (Banking Module Specification).
+import type { CountryCode } from "./lib/countries";
 
 export type AccountType = "checking" | "savings" | "credit" | "loan" | "cash";
 export type AccountStatus = "active" | "frozen" | "closed";
 export type TxStatus = "pending" | "posted" | "failed" | "reversed";
 export type TxDirection = "debit" | "credit";
 
+/** Free-form key/value bag for country-specific routing fields (aba, ifsc, iban, swift, ...). */
+export type RoutingFields = Record<string, string>;
+
+export interface CompanyProfile {
+  name: string;
+  registrationNumber: string;
+  industry: string;
+  phone: string;
+  email: string;
+  website: string;
+  address: string;
+}
+
 export interface BankAccount {
   id: string;
-  name: string;
-  number: string;
-  type: AccountType;
+  label: string;             // e.g. "Operating account"
+  bankName: string;
+  accountHolder: string;
+  accountNumber: string;
   currency: string;
-  balance: number;
+  country: CountryCode;
+  routing: RoutingFields;    // dynamic country-specific fields
+  branchAddress?: string;
   status: AccountStatus;
-  openedAt: string;
+  createdAt: string;
+}
+
+export interface Beneficiary {
+  id: string;
+  fullName: string;
+  relationship: string;
+  bankName: string;
+  accountNumber: string;
+  iban: string;
+  phone: string;
+  email: string;
+  address: string;
+  country: CountryCode;
+  routing: RoutingFields;
+  createdAt: string;
 }
 
 export interface BankTransaction {
@@ -40,9 +70,24 @@ export interface BankTransfer {
   notes?: string;
 }
 
+export interface TransferDocument {
+  id: string;
+  reference: string;
+  date: string;
+  fromAccountId: string;
+  amount: number;
+  currency: string;
+  reason: string;
+  beneficiaryIds: string[];
+  signatureDataUrl?: string;
+  stampDataUrl?: string;
+}
+
 export type BankingPageId =
   | "banking-dashboard"
   | "banking-accounts"
+  | "banking-beneficiaries"
+  | "banking-document"
   | "banking-transactions"
   | "banking-transfers"
   | "banking-reports";
