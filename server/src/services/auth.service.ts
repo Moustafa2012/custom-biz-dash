@@ -5,10 +5,12 @@ import { RegisterInput, LoginInput, TwoFactorVerifyInput, ResendTwoFactorInput }
 import { AppError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 import { mapUserToDto } from '../utils/validation';
+import { authenticator } from 'otplib';
+import bcrypt from 'bcrypt';
 
 export class AuthService {
   async register(data: RegisterInput) {
-    const { email, password, name, role, phone, country, city, address, dateOfBirth, gender } = data;
+    const { email, password, name, phone, country, city, address, dateOfBirth, gender } = data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -25,7 +27,8 @@ export class AuthService {
         email,
         password: hashedPassword,
         name,
-        role: role || 'salesman',
+        // SECURITY: hardcoded role on public signup. Privileged roles assigned only via authenticated admin POST /users.
+        role: 'salesman',
         phone,
         country,
         city,
@@ -153,31 +156,35 @@ export class AuthService {
       throw new AppError(401, 'Account is disabled');
     }
 
-    // For demo purposes, we'll use hardcoded 2FA codes
-    // In production, this would integrate with a real 2FA service
-    const demo2FACodes: Record<string, { otp: string; backupCodes: string[] }> = {
-      "admin@erp.com": { otp: "123456", backupCodes: ["A1B2C3", "D4E5F6", "G7H8I9", "J0K1L2"] },
-      "khalid@erp.com": { otp: "654321", backupCodes: ["X1Y2Z3", "M4N5O6"] },
-    };
-
-    const user2FACodes = demo2FACodes[user.email];
-    if (!user2FACodes) {
+    if (!user.twoFactorEnabled || !user.twoFactorSecret) {
       throw new AppError(400, '2FA not configured for this user');
     }
 
     let isValid = false;
 
     if (isBackupCode) {
-      // Check backup codes
-      isValid = user2FACodes.backupCodes.includes(code.toUpperCase());
-      if (isValid) {
-        // Remove used backup code
-        const index = user2FACodes.backupCodes.indexOf(code.toUpperCase());
-        user2FACodes.backupCodes.splice(index, 1);
+      // Backup codes are stored as a JSON array of bcrypt hashes
+      const storedHashes: string[] = user.backupCodes ? JSON.parse(user.backupCodes) : [];
+      let matchedIndex = -1;
+      for (let i = 0; i < storedHashes.length; i++) {
+        if (await bcrypt.compare(code, storedHashes[i])) {
+          matchedIndex = i;
+          break;
+        }
+      }
+      if (matchedIndex >= 0) {
+        isValid = true;
+        // Invalidate the used backup code (one-time use)
+        storedHashes.splice(matchedIndex, 1);
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { backupCodes: JSON.stringify(storedHashes) },
+        });
       }
     } else {
-      // Check OTP code
-      isValid = code === user2FACodes.otp;
+      // TOTP verification (RFC 6238) — accepts ±1 step window for clock skew
+      authenticator.options = { window: 1 };
+      isValid = authenticator.verify({ token: code, secret: user.twoFactorSecret });
     }
 
     if (!isValid) {
