@@ -290,7 +290,6 @@ export default function BankingDocument() {
               <div style={{ transform: "scale(0.55)", transformOrigin: "top left", width: "182%" }}>
                 {account ? (
                   <TransferLetter
-                    ref={letterRef}
                     reference={reference}
                     date={date}
                     account={account}
