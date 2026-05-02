@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";  
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, Heart, Share2, Package } from "lucide-react";
 import { ProductImageCarousel } from "./ProductImageCarousel";
 import { ProductDetailsTab } from "./ProductDetailsTab";
@@ -62,84 +62,123 @@ export function ProductModalContent({ product, language, t }: ProductModalConten
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: product.desc,
-      }).catch(() => {});
+      navigator.share({ title: product.name, text: product.desc }).catch(() => {});
     }
   };
 
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-[420px] lg:order-2">
-          <div className="sticky top-0">
+      <div className="flex flex-col lg:flex-row gap-10">
+        {/* Image column */}
+        <div className="lg:w-[400px] lg:order-2 shrink-0">
+          <div className="lg:sticky lg:top-0 space-y-4">
             <ProductImageCarousel
               images={productImages}
               productName={product.name}
               productNameAr={product.name_ar}
               language={language}
             />
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              <div className="bg-muted rounded-lg p-3 text-center">
-                <div className="h-5 w-5 text-green-600 mx-auto mb-1" />
-                <p className="text-xs text-muted-foreground">{t("100% طبيعي", "100% Natural")}</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-xl border border-border bg-muted/30 p-3 text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  {t("طبيعي", "Natural")}
+                </p>
+                <p className="text-sm font-bold text-foreground mt-0.5">100%</p>
               </div>
-              <div className="bg-muted rounded-lg p-3 text-center">
-                <div className="h-5 w-5 text-primary mx-auto mb-1" />
-                <p className="text-xs text-muted-foreground">{t("ضمان الجودة", "Quality Guarantee")}</p>
+              <div className="rounded-xl border border-border bg-muted/30 p-3 text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  {t("الجودة", "Quality")}
+                </p>
+                <p className="text-sm font-bold text-foreground mt-0.5">{t("مضمونة", "Assured")}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex-1 lg:order-1">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-foreground">
-                {language === 'ar' ? product.name_ar : product.name}
-              </h1>
-              <div className="flex flex-wrap items-center gap-3 mb-3">
-                <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-950/20 px-3 py-1.5 rounded-full">
-                  <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                  <span className="font-bold text-foreground">{product.rating}</span>
-                  <span className="text-sm text-muted-foreground">({t("847 تقييم", "847 Reviews")})</span>
-                </div>
-                <Badge variant="outline" className="border-primary text-primary">
+        {/* Content column */}
+        <div className="flex-1 lg:order-1 min-w-0">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="text-xs font-medium gap-1.5 shrink-0">
                   <Package className="h-3 w-3" />
-                  {language === 'ar' ? product.category_ar : product.category}
+                  {language === "ar" ? product.category_ar : product.category}
                 </Badge>
+                {product.featured && (
+                  <Badge variant="secondary" className="text-xs font-medium shrink-0">
+                    {t("مميز", "Featured")}
+                  </Badge>
+                )}
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-tight">
+                {language === "ar" ? product.name_ar : product.name}
+              </h1>
+              <div className="flex items-center gap-1.5 mt-2">
+                <Star className="h-4 w-4 fill-foreground text-foreground" />
+                <span className="text-sm font-bold text-foreground">{product.rating}</span>
+                <span className="text-sm text-muted-foreground">
+                  · {t("847 تقييم", "847 reviews")}
+                </span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={handleShare}>
-                <Share2 className="h-5 w-5" />
+            <div className="flex items-center gap-1 shrink-0">
+              <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full" onClick={handleShare}>
+                <Share2 className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
+                className={`w-8 h-8 rounded-full ${isLiked ? "text-foreground" : "text-muted-foreground"}`}
                 onClick={() => setIsLiked(!isLiked)}
-                className={`text-muted-foreground hover:text-red-500 ${isLiked ? 'text-red-500' : ''}`}
               >
-                <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+                <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
               </Button>
             </div>
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">{t("الوصف", "Description")}</h2>
-            <p className="text-muted-foreground">
-              {language === 'ar' ? product.desc_ar : product.desc}
+          {/* Divider */}
+          <div className="h-px bg-border mb-6" />
+
+          {/* Description */}
+          <div className="mb-8">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+              {t("الوصف", "Description")}
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {language === "ar" ? product.desc_ar : product.desc}
             </p>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="details">{t("التفاصيل", "Details")}</TabsTrigger>
-              <TabsTrigger value="benefits">{t("الفوائد", "Benefits")}</TabsTrigger>
-              <TabsTrigger value="usage">{t("الاستخدام", "Usage")}</TabsTrigger>
+          {/* Tabs */}
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+            dir={language === "ar" ? "rtl" : "ltr"}
+          >
+            <TabsList className="w-full grid grid-cols-3 rounded-xl bg-muted/50 border border-border p-1 h-auto">
+              <TabsTrigger
+                value="details"
+                className="rounded-lg text-xs font-semibold uppercase tracking-wider py-2"
+              >
+                {t("التفاصيل", "Details")}
+              </TabsTrigger>
+              <TabsTrigger
+                value="benefits"
+                className="rounded-lg text-xs font-semibold uppercase tracking-wider py-2"
+              >
+                {t("الفوائد", "Benefits")}
+              </TabsTrigger>
+              <TabsTrigger
+                value="usage"
+                className="rounded-lg text-xs font-semibold uppercase tracking-wider py-2"
+              >
+                {t("الاستخدام", "Usage")}
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="details" className="mt-6">
+
+            <TabsContent value="details" className="mt-5">
               <ProductDetailsTab
                 origin={product.origin}
                 originAr={product.origin_ar}
@@ -149,13 +188,10 @@ export function ProductModalContent({ product, language, t }: ProductModalConten
                 storage={product.storage}
               />
             </TabsContent>
-            <TabsContent value="benefits" className="mt-6">
-              <ProductBenefitsTab
-                benefits={product.benefits}
-                benefitsAr={product.benefits_ar}
-              />
+            <TabsContent value="benefits" className="mt-5">
+              <ProductBenefitsTab benefits={product.benefits} benefitsAr={product.benefits_ar} />
             </TabsContent>
-            <TabsContent value="usage" className="mt-6">
+            <TabsContent value="usage" className="mt-5">
               <ProductUsageTab usage={product.usage} />
             </TabsContent>
           </Tabs>

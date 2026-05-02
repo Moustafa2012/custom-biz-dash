@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAppConfig } from "@/components/erp/app-config";
 import { ProductModalContent } from "./ProductModalContent";
+import { X } from "lucide-react";
 
 type ShelfLife = {
   duration: string;
@@ -69,9 +70,13 @@ export function ProductsModal({ product, open, onOpenChange }: ProductsModalProp
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="h-[90vh] max-h-[90vh] p-0">
+        <DrawerContent className="h-[92vh] max-h-[92vh] p-0 rounded-t-2xl">
+          {/* Drag handle */}
+          <div className="flex justify-center pt-3 pb-1">
+            <div className="w-10 h-1 rounded-full bg-muted-foreground/20" />
+          </div>
           <ScrollArea className="h-full">
-            <div className="p-6">{content}</div>
+            <div className="px-5 py-4 pb-10">{content}</div>
           </ScrollArea>
         </DrawerContent>
       </Drawer>
@@ -80,16 +85,14 @@ export function ProductsModal({ product, open, onOpenChange }: ProductsModalProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] p-0">
-        <div className="absolute right-4 top-4 z-50">
-          <button
-            onClick={() => onOpenChange(false)}
-            className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-          >
-            X
-          </button>
-        </div>
-        <ScrollArea className="h-[80vh] w-full">
+      <DialogContent className="max-w-3xl max-h-[90vh] p-0 rounded-2xl border border-border overflow-hidden">
+        <button
+          onClick={() => onOpenChange(false)}
+          className="absolute right-4 top-4 z-50 w-8 h-8 rounded-full border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <ScrollArea className="h-[85vh] w-full">
           <div className="p-8">{content}</div>
         </ScrollArea>
       </DialogContent>
