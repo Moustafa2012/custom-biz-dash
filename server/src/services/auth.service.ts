@@ -8,7 +8,7 @@ import { mapUserToDto } from '../utils/validation';
 
 export class AuthService {
   async register(data: RegisterInput) {
-    const { email, password, name, role, phone, country, city, address, dateOfBirth, gender } = data;
+    const { email, password, name, phone, country, city, address, dateOfBirth, gender } = data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -25,7 +25,8 @@ export class AuthService {
         email,
         password: hashedPassword,
         name,
-        role: role || 'salesman',
+        // SECURITY: hardcoded role on public signup. Privileged roles assigned only via authenticated admin POST /users.
+        role: 'salesman',
         phone,
         country,
         city,
