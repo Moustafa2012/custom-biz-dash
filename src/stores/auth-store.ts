@@ -28,13 +28,18 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       twoFactorState: null,
       intendedRoute: null,
-      isLoading: false,
+      isLoading: true,
 
       setIntendedRoute: (route) => set({ intendedRoute: route }),
 
       initializeAuth: async () => {
         const token = localStorage.getItem('auth_token');
-        if (!token) return;
+        if (!token) {
+          // SECURITY: explicitly clear auth state when no token is present so a
+          // tampered persisted `currentUser` cannot grant client-side access.
+          set({ currentUser: null, isAuthenticated: false, isLoading: false });
+          return;
+        }
 
         try {
           set({ isLoading: true });
@@ -45,19 +50,22 @@ export const useAuthStore = create<AuthState>()(
               role: response.data.role as Role,
               twoFactorMethod: response.data.twoFactorMethod as 'otp' | 'email' | 'app' | undefined,
             };
-            set({ 
-              currentUser: user, 
+            set({
+              currentUser: user,
               isAuthenticated: true,
-              isLoading: false
+              isLoading: false,
             });
+          } else {
+            localStorage.removeItem('auth_token');
+            set({ currentUser: null, isAuthenticated: false, isLoading: false });
           }
         } catch (error) {
           // Token is invalid, clear it
           localStorage.removeItem('auth_token');
-          set({ 
-            currentUser: null, 
+          set({
+            currentUser: null,
             isAuthenticated: false,
-            isLoading: false
+            isLoading: false,
           });
         }
       },
@@ -196,12 +204,12 @@ export const useAuthStore = create<AuthState>()(
         return user.role === role;
       },
     }),
-    { 
+    {
       name: "auth-storage",
-      // Only persist essential auth state
+      // SECURITY: never persist `isAuthenticated` or `currentUser` — they would let an
+      // attacker grant themselves UI access by editing localStorage. Auth state must
+      // always be re-derived from a validated server round-trip via initializeAuth().
       partialize: (state) => ({
-        currentUser: state.currentUser,
-        isAuthenticated: state.isAuthenticated,
         intendedRoute: state.intendedRoute,
       }),
     }
