@@ -46,6 +46,8 @@ export const ROLE_PERMISSIONS: Record<Role, string[]> = {
     "finance.view", "finance.create", "finance.edit",
     "sales.invoices.view",
     "banking.view", "banking.accounts.view",
+    "banking.accounts.create", "banking.accounts.edit",
+    "banking.beneficiaries.view", "banking.beneficiaries.create",
     "banking.transactions.view", "banking.transactions.create",
     "banking.transfers.view", "banking.transfers.create",
     "banking.reports.view",

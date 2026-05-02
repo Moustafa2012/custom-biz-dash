@@ -16,11 +16,13 @@ import {
 import { Construction, Loader2 } from "lucide-react";
 
 // Lazy-load Banking & Warehouse feature modules per ERP.md §2.3 (code-splitting).
-const BankingDashboard    = lazy(() => import("@/features/banking/pages/BankingDashboard"));
-const BankingAccounts     = lazy(() => import("@/features/banking/pages/BankingAccounts"));
-const BankingTransactions = lazy(() => import("@/features/banking/pages/BankingTransactions"));
-const BankingTransfers    = lazy(() => import("@/features/banking/pages/BankingTransfers"));
-const BankingReports      = lazy(() => import("@/features/banking/pages/BankingReports"));
+const BankingDashboard     = lazy(() => import("@/features/banking/pages/BankingDashboard"));
+const BankingAccounts      = lazy(() => import("@/features/banking/pages/BankingAccounts"));
+const BankingBeneficiaries = lazy(() => import("@/features/banking/pages/BankingBeneficiaries"));
+const BankingDocument      = lazy(() => import("@/features/banking/pages/BankingDocument"));
+const BankingTransactions  = lazy(() => import("@/features/banking/pages/BankingTransactions"));
+const BankingTransfers     = lazy(() => import("@/features/banking/pages/BankingTransfers"));
+const BankingReports       = lazy(() => import("@/features/banking/pages/BankingReports"));
 
 const WarehouseDashboard  = lazy(() => import("@/features/warehouse/pages/WarehouseDashboard"));
 const WarehouseInventory  = lazy(() => import("@/features/warehouse/pages/WarehouseInventory"));
@@ -74,11 +76,13 @@ function PageContent({ pageId, appId }: { pageId: PageId; appId: ErpAppId }) {
 
   if (appId === "banking") {
     switch (pageId) {
-      case "dashboard":            return <BankingDashboard />;
-      case "banking-accounts":     return <BankingAccounts />;
-      case "banking-transactions": return <BankingTransactions />;
-      case "banking-transfers":    return <BankingTransfers />;
-      case "banking-reports":      return <BankingReports />;
+      case "dashboard":              return <BankingDashboard />;
+      case "banking-accounts":       return <BankingAccounts />;
+      case "banking-beneficiaries":  return <BankingBeneficiaries />;
+      case "banking-document":       return <BankingDocument />;
+      case "banking-transactions":   return <BankingTransactions />;
+      case "banking-transfers":      return <BankingTransfers />;
+      case "banking-reports":        return <BankingReports />;
     }
   }
 

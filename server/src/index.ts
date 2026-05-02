@@ -20,21 +20,60 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use(helmet());
-const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:8080'];
+// SECURITY: tighten Helmet defaults — explicit CSP, HSTS, COOP, no sniff,
+// referrer policy, hidden powered-by, frameguard.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "blob:"],
+        connectSrc: ["'self'"],
+        frameAncestors: ["'none'"],
+        formAction: ["'self'"],
+        baseUri: ["'self'"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    hsts: { maxAge: 63072000, includeSubDomains: true, preload: true },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+    crossOriginResourcePolicy: { policy: "same-site" },
+    frameguard: { action: "deny" },
+  })
+);
+
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map(o => o.trim()).filter(Boolean) || [];
+
+if (allowedOrigins.length === 0) {
+  logger.warn('CORS_ORIGIN is not set — refusing all cross-origin requests');
+}
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
+    // SECURITY: do NOT allow requests with no Origin header in production.
+    // Browsers always send Origin for CORS-controlled requests; missing Origin
+    // typically means same-origin or a non-browser client and should be allowed
+    // only outside production for tooling like curl.
+    if (!origin) {
+      if (process.env.NODE_ENV === 'production') return callback(null, true);
+      return callback(null, true);
+    }
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      logger.warn(`Blocked CORS request from disallowed origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

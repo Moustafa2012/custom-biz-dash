@@ -21,7 +21,7 @@ import {
   Home, ShoppingCart, Users, FileText, RotateCcw, BarChart3,
   BookOpen, Landmark, Receipt, CreditCard, Wallet, PiggyBank,
   Package, Warehouse, ArrowRightLeft, ClipboardList, Wrench, Factory,
-  MapPin,
+  MapPin, Building2, FileSignature,
   Settings, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -127,7 +127,9 @@ const bankingNav: NavGroup[] = [
     labelEn: "Banking", labelAr: "الأعمال البنكية",
     items: [
       { titleEn: "Dashboard", titleAr: "لوحة المعلومات", icon: Home, pageId: "dashboard" },
-      { titleEn: "Accounts", titleAr: "الحسابات", icon: CreditCard, pageId: "banking-accounts" },
+      { titleEn: "Account Setup", titleAr: "إعداد الحسابات", icon: Building2, pageId: "banking-accounts" },
+      { titleEn: "Beneficiaries", titleAr: "المستفيدون", icon: Users, pageId: "banking-beneficiaries" },
+      { titleEn: "Document Generator", titleAr: "منشئ المستندات", icon: FileSignature, pageId: "banking-document" },
       { titleEn: "Transactions", titleAr: "المعاملات", icon: Receipt, pageId: "banking-transactions" },
       { titleEn: "Transfers", titleAr: "التحويلات", icon: ArrowRightLeft, pageId: "banking-transfers" },
       { titleEn: "Reports", titleAr: "التقارير", icon: BarChart3, pageId: "banking-reports" },

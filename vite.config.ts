@@ -4,10 +4,20 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
+const securityHeaders = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+};
+
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    headers: securityHeaders,
     hmr: {
       overlay: false,
     },
@@ -18,6 +28,9 @@ export default defineConfig(({ mode }) => ({
         secure: false,
       },
     },
+  },
+  preview: {
+    headers: securityHeaders,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
