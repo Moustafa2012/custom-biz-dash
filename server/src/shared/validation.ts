@@ -10,7 +10,8 @@ export const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['super_admin', 'admin', 'accountant', 'salesman', 'store_keeper']).optional(),
+  // SECURITY: `role` intentionally NOT accepted on public registration to prevent privilege escalation.
+  // Privileged accounts must be created via authenticated admin flow (POST /users).
   phone: z.string().min(7, 'Phone number must be at least 7 characters'),
   country: z.string().min(2, 'Country is required'),
   city: z.string().min(2, 'City is required'),
