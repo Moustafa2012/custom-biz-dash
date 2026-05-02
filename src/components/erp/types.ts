@@ -28,6 +28,8 @@ export type PageId =
   | "inventory-reports"
   // Banking pages
   | "banking-accounts"
+  | "banking-beneficiaries"
+  | "banking-document"
   | "banking-transactions"
   | "banking-transfers"
   | "banking-reports"
