@@ -11,8 +11,14 @@ import { Badge } from "@/components/ui/badge";
 import { RoutingFields } from "../components/RoutingFields";
 import { COUNTRY_CONFIGS, getCountryConfig, type CountryCode } from "../lib/countries";
 import type { Beneficiary, RoutingFields as RoutingFieldsT } from "../types";
-import { Users, Plus, Trash2, Save, Mail, Phone, MapPin, Lock } from "lucide-react";
+import { Users, Plus, Trash2, Save, Mail, Phone, MapPin, Lock, Pencil, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+interface BForm {
+  fullName: string; relationship: string; bankName: string; accountNumber: string;
+  iban: string; phone: string; email: string; address: string;
+}
+const EMPTY: BForm = { fullName: "", relationship: "", bankName: "", accountNumber: "", iban: "", phone: "", email: "", address: "" };
 
 export default function BankingBeneficiaries() {
   const { t, language } = useAppConfig();
@@ -22,23 +28,26 @@ export default function BankingBeneficiaries() {
 
   const beneficiaries = useBankingStore((s) => s.beneficiaries);
   const addBeneficiary = useBankingStore((s) => s.addBeneficiary);
+  const updateBeneficiary = useBankingStore((s) => s.updateBeneficiary);
   const removeBeneficiary = useBankingStore((s) => s.removeBeneficiary);
 
-  const [showForm, setShowForm] = useState(false);
+  // editingId === null → closed, "new" → creating, otherwise editing
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [country, setCountry] = useState<CountryCode>("SA");
   const [routing, setRouting] = useState<RoutingFieldsT>({});
-  const [form, setForm] = useState({
-    fullName: "", relationship: "", bankName: "", accountNumber: "",
-    iban: "", phone: "", email: "", address: "",
-  });
+  const [form, setForm] = useState<BForm>(EMPTY);
 
-  const reset = () => {
-    setForm({ fullName: "", relationship: "", bankName: "", accountNumber: "", iban: "", phone: "", email: "", address: "" });
-    setRouting({});
-    setShowForm(false);
+  const openNew = () => { setForm(EMPTY); setRouting({}); setCountry("SA"); setEditingId("new"); };
+  const openEdit = (b: Beneficiary) => {
+    setForm({
+      fullName: b.fullName, relationship: b.relationship, bankName: b.bankName,
+      accountNumber: b.accountNumber, iban: b.iban, phone: b.phone, email: b.email, address: b.address,
+    });
+    setRouting(b.routing); setCountry(b.country); setEditingId(b.id);
   };
+  const close = () => { setEditingId(null); setForm(EMPTY); setRouting({}); };
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const cfg = getCountryConfig(country);
     for (const f of cfg.fields) {
@@ -47,16 +56,19 @@ export default function BankingBeneficiaries() {
         return;
       }
     }
-    const b: Beneficiary = {
-      id: `bn_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      ...form,
-      country,
-      routing,
-      createdAt: new Date().toISOString(),
-    };
-    addBeneficiary(b);
-    toast({ title: t("تمت الإضافة", "Added"), description: t("تم حفظ المستفيد.", "Beneficiary saved.") });
-    reset();
+    if (editingId && editingId !== "new") {
+      updateBeneficiary(editingId, { ...form, country, routing });
+      toast({ title: t("تم التحديث", "Updated"), description: t("تم تحديث المستفيد.", "Beneficiary updated.") });
+    } else {
+      const b: Beneficiary = {
+        id: `bn_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        ...form, country, routing,
+        createdAt: new Date().toISOString(),
+      };
+      addBeneficiary(b);
+      toast({ title: t("تمت الإضافة", "Added"), description: t("تم حفظ المستفيد.", "Beneficiary saved.") });
+    }
+    close();
   };
 
   if (!canEdit && beneficiaries.length === 0) {
@@ -77,21 +89,30 @@ export default function BankingBeneficiaries() {
           <h1 className="text-2xl font-heading font-bold text-foreground">{t("المستفيدون", "Beneficiaries")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("إدارة المستفيدين المحفوظين للتحويلات.", "Manage saved beneficiaries for transfers.")}</p>
         </div>
-        {canEdit && (
-          <Button size="sm" onClick={() => setShowForm((v) => !v)} className="gap-2">
-            <Plus className="h-4 w-4" />{showForm ? t("إغلاق", "Cancel") : t("إضافة مستفيد", "Add beneficiary")}
+        {canEdit && editingId === null && (
+          <Button size="sm" onClick={openNew} className="gap-2">
+            <Plus className="h-4 w-4" />{t("إضافة مستفيد", "Add beneficiary")}
           </Button>
         )}
       </div>
 
-      {showForm && canEdit && (
+      {editingId !== null && canEdit && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{t("مستفيد جديد", "New beneficiary")}</CardTitle>
-            <CardDescription>{t("املأ البيانات أدناه ثم احفظ.", "Fill in the details below and save.")}</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base">
+                  {editingId === "new" ? t("مستفيد جديد", "New beneficiary") : t("تعديل المستفيد", "Edit beneficiary")}
+                </CardTitle>
+                <CardDescription>{t("املأ البيانات أدناه ثم احفظ.", "Fill in the details below and save.")}</CardDescription>
+              </div>
+              <Button type="button" variant="ghost" size="sm" onClick={close} className="gap-1">
+                <X className="h-3.5 w-3.5" />{t("إغلاق", "Close")}
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleAdd} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Field id="b-name" label={t("الاسم الكامل", "Full name")} value={form.fullName} onChange={(v) => setForm({ ...form, fullName: v })} required />
                 <Field id="b-rel"  label={t("نوع العلاقة", "Relationship")} value={form.relationship} onChange={(v) => setForm({ ...form, relationship: v })} placeholder={t("مورد، شريك، موظف...", "Supplier, partner, employee…")} />
@@ -112,8 +133,11 @@ export default function BankingBeneficiaries() {
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={reset}>{t("إلغاء", "Cancel")}</Button>
-                <Button type="submit" className="gap-2"><Save className="h-4 w-4" />{t("حفظ", "Save")}</Button>
+                <Button type="button" variant="outline" onClick={close}>{t("إلغاء", "Cancel")}</Button>
+                <Button type="submit" className="gap-2">
+                  <Save className="h-4 w-4" />
+                  {editingId === "new" ? t("حفظ", "Save") : t("حفظ التغييرات", "Save changes")}
+                </Button>
               </div>
             </form>
           </CardContent>
@@ -164,7 +188,10 @@ export default function BankingBeneficiaries() {
                     {b.address && <p className="flex items-start gap-1.5"><MapPin className="h-3 w-3 mt-0.5 shrink-0" /><span className="truncate">{b.address}</span></p>}
                   </div>
                   {canEdit && (
-                    <div className="flex justify-end pt-1">
+                    <div className="flex justify-end gap-1 pt-1">
+                      <Button size="sm" variant="ghost" onClick={() => openEdit(b)} className="h-7 gap-1">
+                        <Pencil className="h-3.5 w-3.5" />{t("تعديل", "Edit")}
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => removeBeneficiary(b.id)} className="h-7 text-destructive hover:text-destructive gap-1">
                         <Trash2 className="h-3.5 w-3.5" />{t("حذف", "Delete")}
                       </Button>
