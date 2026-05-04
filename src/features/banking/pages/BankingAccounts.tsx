@@ -12,10 +12,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RoutingFields } from "../components/RoutingFields";
 import { COUNTRY_CONFIGS, getCountryConfig, type CountryCode } from "../lib/countries";
 import type { BankAccount, AccountType, AccountStatus, RoutingFields as RoutingFieldsT } from "../types";
-import { Building2, CreditCard, Plus, Trash2, Save, Lock } from "lucide-react";
+import { Building2, CreditCard, Plus, Trash2, Save, Lock, Pencil, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const ACCOUNT_TYPES: AccountType[] = ["checking", "savings", "credit", "loan", "cash"];
+
+interface AcctFormState {
+  label: string; bankName: string; accountHolder: string; accountNumber: string;
+  currency: string; branchAddress: string; type: AccountType;
+}
+const EMPTY_ACCT: AcctFormState = {
+  label: "", bankName: "", accountHolder: "", accountNumber: "",
+  currency: "SAR", branchAddress: "", type: "checking",
+};
 
 export default function BankingAccounts() {
   const { t, language } = useAppConfig();
@@ -27,27 +36,36 @@ export default function BankingAccounts() {
   const setCompany = useBankingStore((s) => s.setCompany);
   const accounts = useBankingStore((s) => s.accounts);
   const addAccount = useBankingStore((s) => s.addAccount);
+  const updateAccount = useBankingStore((s) => s.updateAccount);
   const removeAccount = useBankingStore((s) => s.removeAccount);
 
   const [companyDraft, setCompanyDraft] = useState(company);
-  const [showForm, setShowForm] = useState(false);
-
-  // New account form state
+  // editingId === null → form closed; "new" → adding; otherwise editing that id.
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [country, setCountry] = useState<CountryCode>("SA");
   const [routing, setRouting] = useState<RoutingFieldsT>({});
-  const [form, setForm] = useState({
-    label: "", bankName: "", accountHolder: "", accountNumber: "",
-    currency: "SAR", branchAddress: "", type: "checking" as AccountType,
-  });
+  const [form, setForm] = useState<AcctFormState>(EMPTY_ACCT);
+
+  const openNew = () => {
+    setForm(EMPTY_ACCT); setRouting({}); setCountry("SA"); setEditingId("new");
+  };
+  const openEdit = (a: BankAccount) => {
+    setForm({
+      label: a.label, bankName: a.bankName, accountHolder: a.accountHolder,
+      accountNumber: a.accountNumber, currency: a.currency,
+      branchAddress: a.branchAddress ?? "", type: "checking",
+    });
+    setRouting(a.routing); setCountry(a.country); setEditingId(a.id);
+  };
+  const closeForm = () => { setEditingId(null); setForm(EMPTY_ACCT); setRouting({}); };
 
   const saveCompany = () => {
     setCompany(companyDraft);
     toast({ title: t("تم الحفظ", "Saved"), description: t("تم تحديث ملف الشركة.", "Company profile updated.") });
   };
 
-  const handleAddAccount = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Validate required routing fields for the chosen country
     const cfg = getCountryConfig(country);
     for (const f of cfg.fields) {
       if (f.required && !routing[f.key]?.trim()) {
@@ -55,25 +73,36 @@ export default function BankingAccounts() {
         return;
       }
     }
-
-    const acct: BankAccount = {
-      id: `acc_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      label: form.label.trim(),
-      bankName: form.bankName.trim(),
-      accountHolder: form.accountHolder.trim(),
-      accountNumber: form.accountNumber.trim(),
-      currency: form.currency.trim().toUpperCase(),
-      country,
-      routing,
-      branchAddress: form.branchAddress.trim() || undefined,
-      status: "active" as AccountStatus,
-      createdAt: new Date().toISOString(),
-    };
-    addAccount(acct);
-    setForm({ label: "", bankName: "", accountHolder: "", accountNumber: "", currency: "SAR", branchAddress: "", type: "checking" });
-    setRouting({});
-    setShowForm(false);
-    toast({ title: t("تمت الإضافة", "Added"), description: t("تم حفظ الحساب البنكي.", "Bank account saved.") });
+    if (editingId && editingId !== "new") {
+      updateAccount(editingId, {
+        label: form.label.trim(),
+        bankName: form.bankName.trim(),
+        accountHolder: form.accountHolder.trim(),
+        accountNumber: form.accountNumber.trim(),
+        currency: form.currency.trim().toUpperCase(),
+        country,
+        routing,
+        branchAddress: form.branchAddress.trim() || undefined,
+      });
+      toast({ title: t("تم التحديث", "Updated"), description: t("تم تحديث الحساب.", "Account updated.") });
+    } else {
+      const acct: BankAccount = {
+        id: `acc_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        label: form.label.trim(),
+        bankName: form.bankName.trim(),
+        accountHolder: form.accountHolder.trim(),
+        accountNumber: form.accountNumber.trim(),
+        currency: form.currency.trim().toUpperCase(),
+        country,
+        routing,
+        branchAddress: form.branchAddress.trim() || undefined,
+        status: "active" as AccountStatus,
+        createdAt: new Date().toISOString(),
+      };
+      addAccount(acct);
+      toast({ title: t("تمت الإضافة", "Added"), description: t("تم حفظ الحساب البنكي.", "Bank account saved.") });
+    }
+    closeForm();
   };
 
   if (!canEdit && accounts.length === 0) {
@@ -105,7 +134,7 @@ export default function BankingAccounts() {
             <div className="rounded-lg bg-primary/10 p-2"><Building2 className="h-5 w-5 text-primary" /></div>
             <div>
               <CardTitle>{t("ملف الشركة", "Company Profile")}</CardTitle>
-              <CardDescription>{t("معلومات أساسية تظهر على رأس المستندات.", "Basic info that appears on document letterheads.")}</CardDescription>
+              <CardDescription>{t("معلومات أساسية تظهر على رأس المستندات. عدّل القيم واضغط حفظ.", "Basic info on document letterheads. Edit any field and save.")}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -121,7 +150,8 @@ export default function BankingAccounts() {
             <Textarea id="c-addr" value={companyDraft.address} onChange={(e) => setCompanyDraft({ ...companyDraft, address: e.target.value })} disabled={!canEdit} rows={2} />
           </div>
           {canEdit && (
-            <div className="md:col-span-2 flex justify-end">
+            <div className="md:col-span-2 flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setCompanyDraft(company)}>{t("إعادة تعيين", "Reset")}</Button>
               <Button onClick={saveCompany} className="gap-2"><Save className="h-4 w-4" />{t("حفظ", "Save")}</Button>
             </div>
           )}
@@ -136,20 +166,27 @@ export default function BankingAccounts() {
               <div className="rounded-lg bg-primary/10 p-2"><CreditCard className="h-5 w-5 text-primary" /></div>
               <div>
                 <CardTitle>{t("الحسابات البنكية", "Bank Accounts")}</CardTitle>
-                <CardDescription>{t("أضف حساباً واحداً أو أكثر — تتغير الحقول حسب الدولة.", "Add one or more — fields adapt per country.")}</CardDescription>
+                <CardDescription>{t("أضف أو حرّر الحسابات — تتغير الحقول حسب الدولة.", "Add or edit accounts — fields adapt per country.")}</CardDescription>
               </div>
             </div>
-            {canEdit && (
-              <Button size="sm" onClick={() => setShowForm((v) => !v)} className="gap-2">
-                <Plus className="h-4 w-4" />
-                {showForm ? t("إغلاق", "Cancel") : t("إضافة حساب", "Add account")}
+            {canEdit && editingId === null && (
+              <Button size="sm" onClick={openNew} className="gap-2">
+                <Plus className="h-4 w-4" />{t("إضافة حساب", "Add account")}
               </Button>
             )}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {showForm && canEdit && (
-            <form onSubmit={handleAddAccount} className="rounded-lg border bg-muted/30 p-4 space-y-4">
+          {editingId !== null && canEdit && (
+            <form onSubmit={handleSubmit} className="rounded-lg border bg-muted/30 p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-semibold">
+                  {editingId === "new" ? t("حساب جديد", "New account") : t("تعديل الحساب", "Edit account")}
+                </h4>
+                <Button type="button" variant="ghost" size="sm" onClick={closeForm} className="gap-1 h-7">
+                  <X className="h-3.5 w-3.5" />{t("إغلاق", "Close")}
+                </Button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Field id="a-label"  label={t("التسمية", "Label")}            value={form.label}         onChange={(v) => setForm({ ...form, label: v })} required />
                 <Field id="a-bank"   label={t("اسم البنك", "Bank name")}      value={form.bankName}      onChange={(v) => setForm({ ...form, bankName: v })} required />
@@ -177,8 +214,11 @@ export default function BankingAccounts() {
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>{t("إلغاء", "Cancel")}</Button>
-                <Button type="submit" className="gap-2"><Save className="h-4 w-4" />{t("حفظ الحساب", "Save account")}</Button>
+                <Button type="button" variant="outline" onClick={closeForm}>{t("إلغاء", "Cancel")}</Button>
+                <Button type="submit" className="gap-2">
+                  <Save className="h-4 w-4" />
+                  {editingId === "new" ? t("حفظ الحساب", "Save account") : t("حفظ التغييرات", "Save changes")}
+                </Button>
               </div>
             </form>
           )}
@@ -210,7 +250,10 @@ export default function BankingAccounts() {
                       ))}
                     </div>
                     {canEdit && (
-                      <div className="flex justify-end pt-1">
+                      <div className="flex justify-end gap-1 pt-1">
+                        <Button size="sm" variant="ghost" onClick={() => openEdit(a)} className="h-7 gap-1">
+                          <Pencil className="h-3.5 w-3.5" />{t("تعديل", "Edit")}
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={() => removeAccount(a.id)} className="h-7 text-destructive hover:text-destructive gap-1">
                           <Trash2 className="h-3.5 w-3.5" />{t("حذف", "Delete")}
                         </Button>
