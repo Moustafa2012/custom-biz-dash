@@ -5,7 +5,7 @@ import { RegisterInput, LoginInput, TwoFactorVerifyInput, ResendTwoFactorInput }
 import { AppError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 import { mapUserToDto } from '../utils/validation';
-import { authenticator } from 'otplib';
+import * as otplib from 'otplib';
 import bcrypt from 'bcrypt';
 
 export class AuthService {
@@ -183,8 +183,8 @@ export class AuthService {
       }
     } else {
       // TOTP verification (RFC 6238) — accepts ±1 step window for clock skew
-      authenticator.options = { window: 1 };
-      isValid = authenticator.verify({ token: code, secret: user.twoFactorSecret });
+      const totpResult: any = await (otplib as any).verify({ token: code, secret: user.twoFactorSecret, window: 1 });
+      isValid = totpResult?.valid ?? !!totpResult;
     }
 
     if (!isValid) {
