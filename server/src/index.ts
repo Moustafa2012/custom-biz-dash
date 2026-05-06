@@ -49,7 +49,7 @@ app.use(
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map(o => o.trim()).filter(Boolean) || [];
 
 if (allowedOrigins.length === 0) {
-  logger.warn('CORS_ORIGIN is not set — refusing all cross-origin requests');
+  logger.warning('CORS_ORIGIN is not set — refusing all cross-origin requests');
 }
 
 app.use(cors({
@@ -66,7 +66,7 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      logger.warn(`Blocked CORS request from disallowed origin: ${origin}`);
+      logger.warning(`Blocked CORS request from disallowed origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
