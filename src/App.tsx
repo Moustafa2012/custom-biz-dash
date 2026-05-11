@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/auth-context"
 import { AppProvider } from "@/contexts/app-context"
 import { LanguageProvider } from "@/components/language-provider"
 import LoginPage from "@/pages/login-page"
+import { PrivateRoute } from "@/components/auth/private-route"
 import SettingsPage from "@/pages/settings"
 import HelpPage from "@/pages/help"
 import SearchPage from "@/pages/search"
@@ -45,35 +46,35 @@ export function App() {
               <Route path="/login" element={<LoginPage />} />
 
               {/* Platform app routes */}
-              <Route path="/platform/overview" element={<PlatformOverviewPage />} />
-              <Route path="/platform/telefather" element={<TelefatherPage />} />
-              <Route path="/platform/mailer" element={<MailerPage />} />
-              <Route path="/platform/users" element={<PlatformUsersPage />} />
-              <Route path="/platform/audit-logs" element={<AuditLogsPage />} />
+              <Route path="/platform/overview" element={<PrivateRoute><PlatformOverviewPage /></PrivateRoute>} />
+              <Route path="/platform/telefather" element={<PrivateRoute><TelefatherPage /></PrivateRoute>} />
+              <Route path="/platform/mailer" element={<PrivateRoute><MailerPage /></PrivateRoute>} />
+              <Route path="/platform/users" element={<PrivateRoute><PlatformUsersPage /></PrivateRoute>} />
+              <Route path="/platform/audit-logs" element={<PrivateRoute><AuditLogsPage /></PrivateRoute>} />
 
               {/* General routes */}
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
               <Route path="/help" element={<HelpPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/articles/read" element={<ArticleReader />} />
 
               {/* Site Manager app routes */}
-              <Route path="/site-manager/overview" element={<OverviewPage />} />
-              <Route path="/site-manager/products" element={<ProductsPage />} />
-              <Route path="/site-manager/articles" element={<ArticlesPage />} />
-              <Route path="/site-manager/articles/create" element={<ArticleComposerPage />} />
-              <Route path="/site-manager/articles/edit" element={<ArticleComposerPage />} />
-              <Route path="/site-manager/faq" element={<FAQPage />} />
-              <Route path="/site-manager/messages" element={<MessagesPage />} />
-              <Route path="/site-manager/newsletter" element={<NewsletterPage />} />
+              <Route path="/site-manager/overview" element={<PrivateRoute><OverviewPage /></PrivateRoute>} />
+              <Route path="/site-manager/products" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
+              <Route path="/site-manager/articles" element={<PrivateRoute><ArticlesPage /></PrivateRoute>} />
+              <Route path="/site-manager/articles/create" element={<PrivateRoute><ArticleComposerPage /></PrivateRoute>} />
+              <Route path="/site-manager/articles/edit" element={<PrivateRoute><ArticleComposerPage /></PrivateRoute>} />
+              <Route path="/site-manager/faq" element={<PrivateRoute><FAQPage /></PrivateRoute>} />
+              <Route path="/site-manager/messages" element={<PrivateRoute><MessagesPage /></PrivateRoute>} />
+              <Route path="/site-manager/newsletter" element={<PrivateRoute><NewsletterPage /></PrivateRoute>} />
 
               {/* Synex app routes */}
-              <Route path="/synex/overview" element={<SynexOverviewPage />} />
-              <Route path="/synex/accounts" element={<AccountsPage />} />
-              <Route path="/synex/beneficiaries" element={<BeneficiariesPage />} />
-              <Route path="/synex/journal-entries" element={<JournalEntriesPage />} />
-              <Route path="/synex/transactions" element={<TransactionsPage />} />
-              <Route path="/synex/reports" element={<ReportsPage />} />
+              <Route path="/synex/overview" element={<PrivateRoute><SynexOverviewPage /></PrivateRoute>} />
+              <Route path="/synex/accounts" element={<PrivateRoute><AccountsPage /></PrivateRoute>} />
+              <Route path="/synex/beneficiaries" element={<PrivateRoute><BeneficiariesPage /></PrivateRoute>} />
+              <Route path="/synex/journal-entries" element={<PrivateRoute><JournalEntriesPage /></PrivateRoute>} />
+              <Route path="/synex/transactions" element={<PrivateRoute><TransactionsPage /></PrivateRoute>} />
+              <Route path="/synex/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
 
               {/* Default redirect */}
               <Route path="*" element={<Navigate to="/" replace />} />
