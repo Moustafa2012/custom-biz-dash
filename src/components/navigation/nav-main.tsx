@@ -136,6 +136,5 @@ export function NavMain({ items }: { items: NavItem[] }) {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-    </TooltipProvider>
   )
 }
