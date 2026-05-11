@@ -3,7 +3,7 @@
 import * as React from "react"
 import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
-import { TooltipProvider } from "@/components/ui/tooltip"
+
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -39,8 +39,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
   const isActive = useIsActive()
 
   return (
-    <TooltipProvider delayDuration={150}>
-      <SidebarGroup className="pt-4">
+    <SidebarGroup className="pt-4">
         <SidebarGroupLabel
           className="
             text-[10px] font-semibold uppercase tracking-[0.12em]
