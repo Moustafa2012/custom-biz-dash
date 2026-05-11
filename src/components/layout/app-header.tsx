@@ -14,16 +14,42 @@ interface AppHeaderProps {
   icon?: React.ReactNode
 }
 
+const FONT_SIZE_KEY = "app:fontSize"
+const DEFAULT_FONT_SIZE = 16
+const MIN_FONT = 12
+const MAX_FONT = 20
+
+function clampFont(n: number) {
+  return Math.min(MAX_FONT, Math.max(MIN_FONT, Math.round(n)))
+}
+
 export function AppHeader({ title }: AppHeaderProps) {
   const { direction, language, toggleLanguage } = useLanguage()
   const { theme, setTheme } = useTheme()
-  const [fontSize, setFontSize] = useState(16)
+  const [fontSize, setFontSize] = useState<number>(() => {
+    if (typeof window === "undefined") return DEFAULT_FONT_SIZE
+    const stored = Number(localStorage.getItem(FONT_SIZE_KEY))
+    return Number.isFinite(stored) && stored > 0 ? clampFont(stored) : DEFAULT_FONT_SIZE
+  })
+
+  // Apply persisted font size on mount and whenever it changes.
+  // Uses inline style on <html> so Tailwind's rem-based scale follows along.
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}px`
+    try {
+      localStorage.setItem(FONT_SIZE_KEY, String(fontSize))
+    } catch {
+      /* storage may be unavailable */
+    }
+    return () => {
+      // Don't reset on unmount — header is mounted per page; keep the choice.
+    }
+  }, [fontSize])
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
   const handleFontSizeChange = (value: number[]) => {
-    setFontSize(value[0])
-    document.documentElement.style.fontSize = `${value[0]}px`
+    setFontSize(clampFont(value[0]))
   }
 
   return (
