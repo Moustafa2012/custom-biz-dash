@@ -26,13 +26,21 @@ interface AuditLog {
 }
 
 // Audit logging utility
+//
+// SECURITY: Client-side localStorage is NOT a trustworthy audit trail — users,
+// extensions, and other scripts can read, forge, or wipe it. We therefore keep
+// only an ephemeral in-memory buffer for developer diagnostics and forward
+// events to a server endpoint when one is configured. A real audit trail must
+// be implemented server-side (append-only, access-controlled).
 class AuditLogger {
   private static sessionId: string = this.generateSessionId()
-  
+  private static buffer: AuditLog[] = []
+  private static readonly MAX_BUFFER = 200
+
   private static generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   }
-  
+
   static logNavigation(app: string, url: string, action: string = "navigation"): void {
     const log: AuditLog = {
       timestamp: new Date().toISOString(),
@@ -41,78 +49,50 @@ class AuditLogger {
       app,
       url,
       userAgent: navigator.userAgent,
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     }
-    
-    // Console logging for development
-    console.group(`🔍 Audit Log - ${app.toUpperCase()}`)
-    console.log("Timestamp:", log.timestamp)
-    console.log("User ID:", log.userId || "anonymous")
-    console.log("Action:", log.action)
-    console.log("App:", log.app)
-    console.log("URL:", log.url)
-    console.log("Session ID:", log.sessionId)
-    console.log("User Agent:", log.userAgent)
-    console.groupEnd()
-    
-    // Store in localStorage for persistence
-    this.storeLog(log)
-    
-    // Send to external logging service (if available)
+
+    if (import.meta.env.DEV) {
+      console.debug(`[audit] ${app} ${action} ${url}`)
+    }
+
+    this.buffer.push(log)
+    if (this.buffer.length > this.MAX_BUFFER) {
+      this.buffer.splice(0, this.buffer.length - this.MAX_BUFFER)
+    }
+
     this.sendToLogService(log)
   }
-  
+
   private static getCurrentUserId(): string | undefined {
-    // Try to get user ID from various sources
-    return (
-      (window as any).currentUser?.id ||
-      localStorage.getItem('userId') ||
-      sessionStorage.getItem('userId') ||
-      undefined
-    )
+    // Best-effort, non-authoritative. Real identity must come from the server.
+    return (window as any).currentUser?.id || undefined
   }
-  
-  private static storeLog(log: AuditLog): void {
-    try {
-      const existingLogs = JSON.parse(localStorage.getItem('auditLogs') || '[]')
-      existingLogs.push(log)
-      
-      // Keep only last 1000 logs to prevent storage overflow
-      if (existingLogs.length > 1000) {
-        existingLogs.splice(0, existingLogs.length - 1000)
-      }
-      
-      localStorage.setItem('auditLogs', JSON.stringify(existingLogs))
-    } catch (error) {
-      console.error('Failed to store audit log:', error)
-    }
-  }
-  
+
   private static sendToLogService(log: AuditLog): void {
-    // In a real application, this would send to your logging service
-    // For now, we'll just log it to console in development
-    if (typeof window !== 'undefined' && (window as any).__ENV__ === 'production') {
-      // Example: Send to your logging endpoint
-      fetch('/api/audit-logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(log)
-      }).catch(error => {
-        console.error('Failed to send audit log to service:', error)
-      })
-    }
-  }
-  
-  static getAuditLogs(): AuditLog[] {
+    // Forward to a server-side append-only audit endpoint when available.
+    // No-op in the current frontend-only build.
+    if (typeof window === "undefined") return
+    const endpoint = (import.meta.env.VITE_AUDIT_LOG_ENDPOINT as string | undefined) || ""
+    if (!endpoint) return
     try {
-      return JSON.parse(localStorage.getItem('auditLogs') || '[]')
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(log),
+        keepalive: true,
+      }).catch(() => {})
     } catch {
-      return []
+      /* swallow — diagnostics only */
     }
   }
-  
+
+  static getAuditLogs(): AuditLog[] {
+    return [...this.buffer]
+  }
+
   static clearAuditLogs(): void {
-    localStorage.removeItem('auditLogs')
+    this.buffer = []
   }
 }
 
