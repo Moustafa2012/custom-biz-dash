@@ -7,7 +7,7 @@ import { useState } from "react"
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState([
+  const [searchResults] = useState([
     {
       id: 1,
       type: "user",
