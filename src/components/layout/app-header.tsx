@@ -14,7 +14,7 @@ interface AppHeaderProps {
   icon?: React.ReactNode
 }
 
-export function AppHeader({ title, icon }: AppHeaderProps) {
+export function AppHeader({ title }: AppHeaderProps) {
   const { direction, language, toggleLanguage } = useLanguage()
   const { theme, setTheme } = useTheme()
   const [fontSize, setFontSize] = useState(16)

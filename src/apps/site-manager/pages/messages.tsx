@@ -21,7 +21,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -95,7 +94,7 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("all")
   const [selectedPriority, setSelectedPriority] = useState("all")
-  const [viewingMessage, setViewingMessage] = useState<any>(null)
+  const [, setViewingMessage] = useState<any>(null)
   const [replyingTo, setReplyingTo] = useState<any>(null)
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [replyText, setReplyText] = useState("")
