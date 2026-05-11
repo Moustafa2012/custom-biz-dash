@@ -154,14 +154,14 @@ export function UserContextMenu({ className, user: propUser }: UserContextMenuPr
             </span>
           </DropdownMenuItem>
 
-          <DropdownMenuItem className={menuItemClass}>
+          <DropdownMenuItem onClick={() => navigate("/settings")} className={menuItemClass}>
             <span className={iconWrapClass}>
               <User className="h-3.5 w-3.5" />
             </span>
             {t("الملف الشخصي", "Profile")}
           </DropdownMenuItem>
 
-          <DropdownMenuItem className={menuItemClass}>
+          <DropdownMenuItem onClick={() => navigate("/settings")} className={menuItemClass}>
             <span className={iconWrapClass}>
               <Settings className="h-3.5 w-3.5" />
             </span>
