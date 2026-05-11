@@ -6,6 +6,7 @@ import {
   IconSearch,
   IconSettings,
 } from "@tabler/icons-react"
+import { Link } from "react-router-dom"
 
 import { NavSecondary } from "@/components/navigation/nav-secondary"
 import { NavUser } from "@/components/navigation/nav-user"
@@ -26,33 +27,14 @@ import { PlatformNavMain } from "@/apps/platform/nav-main"
 import { SiteManagerNavMain } from "@/apps/site-manager/nav-main"
 import { SynexNavMain } from "@/apps/synex/nav-main"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navSecondary: [
-    {
-      title: t("الإعدادات", "Settings"),
-      url: "/settings",
-      icon: IconSettings,
-    },
-    {
-      title: t("الحصول على المساعدة", "Get Help"),
-      url: "/help",
-      icon: IconHelp,
-    },
-    {
-      title: t("بحث", "Search"),
-      url: "/search",
-      icon: IconSearch,
-    },
-  ],
-}
+const navSecondary = [
+  { title: t("الإعدادات", "Settings"), url: "/settings", icon: IconSettings },
+  { title: t("الحصول على المساعدة", "Get Help"), url: "/help", icon: IconHelp },
+  { title: t("بحث", "Search"), url: "/search", icon: IconSearch },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { language, direction } = useLanguage()
+  const { language } = useLanguage()
   const { activeApp } = useApp()
   const side = language === "ar" ? "right" : "left"
 
@@ -75,28 +57,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       collapsible="icon"
       side={side}
       {...props}
-      style={{ direction }}
       className="border-none"
     >
       <SidebarHeader className="bg-muted/20">
         <AppSwitcher />
         <SidebarMenu className="mt-2">
           <SidebarMenuItem>
-            <SidebarMenuButton>
-              <a href="/" className="flex items-center gap-2.5">
-                <div className="
-                  relative flex items-center justify-center
-                  rounded-md
-                  ring-1 ring-primary
-                  transition-all duration-300
-                ">
+            <SidebarMenuButton asChild tooltip={t("ثريا البلاد", "Thouraya Albilad")}>
+              <Link to="/" className="flex items-center gap-2.5">
+                <div
+                  className="
+                    relative flex items-center justify-center
+                    rounded-md ring-1 ring-primary
+                    transition-all duration-300
+                  "
+                >
                   <IconInnerShadowTop className="size-4 text-primary" />
                   <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-emerald-500 ring-1 ring-background shadow-[0_0_6px_rgba(34,197,94,0.7)]" />
                 </div>
                 <span className="text-lg font-semibold tracking-tight text-foreground">
                   {t("ثريا البلاد", "Thouraya Albilad")}
                 </span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -104,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent className="bg-muted/20">
         {renderNavMain()}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
 
       <SidebarFooter className="pb-4 bg-muted/20">

@@ -1,8 +1,9 @@
 "use client"
 
+import * as React from "react"
 import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
-import { TooltipProvider } from "@/components/ui/tooltip"
+
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -12,35 +13,46 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { t } from "@/lib/translations"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
+import { cn } from "@/lib/utils"
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: Icon
-  }[]
-}) {
-  const [activeItem, setActiveItem] = useState(items[0]?.title)
-  const navigate = useNavigate()
+export interface NavItem {
+  title: string
+  url: string
+  icon?: Icon
+  /** Optional exact-match override; defaults to startsWith for nested routes */
+  exact?: boolean
+}
+
+function useIsActive() {
+  const { pathname } = useLocation()
+  return React.useCallback(
+    (item: NavItem) => {
+      if (item.exact) return pathname === item.url
+      return pathname === item.url || pathname.startsWith(item.url + "/")
+    },
+    [pathname]
+  )
+}
+
+export function NavMain({ items }: { items: NavItem[] }) {
+  const isActive = useIsActive()
 
   return (
     <SidebarGroup className="pt-4">
-      <SidebarGroupLabel className="
-        text-[10px] font-semibold uppercase tracking-[0.12em]
-        text-muted-foreground/50
-        px-3 mb-1
-      ">
-        {t("التنقل", "Navigation")}
-      </SidebarGroupLabel>
+        <SidebarGroupLabel
+          className="
+            text-[10px] font-semibold uppercase tracking-[0.12em]
+            text-muted-foreground/50
+            px-3 mb-1
+          "
+        >
+          {t("التنقل", "Navigation")}
+        </SidebarGroupLabel>
 
-      <SidebarGroupContent className="flex flex-col gap-1.5">
-        <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-1.5 mb-1">
-            <TooltipProvider>
+        <SidebarGroupContent className="flex flex-col gap-1.5">
+          <SidebarMenu>
+            <SidebarMenuItem className="flex items-center gap-1.5 mb-1">
               <SidebarMenuButton
                 tooltip={t("إنشاء سريع", "Quick Create")}
                 className="
@@ -57,77 +69,72 @@ export function NavMain({
                 <IconCirclePlusFilled className="size-4" />
                 <span>{t("إنشاء سريع", "Quick Create")}</span>
               </SidebarMenuButton>
-            </TooltipProvider>
 
-            <Button
-              size="icon"
-              className="
-                size-8 shrink-0
-                rounded-md
-                border border-border/40
-                bg-accent/40
-                text-muted-foreground
-                transition-all duration-200
-                hover:bg-accent hover:border-border/70 hover:text-foreground
-                hover:scale-105
-                active:scale-95
-                group-data-[collapsible=icon]:opacity-0
-              "
-              variant="outline"
-            >
-              <IconMail className="size-3.5" />
-              <span className="sr-only">{t("البريد الوارد", "Inbox")}</span>
-            </Button>
-          </SidebarMenuItem>
-        </SidebarMenu>
-
-        <SidebarMenu className="gap-0.5">
-          {items.map((item, index) => {
-            const isActive = activeItem === item.title
-            return (
-              <SidebarMenuItem
-                key={item.title}
-                style={{ animationDelay: `${index * 40}ms` }}
-                className="animate-in fade-in slide-in-from-start-2 duration-300"
+              <Button
+                size="icon"
+                variant="outline"
+                aria-label={t("البريد الوارد", "Inbox")}
+                className="
+                  size-8 shrink-0 rounded-md
+                  border border-border/40 bg-accent/40 text-muted-foreground
+                  transition-all duration-200
+                  hover:bg-accent hover:border-border/70 hover:text-foreground
+                  hover:scale-105 active:scale-95
+                  group-data-[collapsible=icon]:opacity-0
+                "
               >
-                <TooltipProvider>
+                <IconMail className="size-3.5" />
+              </Button>
+            </SidebarMenuItem>
+          </SidebarMenu>
+
+          <SidebarMenu className="gap-0.5">
+            {items.map((item, index) => {
+              const active = isActive(item)
+              return (
+                <SidebarMenuItem
+                  key={item.url}
+                  style={{ animationDelay: `${index * 30}ms` }}
+                  className="animate-in fade-in slide-in-from-bottom-1 duration-300"
+                >
                   <SidebarMenuButton
+                    asChild
                     tooltip={item.title}
-                    onClick={() => {
-                      setActiveItem(item.title)
-                      navigate(item.url)
-                    }}
-                    isActive={isActive}
-                    className={`
-                      group relative rounded-md
-                      text-[13px] font-medium
-                      transition-all duration-200
-                      hover:translate-x-0.5 rtl:hover:translate-x-[-0.5]
-                      ${isActive
-                        ? "bg-primary/10 text-primary hover:bg-primary/12"
-                        : "text-muted-foreground hover:bg-accent/60 hover:text-foreground font-bold" 
-                      }
-                    `}
+                    isActive={active}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "group relative rounded-md text-[13px] font-medium",
+                      "transition-all duration-200",
+                      "hover:translate-x-0.5 rtl:hover:-translate-x-0.5",
+                      active
+                        ? "bg-primary/10 text-primary hover:bg-primary/15"
+                        : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                    )}
                   >
-                    {isActive && (
-                      <span className="absolute inset-y-0 start-0 h-8 w-0.75 rounded-md bg-primary" />
-                    )}
-                    {item.icon && (
-                      <item.icon className={`
-                        size-4 shrink-0 transition-all duration-200
-                        ${isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-foreground"}
-                      `} />
-                    )}
-                    <span className={`transition-colors duration-200 ${isActive ? "font-semibold" : ""}`}>
-                      {item.title}
-                    </span>
+                    <Link to={item.url}>
+                      {active && (
+                        <span className="absolute inset-y-0 start-0 my-auto h-6 w-0.5 rounded-full bg-primary" />
+                      )}
+                      {item.icon && (
+                        <item.icon
+                          className={cn(
+                            "size-4 shrink-0 transition-colors duration-200",
+                            active
+                              ? "text-primary"
+                              : "text-muted-foreground/70 group-hover:text-foreground"
+                          )}
+                        />
+                      )}
+                      <span className={cn("transition-colors duration-200", active && "font-semibold")}>
+                        {item.title}
+                      </span>
+                    </Link>
                   </SidebarMenuButton>
-                </TooltipProvider>
-              </SidebarMenuItem>
-            )
-          })}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+                </SidebarMenuItem>
+              )
+            })}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
   )
 }

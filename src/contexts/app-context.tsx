@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { IconDashboard, IconChartBar, IconFolder } from "@tabler/icons-react"
 import { t } from "@/lib/translations"
 
@@ -11,7 +12,10 @@ export interface App {
   name: string
   logo: React.ElementType
   description: string
+  /** Base URL prefix used to detect and switch to this app */
   path: string
+  /** Default landing page when switching into this app */
+  defaultRoute: string
 }
 
 export const APPS: App[] = [
@@ -21,6 +25,7 @@ export const APPS: App[] = [
     logo: IconDashboard,
     description: t("المنصة الرئيسية للنظام", "Main system platform"),
     path: "/platform",
+    defaultRoute: "/platform/overview",
   },
   {
     id: "site-manager",
@@ -28,6 +33,7 @@ export const APPS: App[] = [
     logo: IconFolder,
     description: t("إدارة المحتوى والموقع", "Content and site management"),
     path: "/site-manager",
+    defaultRoute: "/site-manager/overview",
   },
   {
     id: "synex",
@@ -35,8 +41,15 @@ export const APPS: App[] = [
     logo: IconChartBar,
     description: t("نظام البنك المالي", "Financial banking system"),
     path: "/synex",
+    defaultRoute: "/synex/overview",
   },
 ]
+
+const APP_STORAGE_KEY = "active_app_id"
+
+function detectAppFromPath(pathname: string): App | undefined {
+  return APPS.find((a) => pathname === a.path || pathname.startsWith(a.path + "/"))
+}
 
 type AppContextType = {
   activeApp: App
@@ -47,21 +60,37 @@ type AppContextType = {
 const AppContext = React.createContext<AppContextType | undefined>(undefined)
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [activeApp, setActiveAppState] = React.useState<App>(APPS[0])
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  const setActiveApp = React.useCallback((appId: AppId) => {
-    const app = APPS.find(a => a.id === appId)
-    if (app) {
-      setActiveAppState(app)
+  // Derive active app from URL when possible; fall back to last-used or first.
+  const activeApp = React.useMemo<App>(() => {
+    const fromUrl = detectAppFromPath(location.pathname)
+    if (fromUrl) return fromUrl
+    const stored = typeof window !== "undefined" ? localStorage.getItem(APP_STORAGE_KEY) : null
+    return APPS.find((a) => a.id === stored) ?? APPS[0]
+  }, [location.pathname])
+
+  // Persist whichever app the user is currently viewing.
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(APP_STORAGE_KEY, activeApp.id)
+    } catch {
+      /* storage may be unavailable */
     }
-  }, [])
+  }, [activeApp.id])
+
+  const setActiveApp = React.useCallback(
+    (appId: AppId) => {
+      const app = APPS.find((a) => a.id === appId)
+      if (!app || app.id === activeApp.id) return
+      navigate(app.defaultRoute)
+    },
+    [activeApp.id, navigate]
+  )
 
   const value = React.useMemo(
-    () => ({
-      activeApp,
-      setActiveApp,
-      apps: APPS,
-    }),
+    () => ({ activeApp, setActiveApp, apps: APPS }),
     [activeApp, setActiveApp]
   )
 
