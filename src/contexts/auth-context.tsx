@@ -92,7 +92,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    if (!validateEmail(email) || !validatePassword(password)) return false
+    // Don't enforce length policy on login — only on signup. Otherwise valid
+    // existing accounts (including the demo) cannot sign in.
+    if (!validateEmail(email) || typeof password !== "string" || password.length === 0) return false
 
     if (
       DEMO_EMAIL &&
