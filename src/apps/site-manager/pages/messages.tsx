@@ -94,7 +94,7 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("all")
   const [selectedPriority, setSelectedPriority] = useState("all")
-  const [, setViewingMessage] = useState<any>(null)
+  
   const [replyingTo, setReplyingTo] = useState<any>(null)
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [replyText, setReplyText] = useState("")
