@@ -94,7 +94,8 @@ export default function NewsletterPage() {
       alert(t("يرجى ملء جميع الحقول المطلوبة", "Please fill in all required fields"))
       return
     }
-    console.log("Send newsletter:", emailData, smtpConfig, "to:", selectedRecipients)
+    // Do not log smtpConfig — it contains credentials. In production, send via a server-side endpoint.
+    console.log("Send newsletter:", { subject: emailData.subject, recipients: selectedRecipients.length, host: smtpConfig.host })
     alert(t("تم إرسال النشرة البريدية بنجاح!", "Newsletter sent successfully!"))
     setIsComposeOpen(false)
     setEmailData({ subject: "", content: "", previewText: "" })
