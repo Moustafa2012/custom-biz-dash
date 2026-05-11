@@ -1,16 +1,22 @@
-import { createContext, useContext } from "react";
-import type { ReactNode } from "react";
+"use client"
 
-const DirectionContext = createContext<"ltr" | "rtl">("ltr");
+import * as React from "react"
+import { Direction } from "radix-ui"
 
-export function DirectionProvider({ dir, children }: { dir: "ltr" | "rtl"; children: ReactNode }) {
+function DirectionProvider({
+  dir,
+  direction,
+  children,
+}: React.ComponentProps<typeof Direction.DirectionProvider> & {
+  direction?: React.ComponentProps<typeof Direction.DirectionProvider>["dir"]
+}) {
   return (
-    <DirectionContext.Provider value={dir}>
-      <div dir={dir}>{children}</div>
-    </DirectionContext.Provider>
-  );
+    <Direction.DirectionProvider dir={direction ?? dir}>
+      {children}
+    </Direction.DirectionProvider>
+  )
 }
 
-export function useDirection() {
-  return useContext(DirectionContext);
-}
+const useDirection = Direction.useDirection
+
+export { DirectionProvider, useDirection }

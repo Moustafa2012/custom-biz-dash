@@ -1,41 +1,88 @@
-'use client';
+import * as React from "react"
+import { type Language, type Direction, setLanguage } from "@/lib/translations"
+import { DirectionProvider } from "@/components/ui/direction.tsx"
 
-import { createContext, useContext, useState } from 'react';
-
-interface LanguageContextType {
-  language: string;
-  direction: 'ltr' | 'rtl';
-  setLanguage: (lang: string) => void;
-  t: (en: string, ar: string) => string;
+type LanguageProviderProps = {
+  children: React.ReactNode
+  defaultLanguage?: Language
+  storageKey?: string
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+type LanguageProviderState = {
+  language: Language
+  direction: Direction
+  setLanguage: (language: Language) => void
+  toggleLanguage: () => void
+}
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState('en');
+const LanguageProviderContext = React.createContext<
+  LanguageProviderState | undefined
+>(undefined)
 
-  const direction = language === 'ar' ? 'rtl' : 'ltr';
+function isLanguage(value: string | null): value is Language {
+  return value === "ar" || value === "en"
+}
 
-  const t = (en: string, ar: string) => {
-    return language === 'ar' ? ar : en;
-  };
+export function LanguageProvider({
+  children,
+  defaultLanguage = "en",
+  storageKey = "language",
+  ...props
+}: LanguageProviderProps) {
+  const [language, setLanguageState] = React.useState<Language>(() => {
+    const stored = localStorage.getItem(storageKey)
+    if (stored && isLanguage(stored)) {
+      return stored
+    }
+    return defaultLanguage
+  })
+
+  const direction: Direction = language === "ar" ? "rtl" : "ltr"
+
+  React.useEffect(() => {
+    const root = window.document.documentElement
+    root.classList.remove("ltr", "rtl")
+    root.classList.add(direction)
+    root.setAttribute("dir", direction)
+    root.setAttribute("lang", language)
+  }, [language, direction])
+
+  const handleSetLanguage = React.useCallback(
+    (newLanguage: Language) => {
+      localStorage.setItem(storageKey, newLanguage)
+      setLanguageState(newLanguage)
+      setLanguage(newLanguage)
+    },
+    [storageKey]
+  )
+
+  const toggleLanguage = React.useCallback(() => {
+    handleSetLanguage(language === "ar" ? "en" : "ar")
+  }, [language, handleSetLanguage])
+
+  const value = React.useMemo(
+    () => ({
+      language,
+      direction,
+      setLanguage: handleSetLanguage,
+      toggleLanguage,
+    }),
+    [language, direction, handleSetLanguage, toggleLanguage]
+  )
 
   return (
-    <LanguageContext.Provider value={{ language, direction, setLanguage, t }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+    <LanguageProviderContext.Provider {...props} value={value}>
+      <DirectionProvider dir={direction}>
+        {children}
+      </DirectionProvider>
+    </LanguageProviderContext.Provider>
+  )
 }
 
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    return {
-      language: 'en',
-      direction: 'ltr' as const,
-      setLanguage: () => {},
-      t: (en: string) => en,
-    };
+export const useLanguage = () => {
+  const context = React.useContext(LanguageProviderContext)
+  if (context === undefined) {
+    throw new Error("useLanguage must be used within a LanguageProvider")
   }
-  return context;
+  return context
 }

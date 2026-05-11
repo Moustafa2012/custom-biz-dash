@@ -1,99 +1,88 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { AppConfigProvider } from "@/components/erp/app-config";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { useAuthStore } from "@/stores/auth-store";
-import { useEffect } from "react";
-import { queryClient } from "@/lib/api/queryClient";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import TwoFactorPage from "./pages/TwoFactorPage";
-import ErpAppPage from "./pages/ErpAppPage";
-import NotFound from "./pages/NotFound.tsx";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { LandingPage } from "@/pages/landing-page"
+import { AuthProvider } from "@/contexts/auth-context"
+import { AppProvider } from "@/contexts/app-context"
+import { LanguageProvider } from "@/components/language-provider"
+import LoginPage from "@/pages/login-page"
+import SettingsPage from "@/pages/settings"
+import HelpPage from "@/pages/help"
+import SearchPage from "@/pages/search"
+import ArticleReader from "@/components/sections/ArticleReader"
 
-const App = () => {
+// Platform app pages
+import PlatformOverviewPage from "@/apps/platform/pages/overview/overview"
+import TelefatherPage from "@/apps/platform/pages/telefather/telefather"
+import MailerPage from "@/apps/platform/pages/Mailer/mailer"
+import PlatformUsersPage from "@/apps/platform/pages/users/users"
+import AuditLogsPage from "@/apps/platform/pages/audit-logs/audit-logs"
+
+// Site Manager app pages
+import OverviewPage from "@/apps/site-manager/pages/overview"
+import ProductsPage from "@/apps/site-manager/pages/products"
+import ArticlesPage from "@/apps/site-manager/pages/articles/articles"
+import ArticleComposerPage from "@/apps/site-manager/pages/articles/Articlecomposer"
+import FAQPage from "@/apps/site-manager/pages/faq"
+import MessagesPage from "@/apps/site-manager/pages/messages"
+import NewsletterPage from "@/apps/site-manager/pages/newsletter"
+
+// Synex app pages
+import SynexOverviewPage from "@/apps/synex/pages/Overview/overview"
+import AccountsPage from "@/apps/synex/pages/Accounts/accounts"
+import BeneficiariesPage from "@/apps/synex/pages/Beneficiaries/beneficiaries"
+import JournalEntriesPage from "@/apps/synex/pages/Journal-Entries/entries"
+import TransactionsPage from "@/apps/synex/pages/Transactions/transactions"
+import ReportsPage from "@/apps/synex/pages/Reports/reports"
+
+export function App() {
   return (
-    <ErrorBoundary>
-      <AppConfigProvider>
-        <AppContent />
-      </AppConfigProvider>
-    </ErrorBoundary>
-  );
-};
+    <BrowserRouter>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppProvider>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
-const AuthInitializer = () => {
-  const initializeAuth = useAuthStore((s) => s.initializeAuth);
-  useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
-  return null;
-};
+              {/* Platform app routes */}
+              <Route path="/platform/overview" element={<PlatformOverviewPage />} />
+              <Route path="/platform/telefather" element={<TelefatherPage />} />
+              <Route path="/platform/mailer" element={<MailerPage />} />
+              <Route path="/platform/users" element={<PlatformUsersPage />} />
+              <Route path="/platform/audit-logs" element={<AuditLogsPage />} />
 
-const AppContent = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AuthInitializer />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/2fa" element={<TwoFactorPage />} />
+              {/* General routes */}
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/help" element={<HelpPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/articles/read" element={<ArticleReader />} />
 
-            {/* Module routes — each guarded by its `<module>.view` permission. */}
-            <Route
-              path="/sales"
-              element={
-                <ProtectedRoute requiredPermission="sales.view">
-                  <ErpAppPage appId="sales" defaultPage="dashboard" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/finance"
-              element={
-                <ProtectedRoute requiredPermission="finance.view">
-                  <ErpAppPage appId="finance" defaultPage="dashboard" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/inventory"
-              element={
-                <ProtectedRoute requiredPermission="inventory.view">
-                  <ErpAppPage appId="inventory" defaultPage="dashboard" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/banking"
-              element={
-                <ProtectedRoute requiredPermission="banking.view">
-                  <ErpAppPage appId="banking" defaultPage="dashboard" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/warehouse"
-              element={
-                <ProtectedRoute requiredPermission="warehouse.view">
-                  <ErpAppPage appId="warehouse" defaultPage="dashboard" />
-                </ProtectedRoute>
-              }
-            />
+              {/* Site Manager app routes */}
+              <Route path="/site-manager/overview" element={<OverviewPage />} />
+              <Route path="/site-manager/products" element={<ProductsPage />} />
+              <Route path="/site-manager/articles" element={<ArticlesPage />} />
+              <Route path="/site-manager/articles/create" element={<ArticleComposerPage />} />
+              <Route path="/site-manager/articles/edit" element={<ArticleComposerPage />} />
+              <Route path="/site-manager/faq" element={<FAQPage />} />
+              <Route path="/site-manager/messages" element={<MessagesPage />} />
+              <Route path="/site-manager/newsletter" element={<NewsletterPage />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-};
+              {/* Synex app routes */}
+              <Route path="/synex/overview" element={<SynexOverviewPage />} />
+              <Route path="/synex/accounts" element={<AccountsPage />} />
+              <Route path="/synex/beneficiaries" element={<BeneficiariesPage />} />
+              <Route path="/synex/journal-entries" element={<JournalEntriesPage />} />
+              <Route path="/synex/transactions" element={<TransactionsPage />} />
+              <Route path="/synex/reports" element={<ReportsPage />} />
 
-export default App;
+              {/* Default redirect */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AppProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </BrowserRouter>
+  )
+}
+
+export default App
