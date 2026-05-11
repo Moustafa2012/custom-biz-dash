@@ -6,7 +6,7 @@ import { Moon, Sun, Globe, Type, LayoutDashboard, ChevronRight } from "lucide-re
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/components/language-provider"
 import { t } from "@/lib/translations"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface AppHeaderProps {
