@@ -65,17 +65,14 @@ export default function LoginPage() {
       </div>
       
       <div className="relative z-10 flex w-full max-w-lg items-center justify-center">
-        <LoginForm 
+        <LoginForm
           onSuccess={(data) => {
-            // Handle successful login/signup
             if (data.tab === "login") {
-              // For login, authenticate user
               handleSubmit({ email: data.email, password: data.password } as any)
             } else {
-              // For signup, you might redirect to a verification page or auto-login
-              console.log("Signup successful:", data)
-              // For now, just navigate to home
-              navigate("/")
+              // Signup is not supported without a backend. Surface a clear
+              // error instead of silently navigating into the app.
+              console.error("Signup is disabled in this build — no backend available.")
             }
           }}
         />
