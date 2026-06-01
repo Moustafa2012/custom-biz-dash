@@ -34,8 +34,8 @@ export function SynexNavMain() {
       icon: IconBook,
     },
     {
-      title: t("المعاملات", "Transactions"),
-      url: "/synex/transactions",
+      title: t("التحويلات", "Transfers"),
+      url: "/synex/transfers",
       icon: IconTransactionDollar,
     },
     {

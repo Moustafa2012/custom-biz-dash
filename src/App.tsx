@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7"
 import { LandingPage } from "@/pages/landing-page"
 import { AuthProvider } from "@/contexts/auth-context"
 import { AppProvider } from "@/contexts/app-context"
@@ -29,59 +30,82 @@ import NewsletterPage from "@/apps/site-manager/pages/newsletter"
 // Synex app pages
 import SynexOverviewPage from "@/apps/synex/pages/Overview/overview"
 import AccountsPage from "@/apps/synex/pages/Accounts/accounts"
+import AccountDetailsPage from "@/apps/synex/pages/Accounts/details"
+import NewAccountPage from "@/apps/synex/pages/Accounts/new"
 import BeneficiariesPage from "@/apps/synex/pages/Beneficiaries/beneficiaries"
+import NewBeneficiaryPage from "@/apps/synex/pages/Beneficiaries/new"
 import JournalEntriesPage from "@/apps/synex/pages/Journal-Entries/entries"
-import TransactionsPage from "@/apps/synex/pages/Transactions/transactions"
+import NewJournalEntryPage from "@/apps/synex/pages/Journal-Entries/new"
+import TransfersPage from "@/apps/synex/pages/Transfers/transfers"
+import NewTransferPage from "@/apps/synex/pages/Transfers/new"
 import ReportsPage from "@/apps/synex/pages/Reports/reports"
+import { SynexProvider } from "@/apps/synex/store/synex-store.tsx"
+
 
 export function App() {
   return (
     <BrowserRouter>
-      <LanguageProvider>
-        <AuthProvider>
-          <AppProvider>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
+      <NuqsAdapter>
+        <LanguageProvider>
+          <AuthProvider>
+            <AppProvider>
+              <Routes>
+                {/* ... existing routes ... */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
 
-              {/* Platform app routes */}
-              <Route path="/platform/overview" element={<PrivateRoute><PlatformOverviewPage /></PrivateRoute>} />
-              <Route path="/platform/telefather" element={<PrivateRoute><TelefatherPage /></PrivateRoute>} />
-              <Route path="/platform/mailer" element={<PrivateRoute><MailerPage /></PrivateRoute>} />
-              <Route path="/platform/users" element={<PrivateRoute><PlatformUsersPage /></PrivateRoute>} />
-              <Route path="/platform/audit-logs" element={<PrivateRoute><AuditLogsPage /></PrivateRoute>} />
+                {/* Platform app routes */}
+                <Route path="/platform/overview" element={<PrivateRoute><PlatformOverviewPage /></PrivateRoute>} />
+                <Route path="/platform/telefather" element={<PrivateRoute><TelefatherPage /></PrivateRoute>} />
+                <Route path="/platform/mailer" element={<PrivateRoute><MailerPage /></PrivateRoute>} />
+                <Route path="/platform/users" element={<PrivateRoute><PlatformUsersPage /></PrivateRoute>} />
+                <Route path="/platform/audit-logs" element={<PrivateRoute><AuditLogsPage /></PrivateRoute>} />
 
-              {/* General routes */}
-              <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
-              <Route path="/help" element={<HelpPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/articles/read" element={<ArticleReader />} />
+                {/* General routes */}
+                <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
+                <Route path="/help" element={<HelpPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/articles/read" element={<ArticleReader />} />
 
-              {/* Site Manager app routes */}
-              <Route path="/site-manager/overview" element={<PrivateRoute><OverviewPage /></PrivateRoute>} />
-              <Route path="/site-manager/products" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
-              <Route path="/site-manager/articles" element={<PrivateRoute><ArticlesPage /></PrivateRoute>} />
-              <Route path="/site-manager/articles/create" element={<PrivateRoute><ArticleComposerPage /></PrivateRoute>} />
-              <Route path="/site-manager/articles/edit" element={<PrivateRoute><ArticleComposerPage /></PrivateRoute>} />
-              <Route path="/site-manager/faq" element={<PrivateRoute><FAQPage /></PrivateRoute>} />
-              <Route path="/site-manager/messages" element={<PrivateRoute><MessagesPage /></PrivateRoute>} />
-              <Route path="/site-manager/newsletter" element={<PrivateRoute><NewsletterPage /></PrivateRoute>} />
+                {/* Site Manager app routes */}
+                <Route path="/site-manager/overview" element={<PrivateRoute><OverviewPage /></PrivateRoute>} />
+                <Route path="/site-manager/products" element={<PrivateRoute><ProductsPage /></PrivateRoute>} />
+                <Route path="/site-manager/articles" element={<PrivateRoute><ArticlesPage /></PrivateRoute>} />
+                <Route path="/site-manager/articles/create" element={<PrivateRoute><ArticleComposerPage /></PrivateRoute>} />
+                <Route path="/site-manager/faq" element={<PrivateRoute><FAQPage /></PrivateRoute>} />
+                <Route path="/site-manager/messages" element={<PrivateRoute><MessagesPage /></PrivateRoute>} />
+                <Route path="/site-manager/newsletter" element={<PrivateRoute><NewsletterPage /></PrivateRoute>} />
 
-              {/* Synex app routes */}
-              <Route path="/synex/overview" element={<PrivateRoute><SynexOverviewPage /></PrivateRoute>} />
-              <Route path="/synex/accounts" element={<PrivateRoute><AccountsPage /></PrivateRoute>} />
-              <Route path="/synex/beneficiaries" element={<PrivateRoute><BeneficiariesPage /></PrivateRoute>} />
-              <Route path="/synex/journal-entries" element={<PrivateRoute><JournalEntriesPage /></PrivateRoute>} />
-              <Route path="/synex/transactions" element={<PrivateRoute><TransactionsPage /></PrivateRoute>} />
-              <Route path="/synex/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
+                {/* Synex app routes */}
+                <Route path="/synex/*" element={
+                  <PrivateRoute>
+                    <SynexProvider>
+                      <Routes>
+                        <Route path="overview" element={<SynexOverviewPage />} />
+                        <Route path="accounts" element={<AccountsPage />} />
+                        <Route path="accounts/new" element={<NewAccountPage />} />
+                        <Route path="accounts/:id" element={<AccountDetailsPage />} />
+                        <Route path="beneficiaries" element={<BeneficiariesPage />} />
+                        <Route path="beneficiaries/new" element={<NewBeneficiaryPage />} />
+                        <Route path="beneficiaries/:id" element={<BeneficiariesPage />} />
+                        <Route path="transfers" element={<TransfersPage />} />
+                        <Route path="transfers/new" element={<NewTransferPage />} />
+                        <Route path="transfers/:id" element={<TransfersPage />} />
+                        <Route path="journal-entries" element={<JournalEntriesPage />} />
+                        <Route path="journal-entries/new" element={<NewJournalEntryPage />} />
+                        <Route path="reports" element={<ReportsPage />} />
+                      </Routes>
+                    </SynexProvider>
+                  </PrivateRoute>
+                } />
 
-              {/* Default redirect */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </AppProvider>
-        </AuthProvider>
-      </LanguageProvider>
+                {/* Default redirect */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </AppProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </NuqsAdapter>
     </BrowserRouter>
   )
 }
