@@ -47,11 +47,8 @@ function findTransfer(state: EngineState, id: string): Transfer {
   return t
 }
 
-function findAccount(state: EngineState, id: string): Account {
-  const a = state.accounts.find((x) => x.id === id)
-  if (!a) throw new EngineError('ENTITY_NOT_FOUND', `Account ${id} not found`)
-  return a
-}
+// (account lookup helper removed — inlined where needed)
+
 
 function transition(
   state: EngineState,
