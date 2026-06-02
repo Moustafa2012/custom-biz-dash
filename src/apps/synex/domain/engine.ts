@@ -13,6 +13,7 @@
  */
 
 import type { Account, JournalEntry, Transfer } from '../data/mock'
+// (Account type re-used inside EngineState)
 import {
   EngineError,
   type Batch,
