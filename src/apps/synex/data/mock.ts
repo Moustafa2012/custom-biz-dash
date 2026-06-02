@@ -127,7 +127,7 @@ export interface Transfer {
   bankName: string
   amount: number
   currency: string
-  status: 'draft' | 'pending' | 'sent' | 'completed' | 'rejected' | 'cancelled'
+  status: 'draft' | 'pending' | 'pending_approval' | 'approved' | 'sent' | 'completed' | 'settled' | 'rejected' | 'cancelled' | 'voided' | 'failed'
   transferReason: string
   notes?: string
   executionDate: Date
