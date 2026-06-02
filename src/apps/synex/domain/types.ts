@@ -123,9 +123,13 @@ export interface Batch {
 // ─── Engine result ───────────────────────────────────────────────────────────
 
 export class EngineError extends Error {
-  constructor(public readonly code: EngineErrorCode, message: string, public readonly context?: Record<string, unknown>) {
+  readonly code: EngineErrorCode
+  readonly context?: Record<string, unknown>
+  constructor(code: EngineErrorCode, message: string, context?: Record<string, unknown>) {
     super(message)
     this.name = 'EngineError'
+    this.code = code
+    this.context = context
   }
 }
 
