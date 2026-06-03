@@ -112,9 +112,8 @@ export default function TransfersPage() {
   )
 
   const handleView = useCallback((transfer: Transfer) => {
-    setSelectedTransfer(transfer)
-    setDetailsOpen(true)
-  }, [])
+    navigate(`/synex/transfers/${transfer.id}`)
+  }, [navigate])
 
   const handleDownloadPDF = useCallback((transfer: Transfer) => {
     navigate(`/synex/transfers/${transfer.id}/document`)
@@ -339,7 +338,8 @@ export default function TransfersPage() {
         id: 'actions',
         enableHiding: false, enableSorting: false, enableColumnFilter: false,
         cell: ({ row }) => (
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-1">
+            <TransferActions transfer={row.original} variant="row" />
             <TableActions
               data={row.original}
               onView={handleView}
@@ -367,7 +367,7 @@ export default function TransfersPage() {
             />
           </div>
         ),
-        size: 52,
+        size: 180,
       },
     ],
     [state.accounts, state.beneficiaries, handleDelete, handleDownloadPDF, handleArchive, handleView],
