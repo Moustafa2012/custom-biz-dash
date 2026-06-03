@@ -38,6 +38,7 @@ import JournalEntriesPage from "@/apps/synex/pages/Journal-Entries/entries"
 import NewJournalEntryPage from "@/apps/synex/pages/Journal-Entries/new"
 import TransfersPage from "@/apps/synex/pages/Transfers/transfers"
 import NewTransferPage from "@/apps/synex/pages/Transfers/new"
+import TransferDetailPage from "@/apps/synex/pages/Transfers/details"
 import ReportsPage from "@/apps/synex/pages/Reports/reports"
 import { SynexProvider } from "@/apps/synex/store/synex-store.tsx"
 
@@ -90,7 +91,7 @@ export function App() {
                         <Route path="beneficiaries/:id" element={<BeneficiariesPage />} />
                         <Route path="transfers" element={<TransfersPage />} />
                         <Route path="transfers/new" element={<NewTransferPage />} />
-                        <Route path="transfers/:id" element={<TransfersPage />} />
+                        <Route path="transfers/:id" element={<TransferDetailPage />} />
                         <Route path="journal-entries" element={<JournalEntriesPage />} />
                         <Route path="journal-entries/new" element={<NewJournalEntryPage />} />
                         <Route path="reports" element={<ReportsPage />} />
