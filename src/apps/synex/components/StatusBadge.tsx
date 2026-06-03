@@ -8,20 +8,25 @@ interface StatusBadgeProps {
 }
 
 const statusConfig: Record<string, { ar: string; en: string; variant: 'default' | 'secondary' | 'destructive' | 'outline'; icon?: string }> = {
-  active: { ar: 'نشط', en: 'Active', variant: 'default' },
-  inactive: { ar: 'غير نشط', en: 'Inactive', variant: 'secondary' },
-  suspended: { ar: 'معلق', en: 'Suspended', variant: 'destructive' },
-  draft: { ar: 'مسودة', en: 'Draft', variant: 'outline' },
-  pending: { ar: 'قيد الانتظار', en: 'Pending', variant: 'secondary', icon: '/assets/media/synex/waiting.png' },
-  sent: { ar: 'تم الإرسال', en: 'Sent', variant: 'default' },
-  completed: { ar: 'مكتمل', en: 'Completed', variant: 'default', icon: '/assets/media/synex/success.png' },
-  rejected: { ar: 'مرفوض', en: 'Rejected', variant: 'destructive' },
-  cancelled: { ar: 'ملغي', en: 'Cancelled', variant: 'destructive' },
+  active:           { ar: 'نشط',           en: 'Active',           variant: 'default' },
+  inactive:         { ar: 'غير نشط',       en: 'Inactive',         variant: 'secondary' },
+  suspended:        { ar: 'معلق',          en: 'Suspended',        variant: 'destructive' },
+  draft:            { ar: 'مسودة',         en: 'Draft',            variant: 'outline' },
+  pending:          { ar: 'قيد الانتظار',  en: 'Pending',          variant: 'secondary', icon: '/assets/media/synex/waiting.png' },
+  pending_approval: { ar: 'بانتظار الموافقة', en: 'Pending Approval', variant: 'secondary', icon: '/assets/media/synex/waiting.png' },
+  approved:         { ar: 'تمت الموافقة',  en: 'Approved',         variant: 'default' },
+  sent:             { ar: 'تم الإرسال',    en: 'Sent',             variant: 'default' },
+  settled:          { ar: 'تمت التسوية',   en: 'Settled',          variant: 'default', icon: '/assets/media/synex/success.png' },
+  completed:        { ar: 'مكتمل',         en: 'Completed',        variant: 'default', icon: '/assets/media/synex/success.png' },
+  rejected:         { ar: 'مرفوض',         en: 'Rejected',         variant: 'destructive' },
+  cancelled:        { ar: 'ملغي',          en: 'Cancelled',        variant: 'destructive' },
+  voided:           { ar: 'مُبطل',         en: 'Voided',           variant: 'destructive' },
+  failed:           { ar: 'فشل',           en: 'Failed',           variant: 'destructive' },
 }
 
 export function StatusBadge({ status, className, showIcon = false }: StatusBadgeProps) {
   const config = statusConfig[status] || { ar: status, en: status, variant: 'outline' as const }
-  
+
   return (
     <Badge variant={config.variant} className={className}>
       {showIcon && config.icon && (
