@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { StatusBadge } from '../../components/StatusBadge'
 import { CurrencyAmount } from '../../components/CurrencyAmount'
+import { TransferActions } from '../../components/TransferActions'
 import { useSynex } from '../../store/synex-store'
 import { Link, useNavigate } from 'react-router-dom'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
@@ -20,7 +21,7 @@ import {
   DataTable, DataTableSkeleton, DataTableColumnHeader, DataTableSortList,
   DataTableFilterMenu, DataTableAdvancedToolbar, BulkActions, ExportButton,
   TableActions, CopyableCell, CellWithIcon, KeyboardShortcutsHelp,
-  RowDetailsSheet, DetailItem, DetailSection, RowGroupingButton, GroupHeader,
+  RowGroupingButton, GroupHeader,
   useGroupedData, useTableKeyboardShortcuts,
   type ExtendedColumnFilter, type GroupableColumn,
 } from '@/components/ui/data-table'
@@ -60,12 +61,17 @@ numberFilterFn.autoRemove = (val: string) => !val
 // ─── Status config ────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<string, { dot: string; label: { ar: string; en: string } }> = {
-  draft:     { dot: 'bg-muted-foreground', label: { ar: 'مسودة',       en: 'Draft'      } },
-  pending:   { dot: 'bg-yellow-500',       label: { ar: 'قيد الانتظار', en: 'Pending'    } },
-  sent:      { dot: 'bg-blue-500',         label: { ar: 'تم الإرسال',  en: 'Sent'        } },
-  completed: { dot: 'bg-emerald-500',      label: { ar: 'مكتمل',       en: 'Completed'   } },
-  rejected:  { dot: 'bg-destructive',      label: { ar: 'مرفوض',       en: 'Rejected'    } },
-  cancelled: { dot: 'bg-muted-foreground', label: { ar: 'ملغي',        en: 'Cancelled'   } },
+  draft:            { dot: 'bg-muted-foreground', label: { ar: 'مسودة',           en: 'Draft'            } },
+  pending:          { dot: 'bg-yellow-500',       label: { ar: 'قيد الانتظار',    en: 'Pending'          } },
+  pending_approval: { dot: 'bg-yellow-500',       label: { ar: 'بانتظار الموافقة', en: 'Pending Approval' } },
+  approved:         { dot: 'bg-sky-500',          label: { ar: 'تمت الموافقة',    en: 'Approved'         } },
+  sent:             { dot: 'bg-blue-500',         label: { ar: 'تم الإرسال',      en: 'Sent'             } },
+  settled:          { dot: 'bg-emerald-500',      label: { ar: 'تمت التسوية',     en: 'Settled'          } },
+  completed:        { dot: 'bg-emerald-500',      label: { ar: 'مكتمل',           en: 'Completed'        } },
+  rejected:         { dot: 'bg-destructive',      label: { ar: 'مرفوض',           en: 'Rejected'         } },
+  cancelled:        { dot: 'bg-muted-foreground', label: { ar: 'ملغي',            en: 'Cancelled'        } },
+  voided:           { dot: 'bg-destructive',      label: { ar: 'مُبطل',           en: 'Voided'           } },
+  failed:           { dot: 'bg-destructive',      label: { ar: 'فشل',             en: 'Failed'           } },
 }
 
 // ─── Groupable columns ────────────────────────────────────────────────────────
@@ -82,8 +88,6 @@ export default function TransfersPage() {
   const { state, loadFromStorage, deleteTransfer } = useSynex()
   const navigate = useNavigate()
 
-  const [selectedTransfer, setSelectedTransfer] = useState<Transfer | null>(null)
-  const [detailsOpen, setDetailsOpen] = useState(false)
   const [activeFilters, setActiveFilters] = useState<ExtendedColumnFilter<Transfer>[]>([])
   const [activeGroup, setActiveGroup] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -106,9 +110,8 @@ export default function TransfersPage() {
   )
 
   const handleView = useCallback((transfer: Transfer) => {
-    setSelectedTransfer(transfer)
-    setDetailsOpen(true)
-  }, [])
+    navigate(`/synex/transfers/${transfer.id}`)
+  }, [navigate])
 
   const handleDownloadPDF = useCallback((transfer: Transfer) => {
     navigate(`/synex/transfers/${transfer.id}/document`)
@@ -333,7 +336,8 @@ export default function TransfersPage() {
         id: 'actions',
         enableHiding: false, enableSorting: false, enableColumnFilter: false,
         cell: ({ row }) => (
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-1">
+            <TransferActions transfer={row.original} variant="row" />
             <TableActions
               data={row.original}
               onView={handleView}
@@ -361,7 +365,7 @@ export default function TransfersPage() {
             />
           </div>
         ),
-        size: 52,
+        size: 180,
       },
     ],
     [state.accounts, state.beneficiaries, handleDelete, handleDownloadPDF, handleArchive, handleView],
@@ -536,41 +540,6 @@ export default function TransfersPage() {
         </motion.div>
       </motion.div>
 
-      {/* ── Row details sheet ──────────────────────────────────────────── */}
-      <RowDetailsSheet
-        open={detailsOpen}
-        onOpenChange={setDetailsOpen}
-        data={selectedTransfer}
-        title={t('تفاصيل التحويل', 'Transfer Details')}
-        description={
-          selectedTransfer
-            ? t(`المرجع: ${selectedTransfer.referenceNumber}`, `Ref: ${selectedTransfer.referenceNumber}`)
-            : undefined
-        }
-        mode="view"
-        allowEdit={false}
-        allowDelete
-        onDelete={async (transfer) => {
-          if (transfer) { handleDelete(transfer.id); setDetailsOpen(false) }
-        }}
-        deleteButtonText={t('حذف التحويل', 'Delete Transfer')}
-        activeFilters={
-          selectedTransfer
-            ? [{ label: t('الحالة', 'Status'), value: selectedTransfer.status, variant: getStatusFilterVariant(selectedTransfer.status) }]
-            : []
-        }
-        renderContent={(transfer) => {
-          if (!transfer) return null
-          return (
-            <TransferDetailContent
-              transfer={transfer}
-              accounts={state.accounts}
-              beneficiaries={state.beneficiaries}
-            />
-          )
-        }}
-        width="w-full sm:max-w-lg"
-      />
     </AppLayout>
   )
 }
@@ -654,72 +623,4 @@ function GroupedTransferRow({
   )
 }
 
-function TransferDetailContent({
-  transfer, accounts, beneficiaries,
-}: {
-  transfer: Transfer
-  accounts: any[]
-  beneficiaries: any[]
-}) {
-  const account = accounts.find((a) => a.id === transfer.sourceAccountId)
-  const beneficiary = beneficiaries.find((b) => b.id === transfer.beneficiaryId)
-  const cfg = STATUS_CONFIG[transfer.status]
-
-  return (
-    <>
-      <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
-        <span className={`inline-block size-2.5 rounded-full ${cfg?.dot ?? 'bg-muted'}`} />
-        <StatusBadge status={transfer.status} showIcon />
-      </div>
-
-      <DetailSection title={t('بيانات التحويل', 'Transfer Info')}>
-        <DetailItem
-          label={t('رقم المرجع', 'Reference Number')}
-          value={<span className="font-mono text-sm tracking-wider">{transfer.referenceNumber}</span>}
-        />
-        <DetailItem
-          label={t('المبلغ', 'Amount')}
-          value={<span className="text-lg font-semibold tabular-nums"><CurrencyAmount amount={transfer.amount} currency={transfer.currency} /></span>}
-        />
-        <DetailItem
-          label={t('العملة', 'Currency')}
-          value={<Badge variant="outline" className="font-mono text-xs font-semibold tracking-widest rounded-lg">{transfer.currency}</Badge>}
-        />
-        {transfer.createdAt && (
-          <DetailItem label={t('تاريخ الإنشاء', 'Created At')} value={new Date(transfer.createdAt).toLocaleString()} />
-        )}
-      </DetailSection>
-
-      <DetailSection title={t('الحساب المُرسِل', 'Source Account')} collapsible>
-        <DetailItem label={t('البنك', 'Bank')} value={account?.bankName ?? transfer.sourceAccountId} />
-        {account?.accountNumber && (
-          <DetailItem
-            label={t('رقم الحساب', 'Account Number')}
-            value={<span className="font-mono text-sm">•••• {account.accountNumber.slice(-4)}</span>}
-          />
-        )}
-      </DetailSection>
-
-      <DetailSection title={t('المستفيد', 'Beneficiary')} collapsible>
-        <DetailItem label={t('الاسم', 'Name')} value={beneficiary?.name ?? transfer.beneficiaryId} />
-        {beneficiary?.bankName && <DetailItem label={t('البنك', 'Bank')} value={beneficiary.bankName} />}
-        {beneficiary?.iban && (
-          <DetailItem label="IBAN" value={<span className="font-mono text-sm tracking-wider">{beneficiary.iban}</span>} />
-        )}
-        <DetailItem label={t('الدولة', 'Country')} value={transfer.country} />
-      </DetailSection>
-    </>
-  )
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function getStatusFilterVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status) {
-    case 'completed': return 'default'
-    case 'rejected':
-    case 'cancelled': return 'destructive'
-    case 'draft':     return 'outline'
-    default:          return 'secondary'
-  }
-}
+// (TransferDetailContent + getStatusFilterVariant removed — replaced by /synex/transfers/:id page)
