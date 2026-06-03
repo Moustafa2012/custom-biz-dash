@@ -88,8 +88,6 @@ export default function TransfersPage() {
   const { state, loadFromStorage, deleteTransfer } = useSynex()
   const navigate = useNavigate()
 
-  const [selectedTransfer, setSelectedTransfer] = useState<Transfer | null>(null)
-  const [detailsOpen, setDetailsOpen] = useState(false)
   const [activeFilters, setActiveFilters] = useState<ExtendedColumnFilter<Transfer>[]>([])
   const [activeGroup, setActiveGroup] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
