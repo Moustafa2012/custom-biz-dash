@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { StatusBadge } from '../../components/StatusBadge'
 import { CurrencyAmount } from '../../components/CurrencyAmount'
+import { TransferActions } from '../../components/TransferActions'
 import { useSynex } from '../../store/synex-store'
 import { Link, useNavigate } from 'react-router-dom'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
@@ -60,12 +61,17 @@ numberFilterFn.autoRemove = (val: string) => !val
 // ─── Status config ────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<string, { dot: string; label: { ar: string; en: string } }> = {
-  draft:     { dot: 'bg-muted-foreground', label: { ar: 'مسودة',       en: 'Draft'      } },
-  pending:   { dot: 'bg-yellow-500',       label: { ar: 'قيد الانتظار', en: 'Pending'    } },
-  sent:      { dot: 'bg-blue-500',         label: { ar: 'تم الإرسال',  en: 'Sent'        } },
-  completed: { dot: 'bg-emerald-500',      label: { ar: 'مكتمل',       en: 'Completed'   } },
-  rejected:  { dot: 'bg-destructive',      label: { ar: 'مرفوض',       en: 'Rejected'    } },
-  cancelled: { dot: 'bg-muted-foreground', label: { ar: 'ملغي',        en: 'Cancelled'   } },
+  draft:            { dot: 'bg-muted-foreground', label: { ar: 'مسودة',           en: 'Draft'            } },
+  pending:          { dot: 'bg-yellow-500',       label: { ar: 'قيد الانتظار',    en: 'Pending'          } },
+  pending_approval: { dot: 'bg-yellow-500',       label: { ar: 'بانتظار الموافقة', en: 'Pending Approval' } },
+  approved:         { dot: 'bg-sky-500',          label: { ar: 'تمت الموافقة',    en: 'Approved'         } },
+  sent:             { dot: 'bg-blue-500',         label: { ar: 'تم الإرسال',      en: 'Sent'             } },
+  settled:          { dot: 'bg-emerald-500',      label: { ar: 'تمت التسوية',     en: 'Settled'          } },
+  completed:        { dot: 'bg-emerald-500',      label: { ar: 'مكتمل',           en: 'Completed'        } },
+  rejected:         { dot: 'bg-destructive',      label: { ar: 'مرفوض',           en: 'Rejected'         } },
+  cancelled:        { dot: 'bg-muted-foreground', label: { ar: 'ملغي',            en: 'Cancelled'        } },
+  voided:           { dot: 'bg-destructive',      label: { ar: 'مُبطل',           en: 'Voided'           } },
+  failed:           { dot: 'bg-destructive',      label: { ar: 'فشل',             en: 'Failed'           } },
 }
 
 // ─── Groupable columns ────────────────────────────────────────────────────────
