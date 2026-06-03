@@ -540,44 +540,12 @@ export default function TransfersPage() {
         </motion.div>
       </motion.div>
 
-      {/* ── Row details sheet ──────────────────────────────────────────── */}
-      <RowDetailsSheet
-        open={detailsOpen}
-        onOpenChange={setDetailsOpen}
-        data={selectedTransfer}
-        title={t('تفاصيل التحويل', 'Transfer Details')}
-        description={
-          selectedTransfer
-            ? t(`المرجع: ${selectedTransfer.referenceNumber}`, `Ref: ${selectedTransfer.referenceNumber}`)
-            : undefined
-        }
-        mode="view"
-        allowEdit={false}
-        allowDelete
-        onDelete={async (transfer) => {
-          if (transfer) { handleDelete(transfer.id); setDetailsOpen(false) }
-        }}
-        deleteButtonText={t('حذف التحويل', 'Delete Transfer')}
-        activeFilters={
-          selectedTransfer
-            ? [{ label: t('الحالة', 'Status'), value: selectedTransfer.status, variant: getStatusFilterVariant(selectedTransfer.status) }]
-            : []
-        }
-        renderContent={(transfer) => {
-          if (!transfer) return null
-          return (
-            <TransferDetailContent
-              transfer={transfer}
-              accounts={state.accounts}
-              beneficiaries={state.beneficiaries}
-            />
-          )
-        }}
-        width="w-full sm:max-w-lg"
-      />
     </AppLayout>
   )
 }
+
+// (legacy RowDetailsSheet removed — clicking a row navigates to /synex/transfers/:id)
+function _unused() { return null }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
