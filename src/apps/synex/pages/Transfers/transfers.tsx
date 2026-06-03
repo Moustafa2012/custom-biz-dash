@@ -21,7 +21,7 @@ import {
   DataTable, DataTableSkeleton, DataTableColumnHeader, DataTableSortList,
   DataTableFilterMenu, DataTableAdvancedToolbar, BulkActions, ExportButton,
   TableActions, CopyableCell, CellWithIcon, KeyboardShortcutsHelp,
-  RowDetailsSheet, DetailItem, DetailSection, RowGroupingButton, GroupHeader,
+  RowGroupingButton, GroupHeader,
   useGroupedData, useTableKeyboardShortcuts,
   type ExtendedColumnFilter, type GroupableColumn,
 } from '@/components/ui/data-table'
@@ -544,9 +544,6 @@ export default function TransfersPage() {
   )
 }
 
-// (legacy RowDetailsSheet removed — clicking a row navigates to /synex/transfers/:id)
-function _unused() { return null }
-
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function StatCard({
@@ -626,72 +623,4 @@ function GroupedTransferRow({
   )
 }
 
-function TransferDetailContent({
-  transfer, accounts, beneficiaries,
-}: {
-  transfer: Transfer
-  accounts: any[]
-  beneficiaries: any[]
-}) {
-  const account = accounts.find((a) => a.id === transfer.sourceAccountId)
-  const beneficiary = beneficiaries.find((b) => b.id === transfer.beneficiaryId)
-  const cfg = STATUS_CONFIG[transfer.status]
-
-  return (
-    <>
-      <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
-        <span className={`inline-block size-2.5 rounded-full ${cfg?.dot ?? 'bg-muted'}`} />
-        <StatusBadge status={transfer.status} showIcon />
-      </div>
-
-      <DetailSection title={t('بيانات التحويل', 'Transfer Info')}>
-        <DetailItem
-          label={t('رقم المرجع', 'Reference Number')}
-          value={<span className="font-mono text-sm tracking-wider">{transfer.referenceNumber}</span>}
-        />
-        <DetailItem
-          label={t('المبلغ', 'Amount')}
-          value={<span className="text-lg font-semibold tabular-nums"><CurrencyAmount amount={transfer.amount} currency={transfer.currency} /></span>}
-        />
-        <DetailItem
-          label={t('العملة', 'Currency')}
-          value={<Badge variant="outline" className="font-mono text-xs font-semibold tracking-widest rounded-lg">{transfer.currency}</Badge>}
-        />
-        {transfer.createdAt && (
-          <DetailItem label={t('تاريخ الإنشاء', 'Created At')} value={new Date(transfer.createdAt).toLocaleString()} />
-        )}
-      </DetailSection>
-
-      <DetailSection title={t('الحساب المُرسِل', 'Source Account')} collapsible>
-        <DetailItem label={t('البنك', 'Bank')} value={account?.bankName ?? transfer.sourceAccountId} />
-        {account?.accountNumber && (
-          <DetailItem
-            label={t('رقم الحساب', 'Account Number')}
-            value={<span className="font-mono text-sm">•••• {account.accountNumber.slice(-4)}</span>}
-          />
-        )}
-      </DetailSection>
-
-      <DetailSection title={t('المستفيد', 'Beneficiary')} collapsible>
-        <DetailItem label={t('الاسم', 'Name')} value={beneficiary?.name ?? transfer.beneficiaryId} />
-        {beneficiary?.bankName && <DetailItem label={t('البنك', 'Bank')} value={beneficiary.bankName} />}
-        {beneficiary?.iban && (
-          <DetailItem label="IBAN" value={<span className="font-mono text-sm tracking-wider">{beneficiary.iban}</span>} />
-        )}
-        <DetailItem label={t('الدولة', 'Country')} value={transfer.country} />
-      </DetailSection>
-    </>
-  )
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function getStatusFilterVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status) {
-    case 'completed': return 'default'
-    case 'rejected':
-    case 'cancelled': return 'destructive'
-    case 'draft':     return 'outline'
-    default:          return 'secondary'
-  }
-}
+// (TransferDetailContent + getStatusFilterVariant removed — replaced by /synex/transfers/:id page)
