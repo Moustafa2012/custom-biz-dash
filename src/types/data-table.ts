@@ -20,19 +20,36 @@ export type FilterVariant =
   | "boolean";
 
 export type FilterOperator =
+  | "iLike"
+  | "notILike"
+  | "eq"
+  | "ne"
+  | "inArray"
+  | "notInArray"
+  | "isEmpty"
+  | "isNotEmpty"
+  | "lt"
+  | "lte"
+  | "gt"
+  | "gte"
+  | "isBetween"
+  | "isRelativeToToday"
+  // legacy aliases still in use by src/utils/data-table.ts
   | "contains"
   | "doesNotContain"
   | "startsWith"
   | "endsWith"
   | "equals"
   | "notEquals"
-  | "isEmpty"
-  | "isNotEmpty"
-  | "isBetween"
   | "isGreaterThan"
   | "isLessThan"
   | "isGreaterThanOrEqual"
   | "isLessThanOrEqual";
+
+export interface ExtendedColumnSort<TData> {
+  id: Extract<keyof TData, string>;
+  desc: boolean;
+}
 
 export interface ExtendedColumnFilter<TData> {
   id: Extract<keyof TData, string>;

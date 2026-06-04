@@ -59,7 +59,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { t } from "@/lib/translations";
 import { MoneyInput } from "../../components/MoneyInput";
 import { useSynex } from "../../store/synex-store";
-import { currencyConfigs } from "../../data/banks";
+
 
 // ─── schema ──────────────────────────────────────────────────────────────────
 const journalEntrySchema = z.object({

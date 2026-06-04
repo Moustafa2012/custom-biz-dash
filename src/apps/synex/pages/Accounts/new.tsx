@@ -69,7 +69,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { t } from "@/lib/translations";
 import { MoneyInput } from "../../components/MoneyInput";
 import { useSynex } from "../../store/synex-store";
-import { currencyConfigs, getCountryByCode, validateField } from "../../data/banks";
+import { currencyConfigs } from "../../data/banks";
 import { IbanInput, validateIBAN } from "@/components/ui/IbanInput";
 // ─── schema ──────────────────────────────────────────────────────────────────
 const accountSchema = z.object({

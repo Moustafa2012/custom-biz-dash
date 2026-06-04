@@ -1,9 +1,9 @@
 import type jsPDF from 'jspdf'
-import { C, fill, stroke, textColor, drawGoldStrip, getStatusColor, drawDiamondDivider } from './pdfUtils'
+import { C, fill, stroke, textColor, drawGoldStrip, getStatusColor } from './pdfUtils'
 import type { Transfer, Account } from '../data/mock'
 
 // ─── Decorative filigree circle pattern
-function drawFiligreeBg(doc: jsPDF, W: number, headerH: number) {
+function drawFiligreeBg(doc: jsPDF, W: number, _headerH: number) {
   doc.saveGraphicsState()
   doc.setGState(new (doc as any).GState({ opacity: 0.03 }))
   stroke(doc, C.gold)
@@ -249,7 +249,7 @@ function drawMetaBar(doc: jsPDF, W: number, transfer: Transfer, metaBarY: number
 }
 
 // ─── Main header export
-export function drawHeader(doc: jsPDF, W: number, transfer: Transfer, sourceAccount: Account): number {
+export function drawHeader(doc: jsPDF, W: number, transfer: Transfer, _sourceAccount: Account): number {
   const headerH = 46
   const metaBarH = 12
   const totalH = headerH + metaBarH
