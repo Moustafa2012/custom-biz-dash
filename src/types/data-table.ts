@@ -20,19 +20,25 @@ export type FilterVariant =
   | "boolean";
 
 export type FilterOperator =
-  | "contains"
-  | "doesNotContain"
-  | "startsWith"
-  | "endsWith"
-  | "equals"
-  | "notEquals"
+  | "iLike"
+  | "notILike"
+  | "eq"
+  | "ne"
+  | "inArray"
+  | "notInArray"
   | "isEmpty"
   | "isNotEmpty"
+  | "lt"
+  | "lte"
+  | "gt"
+  | "gte"
   | "isBetween"
-  | "isGreaterThan"
-  | "isLessThan"
-  | "isGreaterThanOrEqual"
-  | "isLessThanOrEqual";
+  | "isRelativeToToday";
+
+export interface ExtendedColumnSort<TData> {
+  id: Extract<keyof TData, string>;
+  desc: boolean;
+}
 
 export interface ExtendedColumnFilter<TData> {
   id: Extract<keyof TData, string>;
