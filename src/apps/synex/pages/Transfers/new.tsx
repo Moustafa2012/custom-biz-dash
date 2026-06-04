@@ -21,6 +21,7 @@ import {
   IconShieldCheck,
   IconHelp,
   IconClock,
+  IconCalendar,
 } from "@tabler/icons-react";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
@@ -457,8 +458,8 @@ export default function NewTransferPage() {
         {/* ── header ── */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-card shadow-sm overflow-hidden">
-              <img src="/assets/media/synex/send.png" alt="Send" className="h-6 w-6 object-contain" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-card shadow-sm">
+              <IconSend className="h-5 w-5 text-primary" />
             </div>
             <div>
               <h1 className="text-lg font-semibold tracking-tight leading-none">
@@ -797,7 +798,7 @@ export default function NewTransferPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                       <div>
                         <Label className="flex items-center gap-1.5 text-sm mb-1.5">
-                          <img src="/assets/media/synex/calender.png" alt="Calendar" className="h-3.5 w-3.5 object-contain opacity-50" />
+                          <IconCalendar className="h-3.5 w-3.5 opacity-50" />
                           {t("تاريخ التنفيذ", "Execution Date")}
                         </Label>
                         <Input

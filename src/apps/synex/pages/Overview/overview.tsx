@@ -5,6 +5,7 @@ import {
   IconDashboard, IconUsers,
   IconClock, IconChartBar, IconAlertTriangle, IconCircleCheck,
   IconMail, IconArrowUpRight, IconArrowDownRight, IconDots, IconRefresh,
+  IconCash, IconArrowsExchange, IconBell,
 } from '@tabler/icons-react'
 import { CurrencyAmount } from '../../components/CurrencyAmount'
 import { StatusBadge } from '../../components/StatusBadge'
@@ -286,14 +287,14 @@ export default function OverviewPage() {
           <MetricCard
             label={t('إجمالي الأرصدة', 'Total Balances')}
             value={totalBalances}
-            icon={<img src="/assets/media/synex/cash.png" alt="Cash" className="h-5 w-5 object-contain" />}
+            icon={<IconCash className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />}
             trend={{ value: 12.5, isPositive: true }}
             accent
           />
           <MetricCard
             label={t('تحويلات اليوم', "Today's Transfers")}
             value={todayTransfers}
-            icon={<img src="/assets/media/synex/exchange-money.png" alt="Exchange" className="h-5 w-5 object-contain" />}
+            icon={<IconArrowsExchange className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />}
             trend={{ value: 8.2, isPositive: true }}
           />
           <MetricCard
@@ -482,7 +483,7 @@ export default function OverviewPage() {
         {/* ── Alert Widgets ──────────────────────────────────────────────── */}
         <motion.div variants={pageVariants} className="grid gap-3 grid-cols-2 lg:grid-cols-4">
           <AlertWidget
-            icon={<img src="/assets/media/synex/notification.png" alt="Notification" className="h-5 w-5 object-contain" />}
+            icon={<IconBell className="h-5 w-5 text-destructive" />}
             label={t('التنبيهات', 'Alerts')}
             count={3}
             colorClass="text-destructive"
