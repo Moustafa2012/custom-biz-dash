@@ -33,7 +33,18 @@ export type FilterOperator =
   | "gt"
   | "gte"
   | "isBetween"
-  | "isRelativeToToday";
+  | "isRelativeToToday"
+  // legacy aliases still in use by src/utils/data-table.ts
+  | "contains"
+  | "doesNotContain"
+  | "startsWith"
+  | "endsWith"
+  | "equals"
+  | "notEquals"
+  | "isGreaterThan"
+  | "isLessThan"
+  | "isGreaterThanOrEqual"
+  | "isLessThanOrEqual";
 
 export interface ExtendedColumnSort<TData> {
   id: Extract<keyof TData, string>;
