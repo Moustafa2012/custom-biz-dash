@@ -410,8 +410,8 @@ export default function TransfersPage() {
         {/* ── Page header ───────────────────────────────────────────────── */}
         <motion.div variants={cardVariants} className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card shadow-sm overflow-hidden">
-              <img src="/assets/media/synex/send.png" alt="Send" className="h-7 w-7 object-contain" />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card shadow-sm">
+              <IconSend className="h-6 w-6 text-primary" />
             </div>
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">{t('التحويلات', 'Transfers')}</h1>
