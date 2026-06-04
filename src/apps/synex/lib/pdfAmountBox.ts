@@ -251,7 +251,7 @@ export function drawAmountBox(doc: jsPDF, W: number, y: number, transfer: Transf
   doc.saveGraphicsState()
   doc.setGState(new (doc as any).GState({ opacity: 0.65 }))
   textColor(doc, C.goldBright)
-  const amountWidth = doc.getTextWidth(formatted) * (22 / doc.getFontSize())
+  void doc.getTextWidth(formatted) * (22 / doc.getFontSize())
   doc.text(transfer.currency, margin + 12 + (formatted.length * 5), y + 20)
   doc.restoreGraphicsState()
 

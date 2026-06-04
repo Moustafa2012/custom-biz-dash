@@ -235,7 +235,7 @@ export function ColumnHeader<TData, TValue>({
               align === "left" && "justify-start",
               isRTL ? "flex-row-reverse" : "flex-row",
             )}
-            aria-sort={ariaSort}
+            aria-sort={ariaSort as React.AriaAttributes["aria-sort"]}
             aria-label={`${title}, ${ariaSort}`}
           >
             <span

@@ -1,11 +1,10 @@
 "use client";
 
-import type { Column, ColumnSort, SortDirection, Table as TanstackTable } from "@tanstack/react-table";
+import type { Column, ColumnSort, Table as TanstackTable } from "@tanstack/react-table";
 import type { DateRange } from "react-day-picker";
 import {
   ArrowDownUp,
   Check,
-  ChevronsUpDown,
   GripVertical,
   ListFilter,
   PlusCircle,
@@ -16,7 +15,6 @@ import * as React from "react";
 import { t } from "@/lib/translations";
 import { useLanguage } from "@/components/language-provider";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -992,7 +990,7 @@ export function DataTableSortList<TData>({
   ...props
 }: DataTableSortListProps<TData>) {
   const { direction } = useLanguage();
-  const id = React.useId();
+  void React.useId();
   const labelId = React.useId();
   const descriptionId = React.useId();
   const [open, setOpen] = React.useState(false);
@@ -1132,6 +1130,7 @@ export function DataTableSortList<TData>({
 
           <Sortable
             value={sorting}
+            getItemValue={(item) => (item as ColumnSort).id}
             onMove={({ activeIndex, overIndex }) =>
               onSortMove(activeIndex, overIndex)
             }

@@ -56,7 +56,7 @@ export function CopyButton({
   className = "",
   onCopy,
 }: CopyButtonProps) {
-  const { direction } = useLanguage();
+  useLanguage();
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = async (e: React.MouseEvent) => {
