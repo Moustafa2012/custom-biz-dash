@@ -1,7 +1,15 @@
 import jsPDF from 'jspdf'
 import type { Transfer, Account, Beneficiary } from '../data/mock'
 import { AMIRI_REGULAR_BASE64, AMIRI_BOLD_BASE64 } from './Amiri'
-import { setupFonts } from './pdfUtils'
+
+// ─── Font setup (inlined; previously in pdfUtils) ───────────────────────────
+function setupFonts(doc: jsPDF, amiriRegularBase64: string, amiriBoldBase64: string) {
+  doc.addFileToVFS('Amiri-Regular.ttf', amiriRegularBase64)
+  doc.addFont('Amiri-Regular.ttf', 'Amiri', 'normal')
+  doc.addFileToVFS('Amiri-Bold.ttf', amiriBoldBase64)
+  doc.addFont('Amiri-Bold.ttf', 'Amiri', 'bold')
+}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Minimal & modern transfer receipt
