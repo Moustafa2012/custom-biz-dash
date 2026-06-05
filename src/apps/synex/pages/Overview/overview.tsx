@@ -261,26 +261,30 @@ export default function OverviewPage() {
         className="space-y-6 pb-8"
       >
         {/* ── Page Header ───────────────────────────────────────────────── */}
-        <motion.div variants={cardVariants} className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
+        <motion.div variants={cardVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/40 pb-5">
+          <div className="flex min-w-0 items-center gap-4">
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/5 shadow-xs">
               <IconDashboard className="h-6 w-6 text-primary" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">{t('نظرة عامة', 'Overview')}</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">
+            <div className="min-w-0">
+              <h1 className="truncate text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                {t('نظرة عامة', 'Overview')}
+              </h1>
+              <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground font-medium">
                 {t('نظرة شاملة على النظام المالي', 'Comprehensive view of the financial system')}
               </p>
             </div>
           </div>
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 rounded-xl border border-border/60 bg-card px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted hover:border-border transition-all shadow-sm"
+            disabled={refreshing}
+            className="self-start sm:self-center h-9 inline-flex items-center gap-1.5 rounded-xl border border-border/70 bg-background px-3 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all shadow-xs"
           >
             <IconRefresh className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             {t('تحديث', 'Refresh')}
           </button>
         </motion.div>
+
 
         {/* ── Metric Cards ──────────────────────────────────────────────── */}
         <motion.div variants={pageVariants} className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
