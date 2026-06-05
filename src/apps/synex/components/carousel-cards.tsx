@@ -505,14 +505,15 @@ export default function CarouselCards({
       {accounts.length > 1 && (
         <div className="flex items-center justify-center gap-2">
           {accounts.map((_, i) => (
-            <Button
+            <button
               key={i}
+              type="button"
               onClick={() => api?.scrollTo(i)}
               className={cn(
-                "rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40",
+                "rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-foreground/40",
                 i === current
-                  ? "w-5 h-1 bg-white/60"
-                  : "w-1 h-1 bg-white/15 hover:bg-white/30",
+                  ? "w-5 h-1.5 bg-foreground/70"
+                  : "w-1.5 h-1.5 bg-foreground/15 hover:bg-foreground/30",
               )}
               aria-label={`${t("الانتقال إلى الشريحة", "Go to slide")} ${i + 1}`}
             />
