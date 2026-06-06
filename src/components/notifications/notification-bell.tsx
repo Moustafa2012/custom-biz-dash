@@ -34,8 +34,8 @@ function severityClasses(sev: NotificationEvent["severity"]) {
 }
 
 export function NotificationBell() {
-  const { currentApp } = useApp()
-  const appId = currentApp as AppId
+  const { activeApp } = useApp()
+  const appId = activeApp.id as AppId
   const { inbox, unread, markRead, markAllRead, clear } = useNotifications(appId)
   const [open, setOpen] = useState(false)
 
