@@ -17,6 +17,8 @@ import TelefatherPage from "@/apps/platform/pages/telefather/telefather"
 import MailerPage from "@/apps/platform/pages/Mailer/mailer"
 import PlatformUsersPage from "@/apps/platform/pages/users/users"
 import AuditLogsPage from "@/apps/platform/pages/audit-logs/audit-logs"
+import NotificationsAuditPage from "@/apps/platform/pages/notifications/notifications"
+import TwoFactorPage from "@/apps/platform/pages/twofa/twofa"
 
 // Site Manager app pages
 import OverviewPage from "@/apps/site-manager/pages/overview"
@@ -62,6 +64,8 @@ export function App() {
                 <Route path="/platform/mailer" element={<PrivateRoute><MailerPage /></PrivateRoute>} />
                 <Route path="/platform/users" element={<PrivateRoute><PlatformUsersPage /></PrivateRoute>} />
                 <Route path="/platform/audit-logs" element={<PrivateRoute><AuditLogsPage /></PrivateRoute>} />
+                <Route path="/platform/notifications" element={<PrivateRoute><NotificationsAuditPage /></PrivateRoute>} />
+                <Route path="/platform/twofa" element={<PrivateRoute><TwoFactorPage /></PrivateRoute>} />
 
                 {/* General routes */}
                 <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
