@@ -8,6 +8,7 @@ import { useLanguage } from "@/components/language-provider"
 import { t } from "@/lib/translations"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
+import { NotificationBell } from "@/components/notifications/notification-bell"
 
 interface AppHeaderProps {
   title?: string
@@ -122,7 +123,11 @@ export function AppHeader({ title }: AppHeaderProps) {
 
           <div className="w-px h-4 bg-border/40 mx-0.5" />
 
-          {/* Language toggle */}
+          {/* Notifications */}
+          <NotificationBell />
+
+          <div className="w-px h-4 bg-border/40 mx-0.5" />
+
           <Button
             variant="ghost"
             size="icon"
