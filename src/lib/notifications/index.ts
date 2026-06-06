@@ -137,10 +137,6 @@ function saveEvents(events: NotificationEvent[]) {
   writeJSON(K_EVENTS, trimmed)
   emit()
 }
-function pushEvent(ev: NotificationEvent) {
-  const next = [ev, ...getEvents()]
-  saveEvents(next)
-}
 export function markRead(id: string) {
   saveEvents(getEvents().map((e) => (e.id === id ? { ...e, read: true } : e)))
 }
